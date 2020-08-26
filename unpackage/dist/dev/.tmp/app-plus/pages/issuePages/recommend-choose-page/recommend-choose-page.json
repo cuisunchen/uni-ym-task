@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "发布推荐型广告",
+  "bounce": "vertical",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "uni-icons": "/components/uni-icons/uni-icons"
+  }
+}

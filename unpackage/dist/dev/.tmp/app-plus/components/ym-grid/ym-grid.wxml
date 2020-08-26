@@ -1,0 +1,1 @@
+<view class="ymGrid data-v-670118e0" style="{{'background-color:'+(backgroundColor)+';'}}"><view class="title data-v-670118e0">{{title}}</view><view class="{{['gridList flex data-v-670118e0',column==3?'grid-item-3':'grid-item-4']}}"><slot></slot></view></view>

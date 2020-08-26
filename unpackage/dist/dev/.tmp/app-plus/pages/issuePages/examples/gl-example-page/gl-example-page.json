@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "好运型示例",
+  "bounce": "vertical",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "gl-list-item": "/components/gl-list-item/gl-list-item"
+  }
+}

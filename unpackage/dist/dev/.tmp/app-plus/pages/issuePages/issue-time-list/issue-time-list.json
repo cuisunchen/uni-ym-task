@@ -1,0 +1,15 @@
+{
+  "navigationBarTitleText": "可发布时间",
+  "bounce": "vertical",
+  "titleNView": {
+    "backgroundColor": "#2C405A",
+    "buttons": [
+      {
+        "text": "确定",
+        "fontSize": "14",
+        "width": "70px"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

@@ -1,0 +1,13 @@
+{
+  "navigationBarTitleText": "收藏",
+  "bounce": "none",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "ym-tabs": "/components/ym-tabs/ym-tabs",
+    "ygc-refresh": "/components/ygc-refresh/ygc-refresh",
+    "home-list-item": "/components/home-list-item/home-list-item",
+    "gl-list-item": "/components/gl-list-item/gl-list-item"
+  }
+}

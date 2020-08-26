@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "推荐型示例",
+  "bounce": "vertical",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "recommend-list": "/components/recommend-list/recommend-list"
+  }
+}

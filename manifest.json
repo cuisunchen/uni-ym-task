@@ -1,0 +1,124 @@
+{
+    "name" : "今日友米",
+    "appid" : "__UNI__4DF39C1",
+    "description" : "手赚app平台",
+    "versionName" : "1.0.6",
+    "versionCode" : "100",
+    "transformPx" : false,
+    "app-plus" : {
+        "nvueCompiler" : "uni-app",
+        "compilerVersion" : 3,
+        "modules" : {
+            "Payment" : {}
+        },
+        "distribute" : {
+            "android" : {
+                "permissions" : [
+                    "<uses-feature android:name=\"android.hardware.camera\"/>",
+                    "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
+                    "<uses-permission android:name=\"android.permission.CAMERA\"/>",
+                    "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
+                    "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
+                    "<uses-permission android:name=\"android.permission.INSTALL_PACKAGES\"/>",
+                    "<uses-permission android:name=\"android.permission.INTERNET\"/>",
+                    "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
+                    "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
+                    "<uses-permission android:name=\"android.permission.REQUEST_INSTALL_PACKAGES\"/>",
+                    "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+                    "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+                ],
+                "abiFilters" : [ "armeabi-v7a", "x86" ]
+            },
+            "ios" : {
+                "privacyDescription" : {
+                    "NSLocationWhenInUseUsageDescription" : "你的位置信息将用于数据的区域效果展示",
+                    "NSLocationAlwaysAndWhenInUseUsageDescription" : "你的位置信息将用于数据的区域效果展示",
+                    "NSLocationAlwaysUsageDescription" : "你的位置信息将用于数据的区域效果展示"
+                }
+            },
+            "sdkConfigs" : {
+                "ad" : {},
+                "payment" : {
+                    "alipay" : {}
+                },
+                "maps" : {}
+            },
+            "icons" : {
+                "ios" : {
+                    "iphone" : {
+                        "app@2x" : "/Users/apple/Desktop/logos/logo120.png",
+                        "app@3x" : "/Users/apple/Desktop/logos/logo180.png",
+                        "spotlight@2x" : "/Users/apple/Desktop/logos/logo80.png",
+                        "spotlight@3x" : "/Users/apple/Desktop/logos/logo120.png",
+                        "settings@2x" : "/Users/apple/Desktop/logos/logo58.png",
+                        "settings@3x" : "/Users/apple/Desktop/logos/logo87.png",
+                        "notification@2x" : "/Users/apple/Desktop/logos/logo40.png",
+                        "notification@3x" : "/Users/apple/Desktop/logos/logo60.png"
+                    },
+                    "appstore" : "/Users/apple/Desktop/logos/logo1024.png"
+                },
+                "android" : {
+                    "hdpi" : "/Users/apple/Desktop/logos/logo72.png",
+                    "xhdpi" : "/Users/apple/Desktop/logos/logo96.png",
+                    "xxhdpi" : "/Users/apple/Desktop/logos/logo144.png",
+                    "xxxhdpi" : "/Users/apple/Desktop/logos/logo192.png"
+                }
+            },
+            "splashscreen" : {
+                "android" : {
+                    "hdpi" : "",
+                    "xhdpi" : "",
+                    "xxhdpi" : ""
+                },
+                "ios" : {
+                    "iphone" : {
+                        "portrait-896h@3x" : "/Users/apple/Desktop/logos/logo60.png",
+                        "landscape-896h@3x" : "/Users/apple/Desktop/logos/logo120.png",
+                        "portrait-896h@2x" : "/Users/apple/Desktop/logos/logo120.png",
+                        "landscape-896h@2x" : "/Users/apple/Desktop/logos/logo87.png",
+                        "iphonex" : "/Users/apple/Desktop/logos/logo1024.png",
+                        "iphonexl" : "/Users/apple/Desktop/logos/logo1024.png",
+                        "retina55" : "/Users/apple/Desktop/logos/logo1024.png",
+                        "retina55l" : "/Users/apple/Desktop/logos/logo1024.png",
+                        "retina47" : "/Users/apple/Desktop/logos/logo1024.png",
+                        "retina47l" : "/Users/apple/Desktop/logos/logo1024.png",
+                        "retina40" : "/Users/apple/Desktop/logos/logo1024.png",
+                        "retina40l" : "/Users/apple/Desktop/logos/logo1024.png",
+                        "retina35" : "/Users/apple/Desktop/logos/logo1024.png"
+                    }
+                }
+            }
+        },
+        "splashscreen" : {
+            "waiting" : true,
+            "alwaysShowBeforeRender" : true,
+            "autoclose" : true,
+            "delay" : 6
+        },
+        "permissionPhoneState" : {
+            "request" : "always",
+            "prompt" : "为保证您正常、安全地使用，需要获取设备识别码（部分手机提示为获取手机号码）使用权限，请允许。"
+        }
+    },
+    "quickapp" : {},
+    "mp-weixin" : {
+        "appid" : "",
+        "setting" : {
+            "urlCheck" : true
+        }
+    }
+}

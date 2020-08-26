@@ -1,0 +1,14 @@
+{
+  "navigationBarTitleText": "米圈",
+  "bounce": "none",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "friend-list-item": "/components/friends-list-item/friends-list-item",
+    "uni-tag": "/components/uni-tag/uni-tag",
+    "uni-notice-bar": "/components/uni-notice-bar/uni-notice-bar",
+    "ygc-refresh": "/components/ygc-refresh/ygc-refresh",
+    "uni-load-more": "/components/uni-load-more/uni-load-more"
+  }
+}

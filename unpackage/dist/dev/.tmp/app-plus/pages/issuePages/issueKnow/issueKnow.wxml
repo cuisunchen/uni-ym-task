@@ -1,0 +1,1 @@
+<view class="issueKnowPage data-v-a0feb3cc"><block wx:for="{{list}}" wx:for-item="item" wx:for-index="index" wx:key="index"><image class="img data-v-a0feb3cc" src="{{item.titleImg}}" mode data-event-opts="{{[['tap',[['goDetail',['$0'],[[['list','',index]]]]]]]}}" bindtap="__e"></image></block></view>

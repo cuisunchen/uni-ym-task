@@ -1,0 +1,1 @@
+<scroll-view class="nearbyList data-v-60c30fb2" scroll-y><block wx:for="{{100}}" wx:for-item="item" wx:for-index="__i0__" wx:key="*this"><view class="data-v-60c30fb2">{{'1343759723458阿斯顿发见到过'+item+''}}</view></block></scroll-view>

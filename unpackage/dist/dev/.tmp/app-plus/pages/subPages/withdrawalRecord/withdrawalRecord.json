@@ -1,0 +1,13 @@
+{
+  "navigationBarTitleText": "提现记录",
+  "bounce": "none",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "ygc-refresh": "/components/ygc-refresh/ygc-refresh",
+    "uni-load-more": "/components/uni-load-more/uni-load-more",
+    "withdrawal-card": "/components/withdrawal-card/withdrawal-card",
+    "aui-toast": "/components/aui-toast/aui-toast"
+  }
+}

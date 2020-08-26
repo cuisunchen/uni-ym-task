@@ -1,0 +1,19 @@
+{
+  "navigationBarTitleText": "我的问题",
+  "bounce": "none",
+  "titleNView": {
+    "backgroundColor": "#2C405A",
+    "buttons": [
+      {
+        "text": "新增反馈",
+        "fontSize": "14",
+        "width": "90px"
+      }
+    ]
+  },
+  "usingComponents": {
+    "ygc-refresh": "/components/ygc-refresh/ygc-refresh",
+    "uni-load-more": "/components/uni-load-more/uni-load-more",
+    "feed-back-card": "/components/feedBack-card/feedBack-card"
+  }
+}

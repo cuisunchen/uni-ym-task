@@ -1,0 +1,324 @@
+<template>
+	<scroll-view class="details" scroll-y :style="{height:screenHeight+'px'}">
+		<web-view v-if="dataObj.webViewShow" class="webView" :src="dataObj.bigImg" 
+		:style="{top: statusBarHeight + 'px'}" @pagefinish="onPageFinish"></web-view>	
+		
+		<image v-else ref="img" class="img" :src="dataObj.bigImg" mode="aspectFill" @load="imgLoad" :style="{height:imgHeight+'px'}"></image>
+		
+		<uni-icons class="back all-center" type="arrowleft" color="#d5d5d5" size="22" @click="goBack"></uni-icons>
+		<view class="timer flex all-center" v-if="showTimer">
+				<text class="text">剩余: {{timeNum}} s</text>
+		</view>
+		
+		<uni-fab :pattern="pattern" :title="fabText" v-if="fabShow"
+		        :content="content"
+		        :horizontal="horizontal"
+		        :vertical="vertical"
+		        :direction="direction"
+						@fabClick="fabClick"
+		        @trigger="trigger"></uni-fab>
+	</scroll-view>
+</template>
+
+<script>
+	import uniIcons from "@/components/uni-icons/uni-icons.vue"
+	import uniFab from "@/components/uni-fab/uni-fab.vue"
+	import {request} from '@/common/utils/request.js'
+	import {showToast} from '@/common/utils/tools.js'
+	export default {
+		components:{uniIcons,uniFab},
+		data() {
+			return {
+				showTimer: false,
+				timeNum: 5,
+				timer: null,
+				horizontal: 'right',
+				vertical: 'bottom',
+				direction: 'vertical',
+				pattern: {
+					color: '#7A7E83',
+					backgroundColor: '#fff',
+					selectedColor: '#f4ea2a',
+					buttonColor: '#007AFF'
+				},
+				content: [
+					{
+						iconPath: '/static/apply-sel.png',
+						selectedIconPath: '/static/apply-sel-fill.png',
+						text: '申诉',
+						active: false
+					},
+					{
+						iconPath: '/static/sc-sel.png',
+						selectedIconPath: '/static/sc-sel-fill.png',
+						text: '收藏',
+						active: false
+					},
+					{
+						iconPath: '/static/answer.png',
+						selectedIconPath: '/static/answer-fill.png',
+						text: '回答问题',
+						active: false
+					}
+				],
+				dataObj:{},
+				type:'',
+				tabType: '',
+				screenHeight: null,
+				imgHeight:null,
+				statusBarHeight:null,
+				isCollect:false,     //  广告是否收藏
+				fabText:'',
+				prevPage: null,  	//上一个页面的实例
+				dataIndex:null,
+				fabShow: false
+			}
+		},
+		onLoad(option) {
+			uni.showLoading({
+				title:'内容加载中'
+			})
+			this.dataObj = JSON.parse(decodeURIComponent(option.param))
+			this.dataIndex = option.index
+			this.tabType = option.tabType
+			this.isCollectAd()
+			if(this.dataObj.bigImg.indexOf('jpg') < 0 && this.dataObj.bigImg.indexOf('jpeg') < 0 && this.dataObj.bigImg.indexOf('png') < 0){
+				this.dataObj.webViewShow = true
+			}else{
+				this.dataObj.webViewShow = false
+			}
+			this.type = option.type || ''
+			this.fabText = this.type !== 'question'?'操作':'回答'
+			if(this.type !== 'question'){
+				this.content.pop()
+			}
+			this.screenHeight = uni.getSystemInfoSync().windowHeight
+			this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
+			this.fabShow = true
+			let pages = getCurrentPages();  
+			this.prevPage = pages[pages.length - 2]; 
+		},
+		onUnload() {
+			uni.hideToast()
+			if(this.timer){
+				clearInterval(this.timer)
+				this.timer = null
+			}
+		},
+		methods: {
+			isCollectAd(){
+				request('/api/view/isCollectAd','post',
+							{"homeAdId": this.dataObj.id || this.dataObj.homeAdId}).then(res=>{
+					if(res.code == 200){
+						if(res.data == true){
+							this.isCollect = true
+						}else{
+							this.isCollect = false
+						}
+					}else{
+						res.msg || uni.showToast(res.msg)
+					}
+				})
+			},
+			collectAd(){
+				request('/api/view/collectAd','post',
+						{"homeAdId": this.dataObj.id || this.dataObj.homeAdId}).then(res=>{
+							
+					if(res.code == 200){
+						showToast(res.data)
+						this.isCollect = true
+						this.isCollectAd()
+					}
+				})
+			},
+			cancelCollectAd(){
+				request('/api/view/cancelCollectAd','post',
+						{"homeAdId": this.dataObj.id || this.dataObj.homeAdId}).then(res=>{
+							console.log(res)
+					if(res.code == 200){
+						showToast(res.data)
+						this.isCollect = false
+						this.isCollectAd()
+					}
+				})
+			},
+			fabClick(){
+				this.content[1]['active'] = this.isCollect
+				if(this.type == 'question'){
+					if(this.fabText == '回答'){
+						this.fabText = '收起'
+					}else{
+						this.fabText = '回答'
+					}
+				}
+			},
+			lotteryGL(){
+				let param = {"homeAdId": this.dataObj.homeAdId}
+				request('/api/view/lotteryGL','post',param).then(res => {
+					this.dataObj.tags = '已读'
+					if(res.code == 200){	
+						if(res.data.isFinish){
+							this.dataObj.status = '已完成'
+					  }
+						if(res.data.isFirst){ 
+							 if(res.data.isWin){
+									uni.showModal({
+										 title: '提示',
+										 showCancel: false,
+										 content: `恭喜,您抽中${res.data.winMoney}元`
+									})
+							 }else{
+									uni.showModal({
+										 title: '提示',
+										 showCancel: false,
+										 content:'很遗憾,您没有中奖,快去其他广告试试手气吧!'
+									})
+							 }
+						}else{
+							 uni.showModal({
+									title: '提示',
+									showCancel: false,
+									content:"此任务您已完成,不能重复完成"
+							 })
+						}
+					}else
+					if(res.code == 999){
+						showToast(res.msg,'none',3000)
+					}
+					let paras = {
+						'data':this.dataObj,
+						'index':this.dataIndex,
+					}
+					// uni.$emit('sendGL',paras)
+					if(this.tabType = 1){
+						uni.$emit('sendNation',paras)
+					}else
+					if(this.tabType = 2){
+						uni.$emit('sendSameCity',paras)
+					}else{
+						uni.$emit('sendNearby',paras)
+					}
+				})
+			},
+			handleLottery(){
+				if(this.timeNum == -1){return}
+				this.showTimer = true
+				clearInterval(this.timer)
+				this.timer = setInterval(() => {
+					this.timeNum --
+					if(this.timeNum == -1){
+						 clearInterval(this.timer)
+						 this.showTimer = false
+						 this.timer = null
+						 this.lotteryGL()
+					}
+				}, 1000);
+			},
+			imgLoad(e){
+				uni.hideLoading()
+				let imgWidth = e.detail.width  //  图片实际宽度
+				let currentWidth = uni.getSystemInfoSync().windowWidth   //  图片展示的宽度
+				let imgHeight = e.detail.height   //  图片实际高度
+				this.imgHeight = currentWidth/(imgWidth/imgHeight)
+				if(this.type == 'goodLuck'){
+					this.handleLottery()
+				}
+			},
+			onPageFinish(){
+				uni.hideLoading()
+				if(this.type == 'goodLuck'){
+					this.handleLottery()
+				}
+			},
+			goBack(){
+				//  封面进入详情后,点击返回回到首页
+				if(this.type == 'cover'){
+					uni.reLaunch({
+						url:'../../tabBar/home/home'
+					})
+				}else{
+					uni.navigateBack({
+						delta:1
+					})
+				}
+			},
+			trigger(res){
+				if(res.index == 0){
+					uni.navigateTo({
+						url: '../appeal/appeal?id=' + encodeURIComponent(this.dataObj.id || this.dataObj.homeAdId)
+					})
+				}
+				if(res.index == 1){
+					if(res.item.active){
+						res.item.active = false
+						this.cancelCollectAd()
+					}else{
+						res.item.active = true
+						this.collectAd()
+					}
+				}
+				
+				if(res.index == 2){
+					uni.navigateTo({
+						url: '../answerQs/answerQs?param=' + encodeURIComponent(JSON.stringify(this.dataObj))+ "&index=" + this.dataIndex
+					})
+				}
+				
+			}
+		}
+	}
+</script>
+
+<style>
+.details{
+	width: 750upx;
+	height: 100%;
+}
+.img{
+	width: 750upx;
+}
+.back{
+	position: fixed;
+	top: 100upx;
+	left: 45upx;
+	width: 70upx;
+	line-height: 70upx;
+	border-radius: 50%;
+	background-color: rgba(0, 0, 0, .3);
+	z-index: 9999;
+}
+.timer{
+	position: fixed;
+	right: 45upx;
+	top: 115upx;
+	width: 120upx;
+	height: 40upx;
+	border-radius: 10upx;
+	background-color: #edf1fd;
+}
+.text{
+	font-size: 24upx;
+	color: #999;
+}
+
+.wrap{
+	height: 500upx;
+}
+.webView{
+	position: fixed;
+	top: 60upx;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 6;
+}
+.popup{
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 99;
+	background-color: rgba(0,0,0, .5);
+}
+</style>

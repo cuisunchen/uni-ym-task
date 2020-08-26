@@ -1,0 +1,1 @@
+<view class="xyMiddlePage"><web-view src="{{url}}"></web-view></view>

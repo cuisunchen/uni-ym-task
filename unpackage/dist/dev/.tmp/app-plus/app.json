@@ -1,0 +1,114 @@
+{
+  "pages": [
+    "pages/tabBar/home/home",
+    "pages/tabBar/mine/mine",
+    "pages/issuePages/choose-ad-type/choose-ad-type",
+    "pages/issuePages/business-platform/business-platform",
+    "pages/tabBar/goodluck/goodluck",
+    "pages/tabBar/friends/friends",
+    "pages/subPages/detail/detail",
+    "pages/subPages/answerQs/answerQs",
+    "pages/subPages/rebate/rebate",
+    "pages/subPages/todayProfit/todayProfit",
+    "pages/subPages/totalProfit/totalProfit",
+    "pages/subPages/totalProfit-day/totalProfit-day",
+    "pages/subPages/share/share",
+    "pages/subPages/download/download",
+    "pages/subPages/luckdraw/luckdraw",
+    "pages/subPages/myMessage/myMessage",
+    "pages/subPages/collectionAD/collectionAD",
+    "pages/subPages/setting/setting",
+    "pages/subPages/feedBack/feedBack",
+    "pages/subPages/addReply/addReply",
+    "pages/subPages/appendReply/appendReply",
+    "pages/subPages/addFeedback/addFeedback",
+    "pages/subPages/login/login",
+    "pages/subPages/interest/interest",
+    "pages/issuePages/managePublicPage/managePublicPage",
+    "pages/issuePages/msgCenter/msgCenter",
+    "pages/issuePages/qsFeedback/qsFeedback",
+    "pages/issuePages/issueKnow/issueKnow",
+    "pages/issuePages/issueQS/issueQS",
+    "pages/issuePages/issueGL/issueGL",
+    "pages/issuePages/issue-public-page/issue-public-page",
+    "pages/issuePages/issue-time-list/issue-time-list",
+    "pages/issuePages/recommend-choose-page/recommend-choose-page",
+    "pages/issuePages/examples/qs-example-page/qs-example-page",
+    "pages/issuePages/examples/gl-example-page/gl-example-page",
+    "pages/issuePages/examples/swiper-example-page/swiper-example-page",
+    "pages/issuePages/examples/recommend-example-page/recommend-example-page",
+    "pages/issuePages/examples/cover-example-page/cover-example-page",
+    "pages/issuePages/examples/dialog-example-page/dialog-example-page",
+    "pages/issuePages/issue-know-detail/issue-know-detail",
+    "pages/issuePages/order-detail/order-detail",
+    "pages/issuePages/order-detail/order-detail-QSGL",
+    "pages/subPages/xy-middle-page/xy-middle-page",
+    "pages/subPages/withdrawal/withdrawal",
+    "pages/subPages/setAccount/setAccount",
+    "pages/subPages/withdrawalRecord/withdrawalRecord",
+    "pages/issuePages/issueRecommend/issueRecommend",
+    "pages/subPages/appeal/appeal",
+    "pages/subPages/coverPage/coverPage"
+  ],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#2c405a",
+    "backgroundColor": "#f6f6f6"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#333333",
+    "borderStyle": "black",
+    "backgroundColor": "#F8F8F8",
+    "list": [
+      {
+        "pagePath": "pages/tabBar/home/home",
+        "iconPath": "static/home@2x.png",
+        "selectedIconPath": "static/home_fill@2x.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/tabBar/goodluck/goodluck",
+        "iconPath": "static/luck@2x.png",
+        "selectedIconPath": "static/luck_fill@2x.png",
+        "text": "好运"
+      },
+      {
+        "pagePath": "pages/tabBar/friends/friends",
+        "iconPath": "static/group.png",
+        "selectedIconPath": "static/group_fill.png",
+        "text": "米圈"
+      },
+      {
+        "pagePath": "pages/tabBar/mine/mine",
+        "iconPath": "static/people@2x.png",
+        "selectedIconPath": "static/people_fill@2x.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "nvue": {
+    "pages": {
+      "pages/subPages/details/details.html": {
+        "window": {
+          "usingComponents": {},
+          "navigationBarTitleText": "详情",
+          "navigationBarTextStyle": "black",
+          "bounce": "vertical",
+          "titleNView": false
+        },
+        "nvue": true
+      }
+    }
+  },
+  "nvueCompiler": "uni-app",
+  "renderer": "auto",
+  "splashscreen": {
+    "alwaysShowBeforeRender": true,
+    "autoclose": false
+  },
+  "appname": "今日友米",
+  "compilerVersion": "2.4.6",
+  "usingComponents": {}
+}

@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "选择发布广告类型",
+  "bounce": "vertical",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "choose-ad-type-card": "/components/choose-ad-type-card/choose-ad-type-card"
+  }
+}

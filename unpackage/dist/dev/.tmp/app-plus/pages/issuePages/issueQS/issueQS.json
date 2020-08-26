@@ -1,0 +1,15 @@
+{
+  "navigationBarTitleText": "问答型",
+  "bounce": "vertical",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "issue-upload-card": "/components/issue-upload-card/issue-upload-card",
+    "issue-con-img-upload-card": "/components/issue-conImg-upload-card/issue-conImg-upload-card",
+    "form-input": "/components/form-input/form-input",
+    "issue-form-cell": "/components/issue-form-cell/issue-form-cell",
+    "level-linkage": "/components/three-level-linkage/linkage",
+    "popup": "/components/uni-popup/uni-popup"
+  }
+}

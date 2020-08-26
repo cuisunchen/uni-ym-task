@@ -1,0 +1,12 @@
+{
+  "bounce": "none",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "issue-upload-card": "/components/issue-upload-card/issue-upload-card",
+    "issue-con-img-upload-card": "/components/issue-conImg-upload-card/issue-conImg-upload-card",
+    "issue-form-cell": "/components/issue-form-cell/issue-form-cell",
+    "level-linkage": "/components/three-level-linkage/linkage"
+  }
+}

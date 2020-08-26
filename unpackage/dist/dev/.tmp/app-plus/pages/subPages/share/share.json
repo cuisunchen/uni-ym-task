@@ -1,0 +1,15 @@
+{
+  "navigationBarTitleText": "分享应用",
+  "bounce": "vertical",
+  "titleNView": {
+    "backgroundColor": "#2C405A",
+    "buttons": [
+      {
+        "text": "分享",
+        "fontSize": "14",
+        "width": "70px"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

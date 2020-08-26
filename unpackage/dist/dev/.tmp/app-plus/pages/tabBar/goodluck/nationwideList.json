@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "ygc-refresh": "/components/ygc-refresh/ygc-refresh"
+  },
+  "component": true
+}

@@ -1,0 +1,87 @@
+page{
+	/* #ifndef APP-NVUE */
+		height: 100%;
+		font-size: 26rpx;
+		background-color: #f6f6f6;
+	/* #endif */
+}
+.row{
+	flex-direction: row;
+}
+.flex{
+	/* #ifndef APP-NVUE */
+		display: flex;
+	/* #endif */
+	
+}
+.flex-column{
+	/* #ifndef APP-NVUE */
+		display: flex;
+	/* #endif */
+	flex-direction: column;
+}
+.flex1{
+	flex: 1;
+}
+.align-center{
+	align-items: center;
+}
+.justifu-center{
+	justify-content: center;
+}
+.all-center{
+	align-items: center;
+	justify-content: center;
+}
+.flex-end{
+  justify-content: flex-end
+}
+.flex-start{
+  justify-content: flex-start
+}
+.flex-between{
+  justify-content: space-between
+}
+.flex-shrink{
+	/* #ifndef APP-NVUE */
+	flex-shrink: 0;
+	/* #endif */
+	
+}
+
+
+.holderClass{
+	color: #999;
+	font-size: 24rpx;
+	line-height: 80rpx;
+}
+.input{
+	height: 80rpx;
+	font-size: 26rpx!important;
+	border-radius: 10rpx;
+	border-width:1rpx;  
+	border-color:#EEEEEE;  
+	border-style:solid; 
+}
+.ellipsis_one{
+	overflow: hidden;
+	text-overflow:ellipsis;
+	/* #ifndef APP-NVUE */
+		white-space: nowrap;
+	/* #endif */
+	
+}
+.ellipsis_two{
+	/* #ifndef APP-NVUE */
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		overflow: hidden;
+	/* #endif */
+	
+}
+/* #ifndef APP-NVUE */
+button{
+	font-size: 28rpx;
+}
+/* #endif */

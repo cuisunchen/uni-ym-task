@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "详情",
+  "bounce": "vertical",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "uni-icons": "/components/uni-icons/uni-icons",
+    "uni-fab": "/components/uni-fab/uni-fab"
+  }
+}

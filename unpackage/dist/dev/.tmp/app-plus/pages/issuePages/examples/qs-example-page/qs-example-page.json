@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "问答型示例",
+  "bounce": "vertical",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "home-list-item": "/components/home-list-item/home-list-item"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "navigationBarTitleText": "好运",
+  "bounce": "none",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "ygc-refresh": "/components/ygc-refresh/ygc-refresh",
+    "recommend-list": "/components/recommend-list/recommend-list",
+    "gl-list-item": "/components/gl-list-item/gl-list-item",
+    "ym-tabs": "/components/ym-tabs/ym-tabs",
+    "uni-load-more": "/components/uni-load-more/uni-load-more",
+    "nationwide": "/pages/tabBar/goodluck/nationwideList",
+    "same-city-list": "/pages/tabBar/goodluck/sameCityList",
+    "nearby-list": "/pages/tabBar/goodluck/nearbyList"
+  }
+}

@@ -1,0 +1,1 @@
+<view class="formInput flex align-center data-v-6bccecf0"><text class="label data-v-6bccecf0">{{label}}</text><input class="flex1 input data-v-6bccecf0" type="text" placeholder-class="holderClass" placeholder="请输入问题,要求简单明了" data-event-opts="{{[['input',[['inputFun',['$event']]]]]}}" value="{{value}}" bindinput="__e"/></view>

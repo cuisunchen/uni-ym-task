@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "追加回复",
+  "bounce": "vertical",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {}
+}

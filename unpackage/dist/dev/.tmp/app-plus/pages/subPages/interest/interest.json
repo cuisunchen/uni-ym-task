@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "选择兴趣",
+  "bounce": "vertical",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "interest-card": "/components/interest-card/interest-card"
+  }
+}

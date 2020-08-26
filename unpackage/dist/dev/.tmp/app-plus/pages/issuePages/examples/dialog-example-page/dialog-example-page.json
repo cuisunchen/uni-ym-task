@@ -1,0 +1,18 @@
+{
+  "navigationBarTitleText": "弹框型示例",
+  "bounce": "vertical",
+  "titleNView": {
+    "backgroundColor": "#2C405A",
+    "buttons": [
+      {
+        "text": "了解更多",
+        "fontSize": "14",
+        "width": "90px"
+      }
+    ]
+  },
+  "usingComponents": {
+    "uni-icons": "/components/uni-icons/uni-icons",
+    "popup": "/components/uni-popup/uni-popup"
+  }
+}

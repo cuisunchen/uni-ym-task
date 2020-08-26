@@ -1,0 +1,17 @@
+{
+  "navigationBarTitleText": "您的专属宣传页",
+  "bounce": "none",
+  "titleNView": {
+    "backgroundColor": "#2C405A",
+    "buttons": [
+      {
+        "text": "下载",
+        "fontSize": "14",
+        "width": "70px"
+      }
+    ]
+  },
+  "usingComponents": {
+    "tki-qrcode": "/components/tki-qrcode/tki-qrcode"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "商户平台",
+  "bounce": "vertical",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "ym-grid": "/components/ym-grid/ym-grid",
+    "ym-grid-item": "/components/ym-grid-item/ym-grid-item"
+  }
+}

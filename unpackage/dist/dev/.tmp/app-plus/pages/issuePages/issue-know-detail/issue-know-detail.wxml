@@ -1,0 +1,1 @@
+<view class="issueKnowDetail data-v-3b92d310"><image class="img data-v-3b92d310 vue-ref" style="{{'height:'+(imgHeight+'px')+';'}}" src="{{dataObj.contentImg}}" mode="widthFix" data-ref="img" data-event-opts="{{[['load',[['imgLoad',['$event']]]]]}}" bindload="__e"></image></view>

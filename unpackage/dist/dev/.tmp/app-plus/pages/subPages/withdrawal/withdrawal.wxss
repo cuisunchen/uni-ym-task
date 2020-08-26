@@ -1,0 +1,196 @@
+
+page{
+	background-color: #eee;
+}
+
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.withdrawalPage.data-v-d5d8fb2e {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+}
+.withdrawalPage.data-v-d5d8fb2e uni-button {
+    border-color: #B4C386;
+}
+.withdrawalPage .topBg.data-v-d5d8fb2e {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 7;
+    height: 300rpx;
+}
+.withdrawalPage .topBg .layout.data-v-d5d8fb2e {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      z-index: 8;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.3);
+}
+.withdrawalPage .topBg image.data-v-d5d8fb2e {
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+}
+.withdrawalPage .main.data-v-d5d8fb2e {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 99;
+}
+.withdrawalPage .main > view .title.data-v-d5d8fb2e {
+      font-size: 32rpx;
+      margin-bottom: 20rpx;
+}
+.withdrawalPage .main .info.data-v-d5d8fb2e {
+      color: #fff;
+      padding: 0 30rpx;
+      height: 300rpx;
+      overflow: hidden;
+}
+.withdrawalPage .main .info .balance.data-v-d5d8fb2e {
+        margin-top: 50rpx;
+}
+.withdrawalPage .main .info .balance .label.data-v-d5d8fb2e {
+          margin-bottom: 20rpx;
+}
+.withdrawalPage .main .info .balance .num.data-v-d5d8fb2e {
+          font-size: 36rpx;
+          margin-left: 40rpx;
+          font-weight: bold;
+}
+.withdrawalPage .main .info .other.data-v-d5d8fb2e {
+        margin-top: 30rpx;
+}
+.withdrawalPage .main .info .other > view.data-v-d5d8fb2e {
+          text-align: right;
+}
+.withdrawalPage .main .info .other > view text.data-v-d5d8fb2e {
+            display: inline-block;
+            width: 50%;
+            text-align: left;
+            border-radius: 4rpx;
+            background-color: rgba(0, 0, 0, 0.3);
+}
+.withdrawalPage .main .info .other .total.data-v-d5d8fb2e {
+          margin-bottom: 10rpx;
+}
+.withdrawalPage .main .withdrawalMoneys.data-v-d5d8fb2e {
+      margin-top: 20rpx;
+      padding: 20rpx;
+      background-color: #fff;
+}
+.withdrawalPage .main .withdrawalMoneys .types > button.data-v-d5d8fb2e {
+        font-size: 28rpx;
+        height: 80rpx;
+        color: #B4C386;
+}
+.withdrawalPage .main .withdrawalMoneys .types > button.active.data-v-d5d8fb2e {
+          color: #fff;
+          background-color: #B4C386;
+}
+.withdrawalPage .main .withdrawalMoneys .types .meddle.data-v-d5d8fb2e {
+        margin: 0 20rpx;
+}
+.withdrawalPage .main .withdrawalTypes.data-v-d5d8fb2e {
+      margin-top: 20rpx;
+      padding: 20rpx;
+      background-color: #fff;
+}
+.withdrawalPage .main .withdrawalTypes .withdrawalItem.data-v-d5d8fb2e {
+        margin-bottom: 4rpx;
+}
+.withdrawalPage .main .withdrawalTypes .withdrawalItem.data-v-d5d8fb2e:last-child {
+          margin-bottom: 0;
+}
+.withdrawalPage .main .withdrawalTypes .withdrawalItem .wrap.data-v-d5d8fb2e {
+          padding: 0 10rpx;
+          margin-right: 20rpx;
+          background-color: #eee;
+}
+.withdrawalPage .main .withdrawalTypes .withdrawalItem .wrap image.data-v-d5d8fb2e {
+            width: 70rpx;
+            height: 70rpx;
+            margin-right: 20rpx;
+}
+.withdrawalPage .main .withdrawalTypes .withdrawalItem .wrap .label image.data-v-d5d8fb2e {
+            margin-left: 4rpx;
+}
+.withdrawalPage .main .withdrawalTypes .withdrawalItem .wrap.data-v-d5d8fb2e .uni-radio-input {
+            width: 36rpx;
+            height: 36rpx;
+}
+.withdrawalPage .main .withdrawalTypes .withdrawalItem .wrap.data-v-d5d8fb2e .uni-radio-input.uni-radio-input-checked {
+              background-color: #B4C386 !important;
+              border-color: #B4C386 !important;
+}
+.withdrawalPage .main .withdrawalTypes .withdrawalItem .wrap.data-v-d5d8fb2e .uni-radio-input.uni-radio-input-checked::before {
+                font-size: 32rpx;
+}
+.withdrawalPage .main .withdrawalTypes .withdrawalItem button.data-v-d5d8fb2e {
+          width: 170rpx;
+          height: 80rpx;
+          color: #fff;
+          font-size: 26rpx;
+          background-color: #B4C386;
+}
+.withdrawalPage .main .tip.data-v-d5d8fb2e {
+      margin-top: 20rpx;
+      padding: 20rpx;
+      background-color: #fff;
+}
+.withdrawalPage .main .tip .item.data-v-d5d8fb2e {
+        color: #999999;
+        margin-bottom: 10rpx;
+}
+.withdrawalPage .main .tip .item.data-v-d5d8fb2e:last-child {
+          margin-bottom: 0;
+}
+.withdrawalPage .main .tip .item .dot.data-v-d5d8fb2e {
+          display: inline-block;
+          width: 16rpx;
+          height: 16rpx;
+          border-radius: 50%;
+          margin-right: 14rpx;
+          background-color: #eee;
+}
+.withdrawalPage .main .btnBox.data-v-d5d8fb2e {
+      padding: 40rpx;
+}
+.withdrawalPage .main .btnBox button.data-v-d5d8fb2e {
+        width: 100%;
+        height: 100rpx;
+        color: #fff;
+        font-size: 34rpx;
+        background-color: #B4C386;
+}
+

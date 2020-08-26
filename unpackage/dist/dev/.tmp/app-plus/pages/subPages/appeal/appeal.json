@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "申诉",
+  "bounce": "none",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "appeal-upload": "/components/appeal-upload/appeal-upload"
+  }
+}

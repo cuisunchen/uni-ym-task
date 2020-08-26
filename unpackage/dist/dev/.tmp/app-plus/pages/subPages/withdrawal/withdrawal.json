@@ -1,0 +1,15 @@
+{
+  "navigationBarTitleText": "提现",
+  "bounce": "vertical",
+  "titleNView": {
+    "backgroundColor": "#2C405A",
+    "buttons": [
+      {
+        "text": "记录",
+        "fontSize": "14",
+        "width": "70px"
+      }
+    ]
+  },
+  "usingComponents": {}
+}

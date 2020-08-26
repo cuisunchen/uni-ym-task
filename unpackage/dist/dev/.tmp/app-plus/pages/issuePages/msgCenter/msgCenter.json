@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "商户消息",
+  "bounce": "none",
+  "titleNView": {
+    "backgroundColor": "#2C405A"
+  },
+  "usingComponents": {
+    "msg-card": "/components/message-card/message-card",
+    "ygc-refresh": "/components/ygc-refresh/ygc-refresh",
+    "uni-load-more": "/components/uni-load-more/uni-load-more"
+  }
+}

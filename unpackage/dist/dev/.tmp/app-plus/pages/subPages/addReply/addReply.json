@@ -1,0 +1,15 @@
+{
+  "navigationBarTitleText": "问题回复",
+  "bounce": "vertical",
+  "titleNView": {
+    "backgroundColor": "#2C405A",
+    "buttons": [
+      {
+        "text": "追加回复",
+        "fontSize": "14",
+        "width": "90px"
+      }
+    ]
+  },
+  "usingComponents": {}
+}
