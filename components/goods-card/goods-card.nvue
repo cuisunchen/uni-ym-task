@@ -1,0 +1,136 @@
+<template>
+	<view class="goodsCard row">
+		<view class="leftBox">
+			<image class="img" src="../../../static/pic1.jpeg" mode=""></image>
+		</view>
+		<view class="rightBox flex1 flex-column flex-between"> 
+			<text class="title">自然堂安贫面膜10片烟洗按细致提亮补水保湿海藻修护女官网旗舰店全品商品任选</text>
+			
+			<view class="tags row">
+				<view class="tag row all-center">
+					<text class="moneyIcon">￥</text>
+					<text class="tagTxt">红包奖励</text>
+				</view>
+				<view class="tag row all-center">
+					<text class="tagTxt">包邮</text>
+				</view>
+				<view class="tag row all-center">
+					<text class="tagTxt">正品保证</text>
+				</view>
+			</view>
+			
+			<view class="moneyBox row align-center">
+				<text class="money">￥ 59.9</text>
+				<text class="status flex all-center">0/2</text>
+			</view>
+			
+			<view class="info row">
+				<view class="left flex1 flex-column flex-between">
+					<text class="tit">2人拼团,1人拼中</text>
+					<view class="desc row"><text class="descLabel">2未拼中立得</text><text class="descMoney">12.00元</text></view>
+				</view>
+				<view class="right row all-center">
+					<uni-icons class="icon" type="pulldown" color='#ff0000'></uni-icons>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		
+	}
+</script>
+
+<style scoped>
+.goodsCard{
+	padding: 20rpx 0;
+	border-bottom-width: 1rpx;
+	border-style: solid;
+	border-color: #f6f6f6;
+}
+.leftBox{
+	width: 270rpx;
+	height: 270rpx;
+	border-radius: 10rpx;
+	overflow: hidden;
+	background-color: #000000;
+}
+.img{
+	width: 270rpx;
+	height: 270rpx;
+	border-radius: 10rpx;
+}
+.rightBox{
+	margin-left: 16rpx;
+}
+.title{
+	font-size: 30rpx;
+	line-height: 40rpx;
+	color: #666666;
+	overflow:hidden;  
+	text-overflow:ellipsis;  
+	lines: 2; 
+}
+.tag{
+	height: 40rpx;
+	border-radius: 4rpx;
+	padding: 6rpx;
+	margin-right: 16rpx;
+	background-color: #ffe3df;
+}
+.moneyIcon{
+	color: #fff;
+	font-size: 24rpx;
+	width: 30rpx;
+	height: 30rpx;
+	background-color: #FF0000;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 30rpx;
+}
+.tagTxt{
+	color: #ff0000;
+	font-size: 24rpx; 
+	line-height: 30rpx;
+	margin-left: 10rpx;
+}
+.money{
+	color: #000;
+	font-size: 32rpx;
+	margin-right: 16rpx;
+	font-weight: bold;
+}
+.status{
+	height: 30rpx;
+	color: #ff0000;
+	padding: 0 10rpx;
+	font-size: 24rpx;  
+	border-radius: 15rpx;
+	background-color: #ffe3df;
+}
+.info{
+	padding: 0 16rpx;
+	border-radius: 4rpx;
+	background-color: #ffe3df;
+}
+.left{
+	padding: 10rpx 0;
+}
+.tit{
+	font-size: 24rpx;
+}
+.descLabel{
+	font-size: 28rpx;
+}
+.descMoney{
+	color: #ff0000;
+	font-size: 28rpx;
+}
+.icon{
+	width: 30rpx;
+	height: 30rpx;
+	transform: rotate(-90deg);
+}
+</style>

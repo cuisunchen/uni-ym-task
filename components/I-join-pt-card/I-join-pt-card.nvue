@@ -1,0 +1,157 @@
+<template>
+	<div class="IjoinPTcard">
+		<view class="cardTitle row align-center flex-end">
+			<text class="cardTitleTxt">拼团奖励:</text>
+			<text class="cardTitMoney" :class="{blueFont:!dataObj.ischecked}">+{{dataObj.reward}}元</text>
+			<image class="cardHB" src="../../../static/hb.png" mode=""></image>
+		</view>
+		<view class="main">
+			<view class="goodsInfo row">
+				<view class="goodsImg flex-shrink">
+					<image class="img" src="../../../static/pic1.jpeg" mode=""></image>
+				</view>
+				<view class="content flex1 flex-column flex-between">
+					<text class="title">{{dataObj.title}}</text>
+					<view class="status row align-center flex-end">
+						<text class="statusTxt" v-if="dataObj.ischecked">未拼中,预付款已退回</text>
+						<text class="statusTxt blueFont"v-else>拼中了,请及时查收,12小时内可取消发货</text>
+					</view>
+				</view>
+			</view>  
+			<view class="handleBox row align-center flex-between">
+				<view class="btn flex all-center" :class="{blueBg:!dataObj.ischecked}">
+					<text class="btntxt">再拼一单</text>
+				</view>
+				<view class="leftBox row align-center">
+					<text class="label">合计:</text> 
+					<text class="unit" :class="{blueFont:!dataObj.ischecked}">￥</text>
+					<text class="money" :class="{blueFont:!dataObj.ischecked}">{{dataObj.total}}</text>
+				</view>
+			</view>
+		</view>
+	</div>
+</template>
+
+<script>
+	export default {
+		props:{
+			dataObj:{
+				type: Object,
+				default(){
+					return {}
+				}
+			}
+		},
+		data(){
+			return{
+			}
+		},
+	}
+</script>
+
+<style scoped>
+.IjoinPTcard{
+	background-color: #fff;
+}
+.cardTitle{
+	height: 80rpx;
+	padding: 0 20rpx;
+}
+.cardTitleTxt{
+	font-size: 28rpx;
+}
+.cardTitMoney{
+	color: #ff0000;
+	font-size: 28rpx;
+	margin: 0 6rpx;
+}
+.blueFont{
+	color: #73bf93;
+}
+.cardHB{
+	width: 40rpx;
+	height: 40rpx;
+}
+.main{
+	padding: 0 20rpx;
+}
+.goodsInfo{
+	margin-right: 16rpx;
+	padding: 20rpx 0;
+	border-bottom-width: 1rpx;
+	border-top-width: 1rpx;
+	border-style: solid;
+	border-color: #f6f6f6;
+}
+.goodsImg{
+	width: 140rpx;
+	height: 140rpx;
+	border-radius: 10rpx;
+	overflow: hidden;
+}
+.img{
+	width: 100%;
+	height: 100%;
+	border-radius: 10rpx;
+}
+.content{
+	margin-left: 20rpx;
+}
+.statusTxt{
+	color: #ff0000;
+	font-size: 26rpx;
+}
+.title{
+	font-size: 28rpx;
+	line-height: 40rpx;
+	overflow:hidden;  
+	text-overflow:ellipsis;  
+	lines: 2; 
+}
+.nums{
+	font-size: 26rpx;
+	color: #999;
+}
+.handleBox{
+	height: 90rpx;
+}
+.leftBox{
+	color: #7a797b;
+}
+.label{
+	color: #000;
+	font-size: 24rpx;
+	margin-right: 10rpx;
+}
+.btn{
+	width: 160rpx;
+	height: 60rpx;
+	border-radius: 8rpx;
+	background-color: #ff0000;
+}
+.btntxt{
+	color: #fff;
+	font-size: 29rpx;
+}
+.mini-btn{
+	color: #fff;
+	width: 150rpx;
+	height: 60rpx;
+	font-size: 30rpx;
+	background-color: #ff0000;
+	border-color: #ff0000;
+}
+.blueBg{
+	background-color: #73bf93;
+	border-color: #73bf93;
+}
+.unit{
+	margin-right: 2rpx;
+	margin-top: 5rpx;
+}
+.money,.unit{
+	color: #ff0000;
+	font-size: 28rpx;
+}
+
+</style>

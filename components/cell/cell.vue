@@ -1,7 +1,7 @@
 <template>
 	<view class="cellWrap flex" :style="{backgroundColor: bgColor,'borderBottomColor':borderBottomColor}" @click="itemClick">
 		<view class="ltBox flex all-center">
-			<image :src="iconPath" mode=""></image>
+			<image class="userImg" :src="iconPath" mode=""></image>
 		</view>
 		<view class="cterBox flex1 flex align-center">
 			<view class="title">{{title}}</view>
@@ -9,7 +9,7 @@
 		</view>
 		<view class="rtBox flex align-center">
 			<uni-icons v-if="isIconShow" type="arrowright" color="#999" size="18"></uni-icons>
-			<text v-if="!isIconShow && rightText.length > 0">{{rightText}}</text>
+			<text class="des" v-if="!isIconShow && rightText.length > 0">{{rightText}}</text>
 		</view>
 	</view>
 </template>
@@ -107,28 +107,31 @@
 	border-right: none;
 	/* #endif */
 	padding: 5rpx 0;
+}
 	.ltBox{
 		width: 110rpx;
 		height: 110rpx;
-		image{
-			width: 60rpx;
-			height: 60rpx;
-		}
+	}
+	.userImg{
+		width: 60rpx;
+		height: 60rpx;
 	}
 	.cterBox{
-		.title{
-			font-size: 30rpx;
-		}
-		.desc{
-			margin-left: 10rpx;
-		}
+		
+	}
+	.title{
+		font-size: 30rpx;
+	}
+	.desc{
+		margin-left: 10rpx;
 	}
 	.rtBox{
 		padding-right: 30rpx;
-		text{
-			color: #51a3f0;
-			font-weight: bold;
-		}
+		
 	}
-}
+	.des{
+		color: #51a3f0;
+		font-weight: bold;
+	}
+
 </style>

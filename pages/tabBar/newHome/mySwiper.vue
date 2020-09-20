@@ -35,7 +35,7 @@
 			}
 		},
 		created() {
-			// console.log(this.bannerList)
+			console.log(this.bannerList)
 		},
 		methods:{
 			swiperChange (e) {

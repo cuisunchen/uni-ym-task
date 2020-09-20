@@ -85,3 +85,13 @@ button{
 	font-size: 28rpx;
 }
 /* #endif */
+
+.fresh{
+	width: 750rpx;
+	height: 80rpx;
+}
+.freshTit{
+	color: #999;
+	font-size: 32rpx;
+	margin-left: 30rpx;
+}

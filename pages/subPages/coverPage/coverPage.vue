@@ -60,7 +60,7 @@
 						 this.showTimer = false
 						 this.timer = null
 						 uni.reLaunch({
-								url:'../../tabBar/newHome/newHome'
+								url:'../../tabBar/goodsHome/goodsHome'
 						 })
 						 clearInterval(this.timer)
 					}
@@ -68,7 +68,7 @@
 			},
 			goHome(){
 				uni.reLaunch({
-					url:'../../tabBar/newHome/newHome'
+					url:'../../tabBar/goodsHome/goodsHome'
 				})
 			},
 			goDetail(){
@@ -105,7 +105,7 @@
 						})
 					}else{
 						uni.navigateTo({
-							url:'../../tabBar/newHome/newHome'
+							url:'../../tabBar/goodsHome/goodsHome'
 						})
 					}
 				})

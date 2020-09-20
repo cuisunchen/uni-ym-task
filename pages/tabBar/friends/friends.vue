@@ -1,6 +1,6 @@
 <template>
 	<view class="friendEarnPage page flex-column">
-		<view class="top">
+		<view class="top flex-shrink">
 			<view class="friendsNum">您邀请到{{myInfo.friend}}位好友</view>
 			<view class="profitBox flex align-center">
 				<uni-tag :text="myInfo.le" size="small" type="error"></uni-tag>

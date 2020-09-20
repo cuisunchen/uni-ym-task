@@ -3,6 +3,11 @@ import App from './App'
 import store from './store/index.js'
 import {request,uploadRequest} from './common/utils/request.js'
 import {showToast,navigateTo} from 'common/utils/tools.js'
+import MescrollBody from "@/components/mescroll-uni/mescroll-body.vue"
+Vue.component('mescroll-body', MescrollBody)
+
+import uView from "uview-ui";
+Vue.use(uView);
 
 import G_show_modal from '@/components/G_show_modal/g_show_modal.js'
 Vue.use(G_show_modal)

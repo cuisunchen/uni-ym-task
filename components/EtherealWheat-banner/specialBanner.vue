@@ -1,6 +1,6 @@
 <template>
   <div class="banner-container">
-    <swiper :style="{width: '100vw',height: '360rpx'}" :class="{smallMargin: bannerList.length < 3 }"
+    <swiper class="uswiper" :class="{smallMargin: bannerList.length < 3 }"
       :indicator-dots="swiperConfig.indicatorDots" 
       :indicator-color="swiperConfig.indicatorColor" 
       :indicator-active-color="swiperConfig.indicatorActiveColor"
@@ -12,13 +12,13 @@
       :next-margin="swiperConfig.nextMargin"
       @change="swiperChange" 
       @animationfinish="animationfinish">
-      <swiper-item v-for="(item, i) in bannerList" :key="i">
+      <swiper-item class="swiper-item" v-for="(item, i) in bannerList" :key="i">
 		<!-- 1.当前展示为第1项时，bannerList最后一项和第二项的justifyContent值分别为flex-end和flex-start，其余项值为center -->
 		<!-- 2.当前展示为最后一项时，bannerList倒数第2项和第1项的justifyContent值分别为flex-end和flex-start，其余项值为center -->
 		<!-- 3.当前展示为其他项（非第1和最后1项）时，bannerList当前项的前1项和后1项的justifyContent值分别为flex-end和flex-start，其余项值为center -->
 		<!-- 4.padding值也需要根据不同项设定不同值，但理同justifyContent -->
         <div class="image-container" :class="{onlyOne: bannerList.length == 1}" v-if="bannerList.length == 1">
-          <image :src="item.picture" 
+				 <image :src="item.picture" 
             class="slide-image"  mode="aspectFill"
             :style="{
               transform: curIndex===i?'scale(' + scaleX + ',' + scaleY + ')':'scale(1,1)',
@@ -120,13 +120,16 @@ export default {
 <style lang="scss" scoped>
 .banner-container {
 	width: 100vw;
+	.uswiper{
+		width: 100vw;
+		height: 360rpx
+	}
 	.smallMargin{
 		/deep/ .uni-swiper-slides{
-			left: 14px!important;
-			right: 14px!important;
+			left: 20rpx!important;
+			right: 20rpx!important;
 		}
 	}
-	
 	.image-container {
 		box-sizing: border-box;
 		width: 100%;

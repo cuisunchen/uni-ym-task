@@ -1,0 +1,155 @@
+<template>
+	<view class="myPinTuan flex1 flex-column">
+		<header class="tabs row align-center">
+			<text class="tab" :class="{active:tabIndex == index}" :id="tab.id" v-for="(tab,index) in tabList" :key="index" @click="tabChange(index,tab.id)">{{tab.name}}</text>
+			<view class="underLine" :style="{width:lineWidth + 'px' ,left: lineLeft + 'px'}"></view>
+		</header>
+		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false">
+			<swiper-item class="swiperItem flex1 flex-column">
+				<list class="lists flex1">
+					<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="showLoading">
+						<loading-indicator></loading-indicator>
+						<text class="freshTit">加载中 ...</text>
+					</refresh>
+					<cell v-for="(item,index) in joinList" :key="index" class="cell">
+						<ijoin-pt-card class="card" :data-obj="item"></ijoin-pt-card>
+					</cell>
+				</list>
+			</swiper-item>
+			<swiper-item>
+				<list class="lists flex1">
+					<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="showLoading">
+						<loading-indicator></loading-indicator>
+						<text class="freshTit">加载中 ...</text>
+					</refresh>
+					<cell v-for="i in 20" class="cell">
+						<pt-ing class="card"></pt-ing>
+					</cell>
+				</list>
+			</swiper-item>
+		</swiper>
+	</view>
+</template>
+
+<script>
+	import IjoinPtCard from '@/components/I-join-pt-card/I-join-pt-card.nvue'
+	import ptIng from '@/components/pt-ing/ptIng.nvue'
+	export default {
+		components:{IjoinPtCard,ptIng},
+		data() {
+			return {
+				tabList: [
+					{
+						name:'我参与的',
+						id:'tab0'
+					},
+					{
+						name:'我拼团中',
+						id:'tab1'
+					}
+				],
+				current: 0,
+				showLoading:'false',
+				lineLeft: '0',
+				tabIndex: 0,
+				joinList:[
+					{
+						reward: 12.00,
+						title:'卡号等gas大立科技乐山大佛IG就',
+						ischecked: true,
+						total: 128.00
+					},
+					{
+						reward: 6.00,
+						title:'即皇帝位IE喝点水发生',
+						ischecked: false,
+						total: 98.00
+					},
+					{
+						reward: 8.00,
+						title:'空间和科技行阿斯蒂芬',
+						ischecked: false,
+						total: 78.00
+					},
+				]
+			}
+		},
+		onLoad(opt) {
+			this.tabIndex = opt.type
+			this.$nextTick(() => {
+				let theNode=uni.createSelectorQuery().select(`#tab${opt.type}`)
+				theNode.boundingClientRect((data)=>{
+					this.lineLeft = data.left + 10
+					this.lineWidth = data.width - 20
+				}).exec()
+			})
+		},
+		methods: {
+			onrefresh(){
+				 this.showLoading = 'show'
+					setTimeout(res=>{
+							// 模拟网路请求
+							this.num=4;
+							this.showLoading = 'hide'
+					},2000)
+			},
+			onpullingdown(e){
+				// console.log(e)
+			},
+			tabChange(index,id){
+				this.tabIndex = index
+				let theNode=uni.createSelectorQuery().select(`#${id}`)
+				    theNode.boundingClientRect((data)=>{
+				          console.log(data)
+									this.lineLeft = data.left + 10
+				    }).exec()
+			},
+			change(index) {
+				this.current = index;
+			}
+		}
+	}
+</script>
+
+<style scoped>
+.tabs{
+	height: 80rpx;
+	padding: 0 20rpx;
+	background-color: #fff;
+	position: relative;
+}
+.tab{
+	color: #666;
+	font-size: 28rpx;
+	padding: 0 10px;
+}
+.active{
+	color: #000;
+}
+.underLine{
+	width: 100rpx;
+	height: 2rpx;
+	background-color: #000;
+	position: absolute;
+	left: 20rpx;
+	bottom: 0;
+	transition-property: left;
+	transition-duration:.3s;
+	transition-timing-function:ease
+}
+.fresh{
+	width: 750rpx;
+	height: 80rpx;
+}
+.freshTit{
+	color: #999;
+	font-size: 32rpx;
+	margin-left: 30rpx;
+}
+.lists{
+	width: 750rpx;
+}
+.card{
+	margin-top: 20rpx;
+}
+</style>

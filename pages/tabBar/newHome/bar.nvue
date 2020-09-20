@@ -1,5 +1,5 @@
 <template>
-	<div class="bar">
+	<div class="bar flex">
 		<div class="item flex1 flex-column align-center" v-for="(item,index) in barList" @click="itemClick(item,index)">
 			<image class="img" :src="item.img" mode=""></image>
 			<text class="title">{{item.title}}</text>
@@ -12,7 +12,8 @@
 		props:{
 			barList: {
 				type: Array,
-				default:[
+				default(){
+					return [
 					{
 						img:'../../../static/biaoqing.png',
 						title:'任务分类'
@@ -30,6 +31,7 @@
 						title:'发布任务'
 					}
 				]
+				}
 			}
 		},
 		data(){

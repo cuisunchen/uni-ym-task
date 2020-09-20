@@ -9,7 +9,7 @@
 				</label>
 			</view>
 		</view>
-		<p class="title">{{item.name}}</p>
+		<view class="title">{{item.name}}</view>
 	</view>
 </template>
 

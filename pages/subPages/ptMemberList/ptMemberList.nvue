@@ -1,0 +1,116 @@
+<template>
+	<view class="ptMemberList flex-column flex1">
+		<view class="pageTitle row">
+			<image class="titBg flex1" src="../../../static/bg02@2x.jpg" mode=""></image>
+			<view class="memberCount row align-center">
+				<text class="memberlabel">当前拼团人数: 1 人</text>
+			</view>
+		</view>
+		
+		<list class="lists flex1">
+			<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="showLoading">
+				<loading-indicator></loading-indicator>
+				<text class="freshTit">加载中 ...</text>
+			</refresh>
+			<cell v-for="i in 30">
+				<view class="callBox row align-center">
+					<view class="userImgBox">
+						<image class="userImg" src="../../../static/pic1.jpeg" mode="aspectFill"></image>
+					</view>
+					<view class="con flex1 flex-column flex-between">
+						<view class="info row flex-between align-center">
+							<text class="tel">137****0372</text>
+							<text class="date">2020-09-07</text>
+						</view>
+						<view class="idNum">
+							<text class="idNumCon">拼团编号: pt001</text>
+						</view>
+					</view>
+				</view>
+			</cell>
+		</list>
+	</view>
+</template>
+
+<script>
+	export default {
+		data() {
+			return {
+				showLoading:'false',
+			}
+		},
+		methods:{
+			onrefresh(){
+				 this.showLoading = 'show'
+					setTimeout(res=>{
+							// 模拟网路请求
+							this.num=4;
+							this.showLoading = 'hide'
+					},2000)
+			},
+			onpullingdown(e){
+				// console.log(e)
+			},
+		}
+	}
+</script>
+
+<style scoped>
+	
+.pageTitle{
+	color: #fff;
+	height: 90rpx;
+	position: relative;
+}
+.titBg{
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+}
+.memberCount{
+	width: 750upx;
+	height: 90rpx;
+	padding: 0 30rpx;
+}
+.memberlabel{
+	color: #fff;
+	font-size: 28rpx;
+}
+.callBox{
+	margin-bottom: 1rpx;
+	padding: 20rpx 30rpx;
+	background-color: #fff;
+}
+.userImg, .userImgBox{
+	width: 120rpx;
+	height: 120rpx;
+	border-radius: 10rpx;
+}
+.con{
+	height: 120rpx;
+	margin-left: 20rpx;
+}
+.info{
+	height: 66rpx;
+	/* background-color: #0000FF; */
+}
+.tel{
+	color: #333;
+	font-size: 30rpx;
+}
+.date{
+	color: #999;
+	font-size: 24rpx;
+}
+.idNum{
+	color: #fff;
+	height: 44rpx;
+	line-height: 20rpx;
+}
+.idNumCon{
+	color: #999;
+	font-size: 26rpx;
+}
+</style>

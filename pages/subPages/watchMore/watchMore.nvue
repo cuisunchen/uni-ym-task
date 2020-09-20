@@ -1,0 +1,137 @@
+<template>
+	<view class="watchMore flex1 flex-column">
+		<header class="tabs row align-center">
+			<text class="tab flex1 row all-center" :class="{active:tabIndex == index}" :id="tab.id" v-for="(tab,index) in tabList" :key="index" @click="tabChange(index,tab.id)">{{tab.name}}</text>
+			<view class="underLine" :style="{width:lineWidth + 'px' ,left: lineLeft + 'px'}"></view>
+		</header>
+		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false">
+			<swiper-item class="swiperItem flex1 flex-column" v-for="(tab,index) in tabList" :key="index">
+				<list class="lists flex1">
+					<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="showLoading">
+						<loading-indicator></loading-indicator>
+						<text class="freshTit">加载中 ...</text>
+					</refresh>
+					<cell v-for="i in 30" class="cell">
+						<!-- <my-order-card class="card"></my-order-card> -->
+						<goods-card></goods-card>
+					</cell>
+				</list>
+			</swiper-item>
+		</swiper>
+	</view>
+</template>
+
+<script>
+	import myOrderCard from '@/components/myOrder-card/myOrder-card.nvue'
+	import goodsCard from '@/components/goods-card/goods-card.nvue'
+	export default {
+		components:{myOrderCard,goodsCard},
+		data() {
+			return {
+				tabList: [
+					{
+						name:'2人拼团',
+						id:'tab0'
+					},
+					{
+						name:'10人拼团',
+						id:'tab1'
+					},
+					{
+						name:'50人拼团',
+						id:'tab2'
+					},
+					{
+						name:'100人拼团',
+						id:'tab3'
+					}
+				],
+				current: 0,
+				showLoading:'false',
+				lineLeft: '0',
+				tabIndex: 0
+			}
+		},
+		onLoad(opt) {
+			this.tabIndex = opt.type
+			this.$nextTick(() => {
+				let theNode=uni.createSelectorQuery().select(`#tab${opt.type}`)
+				theNode.boundingClientRect((data)=>{
+					this.lineLeft = data.left + 10
+					this.lineWidth = data.width - 20
+				}).exec()
+			})
+		},
+		methods: {
+			onrefresh(){
+			  this.showLoading = 'show'
+				setTimeout(res=>{
+					// 模拟网路请求
+					this.num=4;
+					this.showLoading = 'hide'
+				},2000)
+			},
+			onpullingdown(e){
+				// console.log(e)
+			},
+			tabChange(index,id){
+				this.tabIndex = index
+				let theNode=uni.createSelectorQuery().select(`#${id}`)
+				theNode.boundingClientRect((data)=>{
+					this.lineLeft = data.left + 10
+				}).exec()
+			},
+			change(index) {
+				this.current = index;
+			}
+		}
+	}
+</script>
+
+<style scoped>
+.tabs{
+	height: 80rpx;
+	padding: 0 20rpx;
+	background-color: #fff;
+	position: relative;
+}
+.tab{
+	color: #666;
+	font-size: 28rpx;
+	padding: 0 10px;
+	text-align: center;
+}
+.active{
+	color: #000;
+}
+.underLine{
+	width: 100rpx;
+	height: 2rpx;
+	background-color: #000;
+	position: absolute;
+	left: 20rpx;
+	bottom: 0;
+	transition-property: left;
+	transition-duration:.3s;
+	transition-timing-function:ease
+}
+.fresh{
+	width: 750rpx;
+	height: 80rpx;
+}
+.freshTit{
+	color: #999;
+	font-size: 32rpx;
+	margin-left: 30rpx;
+}
+.lists{
+	width: 750rpx;
+}
+.cell{
+	padding: 0 20rpx;
+	background-color: #fff;
+}
+.card{
+	margin-top: 20rpx;
+}
+</style>

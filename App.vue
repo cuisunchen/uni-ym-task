@@ -38,7 +38,8 @@ export default {
 						},
 						fail: (resq) => {
 							// this.showToast("获取地址失败,请退出重试")
-							uni.showModal({ 
+							// #ifndef H5
+							uni.showModal({
 								title:'提示',
 								showCancel:false,
 								confirmText:'重新获取',
@@ -47,11 +48,13 @@ export default {
 									this.getLocation()
 								},
 							})
+							// #endif
 						}
 					})
 				},
 				fail: (resq) => {
-					uni.showModal({ 
+					// #ifndef H5
+					uni.showModal({
 						title:'提示',
 						showCancel:false,
 						confirmText:'重新获取',
@@ -60,6 +63,7 @@ export default {
 							this.getLocation()
 						},
 					})
+					// #endif
 				}
 			});
 		},
@@ -69,6 +73,9 @@ export default {
 </script>
 
 <style>
+	/* #ifndef APP-NVUE */
+	@import url("uview-ui/index.scss");
+	/* #endif */
 	
 	@import url("./common/public.css");
 /* 解决头条小程序组件内引入字体不生效的问题 */
