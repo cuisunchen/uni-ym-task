@@ -18,23 +18,23 @@
 				</choose-ad-type-card>
 			</view>
 			<view class="wrap flex flex-between">
-				<choose-ad-type-card class="card" type="荐" title="推荐型" desc="低至3元/天" bg-color="crimson" 
-									@click="itemClick('recommend-choose-page','recommend')" 
+				<choose-ad-type-card class="card" type="荐" title="全国推荐" desc="易赚顶部" bg-color="crimson" 
+									@click="itemClick('issueRecommend','recommend-home')" 
 									@btn-click="btnClick('recommend-example-page')">
 				</choose-ad-type-card>
-				<choose-ad-type-card class="card" type="轮" title="轮播型" desc="低于0.01元/人" bg-color="teal" 
-									@click="itemClick('issue-public-page','swiper')"
-									@btn-click="btnClick('swiper-example-page')">
+				<choose-ad-type-card class="card" type="荐" title="全国推荐" desc="问答/好运" bg-color="teal" 
+									@click="itemClick('issueRecommend','recommend-GL1')"
+									@btn-click="btnClick('recommend-example-page')">
 				</choose-ad-type-card>
 			</view>
 			<view class="wrap flex flex-between">
-				<choose-ad-type-card class="card" type="封" title="封面型" desc="低于0.01元/人" bg-color="steelblue" 
-									@click="itemClick('issue-public-page','cover')"
-									@btn-click="btnClick('cover-example-page')">
+				<choose-ad-type-card class="card" type="荐" title="同城推荐" desc="问答/好运" bg-color="steelblue" 
+									@click="itemClick('issueRecommend','recommend-GL2')"
+									@btn-click="btnClick('recommend-example-page')">
 				</choose-ad-type-card>
-				<choose-ad-type-card class="card" type="弹" title="弹框型" desc="低于0.01元/人" bg-color="slateblue" 
-									@click="itemClick('issue-public-page','dialog')"
-									@btn-click="btnClick('dialog-example-page')">
+				<choose-ad-type-card class="card" type="荐" title="附近推荐" desc="问答/好运" bg-color="slateblue" 
+									@click="itemClick('issueRecommend','recommend-GL3')"
+									@btn-click="btnClick('recommend-example-page')">
 				</choose-ad-type-card>
 			</view>
 		</view>
@@ -69,6 +69,9 @@
 			},
 			itemClick(url,type){
 				if(type){
+					uni.navigateTo({
+						url:`../${type}/${type}?type=${type}`
+					})
 					uni.navigateTo({
 						url:`../${url}/${url}?type=${type}`
 					})

@@ -1,10 +1,10 @@
 <template>
-	<view class="goodsCard row">
+	<view class="goodsCard row" @click="itemClick">
 		<view class="leftBox">
-			<image class="img" src="../../../static/pic1.jpeg" mode=""></image>
+			<image class="img" :src="dataObj.icon" mode=""></image>
 		</view>
 		<view class="rightBox flex1 flex-column flex-between"> 
-			<text class="title">自然堂安贫面膜10片烟洗按细致提亮补水保湿海藻修护女官网旗舰店全品商品任选</text>
+			<text class="title">{{dataObj.title}}</text>
 			
 			<view class="tags row">
 				<view class="tag row all-center">
@@ -20,14 +20,14 @@
 			</view>
 			
 			<view class="moneyBox row align-center">
-				<text class="money">￥ 59.9</text>
-				<text class="status flex all-center">0/2</text>
+				<text class="money">￥ {{dataObj.price}}</text>
+				<text class="status flex all-center">{{dataObj.snapUpPeople}}/{{dataObj.snapUpPeopleMax}}</text>
 			</view>
 			
 			<view class="info row">
 				<view class="left flex1 flex-column flex-between">
-					<text class="tit">2人拼团,1人拼中</text>
-					<view class="desc row"><text class="descLabel">2未拼中立得</text><text class="descMoney">12.00元</text></view>
+					<text class="tit">{{dataObj.ruleDes}}</text>
+					<view class="desc row"><text class="descLabel">未拼中立得</text><text class="descMoney">{{dataObj.rebatePrice}}元</text></view>
 				</view>
 				<view class="right row all-center">
 					<uni-icons class="icon" type="pulldown" color='#ff0000'></uni-icons>
@@ -39,7 +39,24 @@
 
 <script>
 	export default {
-		
+		props:{
+			dataObj:{
+				type: Object,
+				default(){
+					return{}
+				}
+			}
+		},
+		watch:{
+			dataObj(val){
+				console.log(val)
+			}
+		},
+		methods:{
+			itemClick(){
+				this.$emit('click')
+			}
+		}
 	}
 </script>
 
@@ -55,7 +72,6 @@
 	height: 270rpx;
 	border-radius: 10rpx;
 	overflow: hidden;
-	background-color: #000000;
 }
 .img{
 	width: 270rpx;
@@ -67,8 +83,8 @@
 }
 .title{
 	font-size: 30rpx;
-	line-height: 40rpx;
-	color: #666666;
+	line-height: 36rpx;
+	color: #000;
 	overflow:hidden;  
 	text-overflow:ellipsis;  
 	lines: 2; 

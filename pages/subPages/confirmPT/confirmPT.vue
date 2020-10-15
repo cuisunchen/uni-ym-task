@@ -5,10 +5,10 @@
 				<image class="addrImg" src="../../../static/dizhi@2x.png" mode=""></image>
 				<view class="con flex-column flex1">
 					<view class="name">
-						<text class="label">收获着姓名</text>
-						<text class="phoneNum">手机号</text>
+						<text class="label">收货者姓名</text>
+						<text class="phoneNum">{{info.tel || '手机号'}}</text>
 					</view>
-					<view class="addr">收货地址</view>
+					<view class="addr">{{info.addr || '地址'}}</view>
 				</view>
 				<u-icon name="arrow-right" size="32" color="#666"></u-icon>
 			</view>
@@ -16,10 +16,10 @@
 			<view class="orderInfo">
 				<view class="goodsInfo flex">
 					<view class="goodsImg flex-shrink">
-						<image class="img" src="../../../static/other/ste@2x.png" mode=""></image>
+						<image class="img" :src="info.goodsImg" mode=""></image>
 					</view>
 					<view class="content flex-column">
-						<view class="title ellipsis_two">自然堂安贫面膜10片烟洗按细致提亮补水保湿海藻修护女官网旗舰店全品商品任选品商品任选</view>
+						<view class="title ellipsis_two">{{info.goodsTitle}}</view>
 						<view class="tags">
 							<u-tag class="tag" text="免运费" color="#ff0000" bg-color="#ffeeec" mode="light" size="mini" border-color="transparent"/>
 							<u-tag class="tag" text="数量: 1" color="#ff0000" bg-color="#ffeeec" mode="light" size="mini" border-color="transparent"/>
@@ -27,17 +27,17 @@
 						</view>
 						<view class="price flex flex-end align-center">
 							<text class="label">单价:</text>
-							<text class="value">0.30元</text>
+							<text class="value">{{info.price}}元</text>
 						</view>
 					</view>
 				</view>
 				<view class="totalPrice flex flex-end align-center">
 					<text class="label">合计:</text>
-					<text class="value">0.30元</text>
+					<text class="value">{{info.price}}元</text>
 				</view>
 				<view class="reward flex flex-end align-center">
 					<text class="label">未拼中奖励:</text>
-					<text class="value">0.20元</text>
+					<text class="value">{{info.failPrice}}元</text>
 					<image class="hb" src="../../../static/hb.png" mode=""></image>
 				</view>
 			</view>
@@ -65,29 +65,15 @@
 					</label>
 				</radio-group>
 			</view>
-			
-			<view class="ptTime">
-				<view class="title flex align-center">
-					<image class="payIcon" src="../../../static/xiaox.png" mode=""></image>
-					<view class="">可拼团时间</view>
-					<view class="desc">- 上一次成团的一分钟后</view>
-				</view>
-				<view class="desc">
-					<view class="line flex">
-						<text class="symbol flex flex-shrink justifu-center">*</text>
-						<text class="txt">上一次拼团成功后,系统将公布拼团结果,统计剩余库存,并在一分钟后重新开始拼团,敬请参与~ ~ ~</text>
-					</view>
-				</view>
-			</view>
 		</view>
 		
 		<view class="payBox flex align-center">
 			<view class="totalMoney flex1 flex align-center flex-end">
 				<text class="label">合计:</text>
 				<text class="symbol">￥</text>
-				<text class="money">0.30</text>
+				<text class="money">{{info.price}}</text>
 			</view>
-			<u-button class="confirmBtn" type="error">确认支付</u-button>
+			<u-button class="confirmBtn" type="error" @click="confirmPay">确认支付</u-button>
 		</view>
 	</view>
 </template>
@@ -101,13 +87,84 @@
 								name: '支付宝支付'
 						}
 				],
-				current: 0
+				current: 0,
+				info:{}
 			}
 		},
+		onShow(){
+			let addr = uni.getStorageSync('addr')
+			if(addr.addr){
+				addr.addr = addr.addr.replace(/-/g,'').replace(/~/,'')
+				this.info = {...this.info,...addr}
+			}
+		},
+		onLoad(opt) {
+			this.info = JSON.parse(opt.param)
+		},
 		methods:{
+			confirmPay(){
+				if(!this.info.addressId){
+					this.showToast('请先选择收货地址')
+					return
+				}
+				let param = {
+					"addressId": this.info.addressId,
+					"attributeValue": this.info.attributeValue,
+					"id": this.info.id
+				}
+				this.$unencryp('/snap/purchase','post',param).then(res => {
+					console.log(res)
+					if(res.code == 200){
+						this.userPayAd(res.data.id)
+					}else{
+						this.showToast(res.msg)
+					}
+				})
+			},
+			userPayAd(id){
+				this.$request('/api/pay/userPayAd','post',{homeAdId: id}).then(res => {
+					if(res.code == 200){
+						uni.requestPayment({
+						    provider: 'alipay',
+						    orderInfo: res.data, //微信、支付宝订单数据
+						    success: (res) => {
+									let rawdata = JSON.parse(res.rawdata)
+									if(rawdata.resultStatus == '9000'){
+										uni.showModal({
+											title:'恭喜您,订单支付成功!',
+											content:'如有疑问,请联系客服',
+											showCancel:false,
+											success: () => {
+												uni.navigateBack({
+													delta:1
+												})
+											}
+										})
+									}else
+									if(rawdata.resultStatus == '8000'){
+										this.showToast('订单处理中,请稍等片刻!')
+									}else
+									if(rawdata.resultStatus == '4000'){
+										this.showToast('订单支付失败')
+									}else
+									if(rawdata.resultStatus == '6002'){
+										this.showToast('网络连接出错')
+									}
+						    },
+						    fail: (err)=> {
+						    	uni.showModal({
+						    		title:'很遗憾,订单支付失败!',
+						    		content:'如有疑问,请联系客服',
+						    		showCancel:false,
+						    	})
+						    }
+						});
+					}
+				})
+			},
 			goAddress(){
 				uni.navigateTo({
-					url:'../addressList/addressList'
+					url:'../addressList/addressList?addressId=' + this.info.addressId
 				})
 			}
 		}

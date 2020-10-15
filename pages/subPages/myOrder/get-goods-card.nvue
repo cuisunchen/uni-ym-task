@@ -1,0 +1,83 @@
+<template>
+	<list class="lists" loadmoreoffset="10" @loadmore="loadMore">
+		<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
+			<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
+			<view class="loadingIco row align-center">
+				<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
+				<text class="freshTit">{{refreshText}}</text>
+			</view>
+		</refresh>
+		<cell v-for="item in lists" class="cell">
+			<my-order-card :data-obj="item" class="card" :has-send="false"></my-order-card>
+		</cell>
+		<cell class="nodata flex1 flex-column all-center" v-if="lists.length == 0">
+			<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
+			<text class="nodatadesc">暂无数据</text>
+		</cell>
+	</list>
+</template>
+
+<script>
+	import myOrderCard from '@/components/myOrder-card/myOrder-card.nvue'
+	export default {
+		components:{myOrderCard},
+		props:{
+			lists:{
+				type: Array,
+				default(){
+					return []
+				}
+			}
+		},
+		data(){
+			return{
+				loadingStatus: true,
+				release:false,
+				refreshText: "下拉可以刷新",
+				loading:false,
+			}
+		},
+		methods:{
+			onrefresh(){
+				if(this.loading){
+						//当正在调用接口获取数据时，此时的下拉不做任何操作
+						return;
+				}
+				this.loading = true;
+				this.refreshing = true
+				this.loadingStatus = false
+				this.refreshText = '加载中 ...'
+				setTimeout(res=>{
+						// 模拟网路请求
+					this.loadingStatus = true
+					this.refreshing = false
+					this.loading = false;
+					this.release = false
+					this.refreshText = '下拉可以刷新'
+				},2000)
+			},
+			onpullingdown(e){
+				if (this.refreshing) return;
+				if(e.pullingDistance >= 150){
+					this.release = true
+					this.refreshText = '释放立即刷新'
+				}else{
+					this.refreshText = '下拉可以刷新'
+					this.release = false
+				}
+			},
+			loadMore(){
+				this.$emit('loadMore')
+			},
+		}
+	}
+</script>
+
+<style scoped>
+.lists{
+	width: 750rpx;
+}
+.card{
+	margin-top: 20rpx;
+}
+</style>

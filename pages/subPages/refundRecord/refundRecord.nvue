@@ -1,0 +1,106 @@
+<template>
+	<view class="refundRecord flex1 flex-column">
+		<list class="lists flex1" loadmoreoffset="10" @loadmore="loadMore">
+			<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="showLoading">
+				<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
+				<view class="loadingIco row align-center">
+					<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
+					<text class="freshTit">{{refreshText}}</text>
+				</view>
+			</refresh>
+			<cell v-for="item in lists" class="cell">
+				<message-card class="card" :data-obj = 'item'></message-card>
+			</cell>
+			<cell class="nodata flex1 flex-column all-center" v-if="lists.length == 0">
+				<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
+				<text class="nodatadesc">暂无数据</text>
+			</cell>
+		</list>
+	</view>
+</template>
+
+<script>
+	import {unencryp} from '../../../common/utils/request.js'
+	import messageCard from '../../../components/message-card/message-card.nvue'
+	export default {
+		components:{
+			messageCard
+		},
+		data() {
+			return {
+				showLoading:'false',
+				loadingStatus: true,
+				release:false,
+				refreshText: "下拉可以刷新",
+				param:{
+					"pageNum": 1,
+					"pageSize": 10
+				},
+				lists:[]
+			}
+		},	
+		mounted() {
+			uni.showLoading({
+				title:'数据加载中...'
+			})
+			this.getLists()
+		},
+		methods: {
+			getLists(type){
+				unencryp('/snap/getMyRefundList','post',this.param).then(res=>{
+					uni.hideLoading()
+					if(type == 'fresh'){
+						setTimeout(()=>{
+							this.showLoading = 'hide'
+							this.loadingStatus = true
+							this.release = false
+							this.refreshText = '下拉可以刷新'
+						},1500)
+					}
+					if(res.code == 200){
+						setTimeout(()=>{
+							if(type && type == 'loadMore'){
+								console.log(res.data.list)
+								this.lists.push(res.data.list)
+							}else{
+								console.log(res.data.list)
+								this.lists = res.data.list
+							}
+						},0)
+					}else{
+						res.msg || uni.showToast(res.msg)
+					}
+				})
+			},
+			onrefresh(){
+				this.param.pageNum = 1
+				this.loadingStatus = false
+				this.showLoading = 'show'
+				this.refreshText = '加载中 ...'
+				this.getLists('fresh')
+			},
+			onpullingdown(e){
+				if(e.pullingDistance >= 150){
+					this.release = true
+					this.refreshText = '释放立即刷新'
+				}else{
+					this.refreshText = '下拉可以刷新'
+					this.release = false
+				}
+			},
+			loadMore(){
+				this.param.pageNum ++ 
+				this.getLists('loadMore')
+			},
+		}
+	}
+</script>
+
+<style scoped>
+.refundRecord{
+	padding-top: 20rpx;
+}
+.card{
+	margin-bottom: 20rpx;
+}
+</style>

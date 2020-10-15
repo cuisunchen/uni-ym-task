@@ -3,16 +3,19 @@
 		<view class="pageTitle row">
 			<image class="titBg flex1" src="../../../static/bg02@2x.jpg" mode=""></image>
 			<view class="memberCount row align-center">
-				<text class="memberlabel">当前拼团人数: 1 人</text>
+				<text class="memberlabel">当前拼团人数: {{lists.length}} 人,还差{{groupType-lists.length}}人成团</text>
 			</view>
 		</view>
 		
 		<list class="lists flex1">
-			<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="showLoading">
-				<loading-indicator></loading-indicator>
-				<text class="freshTit">加载中 ...</text>
+			<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
+				<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
+				<view class="loadingIco row align-center">
+					<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
+					<text class="freshTit">{{refreshText}}</text>
+				</view>
 			</refresh>
-			<cell v-for="i in 30">
+			<cell v-for="item in lists">
 				<view class="callBox row align-center">
 					<view class="userImgBox">
 						<image class="userImg" src="../../../static/pic1.jpeg" mode="aspectFill"></image>
@@ -28,28 +31,71 @@
 					</view>
 				</view>
 			</cell>
+			
+			<cell class="nodata flex1 flex-column all-center" v-if="lists.length == 0">
+				<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
+				<text class="nodatadesc">亲,这里还是空空如也哦~~~</text>
+			</cell>
 		</list>
 	</view>
 </template>
 
 <script>
+	import {unencryp} from '../../../common/utils/request.js'
 	export default {
 		data() {
 			return {
-				showLoading:'false',
+				loadingStatus: true,
+				release:false,
+				refreshText: "下拉可以刷新",
+				loading:false,
+				lists:[],
+				groupType:''
 			}
 		},
+		onLoad(opt) {
+			this.lists = opt.lists
+			this.groupType = Number(opt.groupType)
+			// this.getLists()
+		},
 		methods:{
+			getLists(){
+				unencryp('/snap/getSnapUpPlays','post',{id:this.id}).then(res => {
+					console.log(res)
+					if(res.code == 200){
+						
+					}else{
+						
+					}
+				})
+			},
 			onrefresh(){
-				 this.showLoading = 'show'
-					setTimeout(res=>{
-							// 模拟网路请求
-							this.num=4;
-							this.showLoading = 'hide'
-					},2000)
+				if(this.loading){
+						//当正在调用接口获取数据时，此时的下拉不做任何操作
+						return;
+				}
+				this.loading = true;
+				this.refreshing = true
+				this.loadingStatus = false
+				this.refreshText = '加载中 ...'
+				setTimeout(res=>{
+						// 模拟网路请求
+					this.loadingStatus = true
+					this.refreshing = false
+					this.loading = false;
+					this.release = false
+					this.refreshText = '下拉可以刷新'
+				},2000)
 			},
 			onpullingdown(e){
-				// console.log(e)
+				if (this.refreshing) return;
+				if(e.pullingDistance >= 150){
+					this.release = true
+					this.refreshText = '释放立即刷新'
+				}else{
+					this.refreshText = '下拉可以刷新'
+					this.release = false
+				}
 			},
 		}
 	}

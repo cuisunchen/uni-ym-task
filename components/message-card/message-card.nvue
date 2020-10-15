@@ -1,0 +1,77 @@
+<template>
+	<view class="messageCard">
+		<view class="con flex-column flex-between">
+			 <view class="line1 row flex-between align-center">
+					<view class="money row align-center">
+						<text class="status">已退款</text>
+						<text class="price">{{dataObj.price}}</text>
+						<text class="unit">元</text>
+					</view>
+					<text class="time">{{dataObj.refundTime}}</text>
+			 </view>
+			 <text class="line2 row flex-between">已退到账户余额(我的-提现)中,可随时提现</text>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		props:{
+			dataObj:{
+				type: Object,
+				default(){
+					return {}
+				}
+			}
+		},
+	}
+</script>
+
+<style scoped>
+.messageCard{
+	padding: 20rpx;
+	background-color: #fff;
+}
+.sign{
+	color: #fff;
+	width: 76rpx;
+	height: 76rpx;
+	margin-right: 16rpx;
+	border-radius: 10rpx;
+	background-color: rgb(221, 197, 168);
+}
+.line1{
+	margin-bottom: 20rpx;
+}
+.money{
+	font-size: 28rpx;
+	color: #666;
+}
+.status{
+	color: #fff;
+	font-size: 24rpx;
+	line-height: 20rpx;
+	margin-right: 14rpx;
+	padding: 6rpx;
+	border-radius: 6rpx;
+	background-color: #50A839;
+}
+.price{
+	color: #50A839;
+	font-size: 34rpx;
+}
+.unit{
+	color: #50A839;
+	font-size: 28rpx;
+	line-height: 26rpx;
+	margin-left: 6rpx;
+}
+.time{
+	color: #999;
+	font-size: 26rpx;
+}
+.line2{
+	 color: #333;
+	 font-size: 28rpx;
+}
+</style>

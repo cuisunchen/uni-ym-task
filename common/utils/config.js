@@ -5,8 +5,9 @@ if(process.env.NODE_ENV === 'development'){
     baseUrl = 'https://test.guangyi009.com'
 		// baseUrl = 'https://www.guangyi009.com'
 }else{
+	baseUrl = 'https://test.guangyi009.com'
     // 生产环境
-    baseUrl = 'https://www.guangyi009.com'
+    // baseUrl = 'https://www.guangyi009.com'
 }
 
 export default baseUrl

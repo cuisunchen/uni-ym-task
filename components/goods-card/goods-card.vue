@@ -57,7 +57,7 @@
 			// #ifdef H5
 			this.item=this.dataObj
 			// #endif
-		},
+		}, 
 		methods:{
 			itemClick(){
 				this.$emit('click')
@@ -69,9 +69,11 @@
 <style lang="scss" scoped>
 	.goodsCard{
 		padding: 20rpx 0;
-		border-bottom-width: 1rpx;
-		border-style: solid;
-		border-color: #f6f6f6;
+		/* #ifndef APP-NVUE */
+		display: flex;
+		border-bottom: 1rpx solid #f6f6f6;
+		/* #endif */
+		
 	}
 	.leftBox{
 		width: 270rpx;

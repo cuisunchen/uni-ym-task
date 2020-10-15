@@ -20,15 +20,15 @@
 				<view class="questionEarn flex">
 					<view class="index flex all-center">2</view>
 					<view class="main flex-column flex-between">
-						<view class="text">问答收益</view>
-						<view class="num">+ {{info.qa}}</view>
+						<view class="text">拼团收益</view>
+						<view class="num">+ {{info.snapUp}}</view>
 					</view>
 				</view>
 				<view class="goodluckEarn flex">
 					<view class="index flex all-center">3</view>
 					<view class="main flex-column flex-between">
-						<view class="text">好运收益</view>
-						<view class="num">+ {{info.goodLuck}}</view>
+						<view class="text">问答和好运收益</view>
+						<view class="num">+ {{info.glqa}}</view>
 					</view>
 				</view>
 				<view class="othersEarn flex">
@@ -75,6 +75,8 @@
 			getData(){
 				this.$request('/api/userTodayAmount','get',{}).then(res => {
 					this.info = res.data
+					this.info.glqa = (Number(res.data.goodLuck)+Number(res.data.qa)).toFixed(2)
+					console.log(this.info)
 				})
 			}
 		}

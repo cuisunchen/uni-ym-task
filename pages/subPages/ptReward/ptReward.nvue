@@ -1,0 +1,302 @@
+<template>
+	<view class="wrap">
+		<list class="ptReward flex1 flex-column" loadmoreoffset="10" @loadmore="loadMore">
+			<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="showLoading">
+				<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
+				<view class="loadingIco row align-center">
+					<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
+					<text class="freshTit">{{refreshText}}</text>
+				</view>
+			</refresh>
+			<cell class="head">
+				<image class="topBg" src="../../../static/mineBg.jpeg" mode="aspectFill"></image>
+				<view class="grayBg"></view>
+				<view class="info">
+					<text class="ptLabel">拼团奖励总额(元)</text>
+					<text class="totalMoney">1296.08</text>
+				</view>
+				<text class="desc">拼团奖励总额,为您实际收到的奖励总额(可随时提现),是总额奖励的2/3,剩余1/3返给您的上家,快去分享吧 ~~~</text>
+			</cell>
+			<cell class="pickerBox">
+				<view class="detailTit row flex-between align-center">
+					<text class="detailTitLabel">奖励明细</text>
+					<view class="datePicker row align-center" @click="showPicker">
+						<text class="selectedDate">{{array[0][index[0]]}}-{{array[1][index[1]]}} 获得奖励 {{sumAmount || '-'}} 元</text>
+						<uni-icons type="arrowright" size="16" color="#999"></uni-icons>
+					</view>
+				</view>
+				<view class="uni-list-cell-db">
+					<picker mode="multiSelector" :value="index" @change="bindPickerChange" :range="array">
+						<view class="uni-input"></view>
+					</picker>
+				</view>
+			</cell>
+			<cell v-for="(item,index) in lists" :key="index" class="item row align-center flex-between" :class="{'itemNoBoder': index == lists.length -1}">
+				<view class="itemLeft flex-column">
+					<view class="line1 row align-center">
+						<text class="itemtit">拼团奖励</text>
+						<view class="moneyBox row align-center">
+							<text class="moneyNum flex-column flex-start">12.08</text>
+							<text class="moneyUnit">元</text>
+						</view>
+					</view>
+					<text class="itemDate">2020-09-04 07:00:06</text>
+				</view>
+				<view class="itemRight row">
+					<text class="earnMoney">+ 8.05</text>
+					<image class="hbImg" src="../../../static/hb.png" mode=""></image>
+				</view>
+			</cell>
+			<cell class="nodata flex1 flex-column all-center" v-if="lists && lists.length == 0">
+				<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
+				<text class="nodatadesc">暂无奖励,赶快去赚米吧 ~~</text>
+			</cell>
+		</list>
+	</view>
+</template>
+
+<script>
+	import {unencryp} from '../../../common/utils/request.js'
+	export default {
+		data(){
+			return{
+				array: [[],[]],
+				index: [0,0],
+				
+				lineWidth:null,
+				lineLeft:null,
+				loadingStatus: true,
+				release:false,
+				refreshText: "下拉可以刷新",
+				nowYear: '',
+				sumAmount:'',
+				lists:[],
+				visible: false,
+				years:[2020,2030],
+				year:null,
+				months:[1,2,3],
+				month:null,
+				// param:{
+				// 	"pageNum": 1,
+				// 	"pageSize": 10
+				// },
+				maxPageNum:null,
+				param:{
+					yearMonth: ''
+				}
+			}
+		},
+		onNavigationBarButtonTap() {
+			uni.navigateTo({
+				url:'../download/download'
+			})
+		},
+		mounted() {
+			const date = new Date()
+			for (let i = 1990; i <= 2050; i++) {
+				this.array[0].push(i)
+			}
+			for (let i = 1; i <= 12; i++) {
+				if(i<10){
+					i = '0'+ String(i)
+				}
+				this.array[1].push(i)
+			}
+			this.nowYear = date.getFullYear()
+			this.index[0] = this.nowYear - 1990
+			this.index[1] = date.getMonth()
+			this.param.yearMonth = this.array[0][this.index[0]] + '-' + this.array[1][this.index[1]]
+			this.getLists() 
+		},
+		methods:{
+			bindPickerChange(e) {
+				if(this.array[0][e.detail.value[0]] > this.nowYear){
+					e.detail.value[0] = this.nowYear - 1990
+				}
+				this.index = e.detail.value
+			},
+			getLists(type){
+				unencryp('/snap/snapUpReward','post',this.param).then(res=>{
+					uni.hideLoading()
+					if(res.code == 200 && res.data.list.length > 0){
+						setTimeout(()=>{
+							if(res.data.maxSize >= this.param.pageNum){
+								this.maxPageNum = res.data.maxSize
+							}
+							//  此处有问题,需要等接口改正后完善
+							if(type && type == 'loadMore'){
+								this.lists.push(res.data.list) 
+							}else{
+								this.lists = res.data.list
+								this.sumAmount = res.data.sumAmount.toString()
+							}
+						},0)
+					}else{
+						res.msg || uni.showToast(res.msg)
+					}
+				})
+			},
+			onrefresh(){
+				this.loadingStatus = false
+			  this.showLoading = 'show'
+				this.refreshText = '加载中 ...'
+				setTimeout(res=>{
+						// 模拟网路请求
+						this.num=4;
+						this.showLoading = 'hide'
+						this.loadingStatus = true
+						this.release = false
+						this.refreshText = '下拉可以刷新'
+				},2000)
+			},
+			onpullingdown(e){
+				if(e.pullingDistance >= 150){
+					this.release = true
+					this.refreshText = '释放立即刷新'
+				}else{
+					this.refreshText = '下拉可以刷新'
+					this.release = false
+				}
+			},
+			loadMore(){
+				this.getLists('loadMore')
+			},
+			showPicker(){
+				this.visible = true
+			},
+		}
+	}
+</script>
+
+<style scoped>
+.ptReward{
+	position: relative;
+	top: -4rpx;
+}
+.head{
+	position: relative;
+	height: 380rpx;
+	padding: 30rpx;
+}
+.grayBg{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 750rpx;
+	height: 380rpx;
+	z-index:8;
+	background-color: rgba(0, 0, 0, 0.3);
+}
+.topBg{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 750rpx;
+	height: 380rpx;
+	z-index:7;
+}
+.info{
+	position: relative;
+	z-index: 9;
+}
+.totalMoney{
+	color: #fff;
+	font-size: 44rpx;
+	font-weight: bold;
+}
+.ptLabel{
+	color: #fff;
+	font-size: 28rpx;
+	margin: 40rpx 0 20rpx;
+}
+.desc{
+	color: #fff;
+	font-size: 26rpx;
+	padding: 20rpx;
+	margin-top: 50rpx;
+	line-height: 36rpx;
+	border-radius: 10rpx;
+	background-color: rgba(0, 0, 0, 0.3);
+	position: relative;
+	z-index: 9;
+}
+.pickerBox{
+	height: 90rpx;
+	position: relative;
+}
+.uni-input{
+	height: 90rpx;
+	/* background-color: #007AFF; */
+}
+.detailTit{
+	height: 90rpx;
+	padding: 0 10rpx 0 20rpx;
+	margin-bottom: 1rpx;
+	background-color: #FFFFFF;
+}
+.detailTitLabel{
+	color: #000000;
+	font-size: 30rpx;
+}
+.datePicker{
+	height: 50rpx;
+	padding: 0 10rpx;
+	border-radius: 6rpx;
+}
+.uni-list-cell-db{
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 90rpx;
+	width: 750rpx;
+	/* background-color: #007AFF; */
+}
+.selectedDate{
+	color: #333;
+	font-size: 26rpx;
+	margin: 0 6rpx;
+}
+.item{
+	padding: 20rpx;
+	background-color: #fff;
+	margin-bottom: 1rpx;
+	border-width: 1rpx;
+	border-style: solid;
+	border-color: #f6f6f6;
+}
+.itemNoBoder{
+	border-width: 0;
+}
+.itemtit{
+	font-size: 28rpx;
+	line-height: 32rpx;
+}
+.moneyNum{
+	color: orange;
+	font-size: 32rpx;
+	font-weight: bold;
+	margin: 0 6rpx;
+}
+.moneyUnit{
+	color: orange;
+	font-size: 28rpx;
+	line-height: 26rpx;
+}
+.itemDate{
+	color: #999;
+	font-size: 24rpx;
+	margin-top: 14rpx;
+}
+.earnMoney{
+	color: #18B566;
+	font-weight: bold;
+	margin-right: 6rpx;
+}
+.hbImg{
+	width: 40rpx;
+	height: 40rpx;
+}
+.nodata{
+	padding-top: 200rpx;
+}
+</style>

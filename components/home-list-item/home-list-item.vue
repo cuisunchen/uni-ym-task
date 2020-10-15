@@ -18,7 +18,6 @@
 				<text>收入(元): </text> 
 				<text class="money">{{item.price}}</text>
 			</view>
-			
 		</view>
 	</view>
 </template>
@@ -108,10 +107,6 @@
 	    /*! autoprefixer: off */
 	    -webkit-box-orient: vertical !important;
 	    /* autoprefixer: on */
-	  }
-	  .textItem{
-	    display: inline-block;
-	    margin-right: 20rpx;
 	  }
 	  .texts{
 	    margin: 6rpx 0 10rpx;

@@ -18,61 +18,72 @@
 		<scroll-view class="lists flex1" scroll-y>
 			<radio-group class="group" @change="radioChange">
 				<label class="cell flex align-center flex-between" v-for="(item, index) in lists" :key="index">
-					<view>{{item.name}}</view>
+					<view>{{item}}</view>
 					<view>
-							<radio :value="item.value" :checked="index === current" color="#18B566"/>
+							<radio :value="item" :index="index" :checked="index === current" color="#18B566"/>
 					</view>
 				</label>
 			</radio-group>
 		</scroll-view >
 		<view class="handleBox">
-			<u-button :custom-style="customStyle" :hair-line="false">确定</u-button>
+			<u-button :custom-style="customStyle" :hair-line="false" @click="confirm">确定</u-button>
 		</view>
 	</view>
 </template>
 
 <script>
 	export default{
+		props:{
+			lists:{
+				type: Array,
+				default(){
+					return []
+				}
+			},
+			dataIndex:{
+				// #ifdef APP-PLUS
+				type: String,
+				// #endif
+				// #ifdef H5
+				type: Number,
+				// #endif
+				default () {
+					return 0
+				}
+			}
+		},
 		data(){
 			return{
 				customStyle:{
 					'background-color':'#f6f6f6',
 					'border-color': '#f6f6f6'
 				},
-				lists: [
-					{
-							value: 'USA',
-							name: 'L'
-					},
-					{
-							value: 'CHN',
-							name: 'XL',
-							checked: 'true'
-					},
-					{
-							value: 'BRA',
-							name: 'XXL'
-					},
-					{
-							value: 'JPN',
-							name: 'XXXL'
-					}
-				],
-				current: 0
+				current: 0,
+				value: ''
 			}
 		},
-		onLoad() {
-			
+		created() {
+			console.log(this.dataIndex)
+			this.value = this.lists[0]
+			// #ifdef APP-PLUS
+			this.current=Number(this.dataIndex)
+			// #endif
+			// #ifdef H5
+			this.current=this.dataIndex
+			// #endif
 		},
 		methods:{
-			change(){},
+			confirm(){
+				this.$emit('change',{value:this.value,index:this.current})
+			},
 			radioChange(evt) {
-					for (let i = 0; i < this.lists.length; i++) {
-							if (this.lists[i].value === evt.target.value) {
-									this.current = i;
-									break;
-							}
+				this.value = evt.target.value
+				for (let i = 0; i < this.lists.length-1; i++) {
+					if (this.lists[i] === evt.target.value) {
+						this.current = i;
+						break;
 					}
+				}
 			}
 		}
 	}

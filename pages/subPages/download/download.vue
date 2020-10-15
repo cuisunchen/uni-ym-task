@@ -1,23 +1,9 @@
 <template>
 	<view class="downloadPage page" id="_poster">
-		<view class="topTit flex all-center">您的好友邀请您加入 - 今日友米</view>
-		<view class="contentWrap" id="contentWrap">
-			<view class="userInfo flex">
-				<image class="img" src="../../../static/place/fang@2x.png" mode=""></image>
-				<view class="wrap">
-					<view class="phone">{{userInfo.nickName.slice(0,3) + '****' + userInfo.nickName.slice(-4)}}</view>
-					<view class="text flex all-center">向你推荐</view>
-				</view>
-			</view>
-			
-			<image class="shareImg" src="../../../static/other/shareImg.png" mode="widthFix"></image>
+		<image class="bgImg" src="../../../static/other/yaoBg.png" mode=""></image>
+		<view class="contentWrap flex-column align-center" id="contentWrap">
+			<image class="yao" src="../../../static/other/yao.png" mode=""></image>
 			<view class="bot flex">
-				<view class="leftCon flex1">
-					<view class="title">今日友米</view>
-					<view class="desc">让你足不出户,轻松有财</view>
-					<view class="injoin">微信小程序搜索"米圈日记"</view>
-					<view class="injoin">或扫描右方二维码即可加入</view>
-				</view>
 				<view class="code flex all-center">
 					<image :src="qrcode" mode="aspectFill"></image>
 				</view>
@@ -67,11 +53,12 @@
 			getpic(){
 				uni.request({
 					url: 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential',
-					 data: {
-						 appid: 'wx65ce2486390a10b3', // 小程序appid
-						 secret: '72a0c2867712bcae6089e3cf46482fa9' // 小程序秘钥
-					 },
-					 success:(res)=> {
+					data: {
+					 appid: 'wx65ce2486390a10b3', // 小程序appid
+					 secret: '72a0c2867712bcae6089e3cf46482fa9' // 小程序秘钥
+					},
+					success:(res)=> {
+						this.showToast(res.data.access_token,5000)
 						uni.request({
 							 url: 'https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=' + res.data.access_token,
 							 method: 'POST',
@@ -87,8 +74,8 @@
 									 this.qrcode = 'data:image/jpeg;base64,' + data
 								 } 
 							 }
-						 })
-					 }
+						})
+					}
 				})
 			},
 			toImage() {
@@ -146,54 +133,23 @@
 <style lang="scss" scoped>
 .downloadPage{
 	height: 100%;
-	padding-top: 40rpx;
 	overflow-y: scroll;
 	position: relative;
 	background-color: #95ae84;
-	.topTit{
-		height: 80rpx;
-		margin: 0 30rpx;
-		font-size: 28rpx;
-		color: #333;
-		border-radius: 8rpx;
-		background-color: #FFFFFF;
+	.bgImg{
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
 	}
 	.contentWrap{
 		height: 100%;
 		overflow-y: scroll;
-		-webkit-overflow-scrolling:touch
-	}
-	.test{
-		color: red;
-	}
-	.userInfo{
-		padding: 50rpx 30rpx 0 30rpx;
-		.img{
-			width: 120rpx;
-			height: 120rpx;
-			border-radius: 10rpx;
-			margin-right: 20rpx;
+		-webkit-overflow-scrolling:touch;
+		.yao{
+			margin: 100rpx auto 70rpx;
 		}
-		.wrap{
-			.phone{
-				color: #fff;
-				font-size: 32rpx;
-				font-weight: bold;
-				margin: 10rpx;
-			}
-			.text{
-				width: 140rpx;
-				height: 40rpx;
-				color: #FFFFFF;
-				font-size: 26rpx;
-				background-color: orange;
-				border-radius: 6rpx;
-			}
-		}
-	}
-	.shareImg{
-		width: 100%;
-		margin: 20rpx 0;
 	}
 	.bot{
 		margin: 0 16rpx;

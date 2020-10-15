@@ -1,11 +1,5 @@
 <template>
 	<view class="homePage page flex-column" :class="{disabled: is_update_app}">
-		<view class="page-swiper">
-			<special-banner :banner-list="bannerList" :swiper-config="swiperConfig" 
-				:hasDesc="false" :scaleX="bannerList.length > 2 ? '1.1591': '1.2436'"
-				@click="goDetail"/>
-		</view>
-		
 		<view class="recommendBox">
 			<recommend-list :data-obj="recommendList" @click="goDetail"></recommend-list>
 		</view>

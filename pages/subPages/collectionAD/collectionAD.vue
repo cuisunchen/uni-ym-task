@@ -13,9 +13,6 @@
 				<swiper-item>
 					<goodluck-col ref="sameCityList"></goodluck-col>
 				</swiper-item>
-				<swiper-item>
-					<others-list ref="nearbyList"></others-list>
-				</swiper-item>
 			</swiper>
 		</view>
 	</view>
@@ -32,7 +29,7 @@
 		components:{ymTabs,ygcRefresh,homeListItem,glListItem,questionCol,goodluckCol,othersList},
 		data() {
 			return {
-				tabs:['接单收藏','好运收藏','其他收藏'],
+				tabs:['商品收藏','广告收藏'],
 				pullupLoadingType:'more',
 				swiperIndex: 0,
 			}

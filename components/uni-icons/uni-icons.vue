@@ -63,5 +63,8 @@
 		font-family: uniicons;
 		text-decoration: none;
 		text-align: center;
+		transition-property: transform;
+		transition-duration: .3s;
+		transition-timing-function: linear;
 	}
 </style>

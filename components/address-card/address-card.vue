@@ -1,13 +1,19 @@
 <template>
 	<view class="addressCard flex-column">
-		<view class="infoBox">
-			<view class="info">
-				<text class="name">崔孙晨</text><text>13728760372</text>
+		<view class="infoBox flex">
+			<view class="wrap flex1">
+				<view class="info">
+					<text class="name">{{item.name}}</text><text>{{item.phone}}</text>
+				</view>
+				<view class="addr">{{item.newAddr}}</view>
 			</view>
-			<view class="addr">广东省深圳市龙华区</view>
+			<image v-if="item.default" class="addrImg" src="../../static/dizhi@2x.png" mode=""></image>
 		</view>
 		<view class="handleBox flex flex-between align-center">
-			<label class="flex align-center"><radio class="radio" :value="item.id" :checked="false" color="#ff0000" /><text class="label">默认地址</text></label>
+			<view class="flex align-center" @click="changeAddr">
+				<radio class="radio" :checked="item.default" color="#ff0000" />
+				<text class="label">默认地址</text>
+			</view>
 			<view class="right flex align-center">
 				<view class="edit flex align-center" @click="goSubpage('address')">
 					<uni-icons type="compose" size="18"></uni-icons><text class="label">编辑</text>
@@ -33,6 +39,12 @@
 				default () {
 					return {}
 				}
+			},
+			hasDefault:{
+				type: Boolean,
+				default () {
+					return true
+				}
 			}
 		},
 		data(){
@@ -51,13 +63,14 @@
 			
 		},
 		methods:{
+			changeAddr(){
+				this.$emit('change')
+			},
 			goSubpage(){
-				uni.navigateTo({
-					url:'../../pages/subPages/addAddress/addAddress?param=' + this.item
-				})
+				this.$emit('click')
 			},
 			deleteItem(){
-				console.log('删除地址')
+				this.$emit('delete')
 			}
 		}
 	}
@@ -77,6 +90,10 @@
 				line-height: 20rpx;
 				margin-top: 16rpx;
 			}
+		}
+		.addrImg{
+			width: 70rpx;
+			height: 70rpx;
 		}
 		.handleBox{
 			padding: 16rpx 30rpx 16rpx 25rpx;

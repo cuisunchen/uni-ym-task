@@ -1,14 +1,14 @@
 <template>
 	<div class="myOrderCard flex-column">
-		<text class="cardTitle">10人拼团</text>
+		<text class="cardTitle">{{dataObj.type}}</text>
 		<view class="main">
 			<view class="goodsInfo row">
 				<view class="goodsImg flex-shrink">
-					<image class="img" src="../../../static/pic1.jpeg" mode=""></image>
+					<image class="img" :src="dataObj.icon" mode=""></image>
 				</view>
 				<view class="content flex1 flex-column flex-between">
-					<text class="title">自然堂安贫面膜10片烟洗按细致提亮补水保湿海藻修护女官网旗舰店全品商品任选</text>
-					<text class="nums">数量: 1</text>
+					<text class="title">{{dataObj.title}}</text>
+					<text class="nums">数量: {{dataObj.number}}</text>
 				</view>
 			</view>  
 			<view class="handleBox row align-center flex-between" v-if="hasSend">
@@ -30,6 +30,12 @@
 			hasSend:{
 				type: Boolean,
 				default: true
+			},
+			dataObj:{
+				type: Object,
+				default(){
+					return {}
+				}
 			}
 		},
 		data(){

@@ -57,8 +57,8 @@
 		{
 		  "path" : "pages/tabBar/home/home",
 		  "style" : {
-				"navigationBarTitleText": "首页",
-				"enablePullDownRefresh": true,
+				"navigationBarTitleText": "问答",
+				// "enablePullDownRefresh": true,
 				"app-plus": {
 					"bounce": "none",
 					"titleNView": {
@@ -942,6 +942,42 @@
 							}
 						}
         }
+        ,{
+            "path" : "pages/subPages/refundRecord/refundRecord",
+            "style" : {
+							"navigationBarTitleText": "退款记录",
+							"app-plus": {
+								"bounce": "none",
+								"titleNView": {
+									"backgroundColor": "#2C405A"
+								}
+							}
+						}
+        },
+				{
+				    "path" : "pages/subPages/HM-search/HM-search",
+				    "style" : {
+							"navigationBarTitleText": "搜索",
+							"app-plus": {
+								"bounce": "none",
+								"titleNView": {
+									"backgroundColor": "#2C405A"
+								}
+							}
+						}
+				}
+        ,{
+            "path" : "pages/tabBar/easyEarn/easyEarn",
+            "style" : {
+							"navigationBarTitleText": "易赚",
+							"app-plus": {
+								"bounce": "none",
+								"titleNView": {
+									"backgroundColor": "#2C405A"
+								}
+							}
+						}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
@@ -962,7 +998,7 @@
 				"text": "首页"
 			},
 			{
-				"pagePath": "pages/tabBar/goodluck/goodluck",
+				"pagePath": "pages/tabBar/easyEarn/easyEarn",
 				"iconPath": "static/luck@2x.png",
 				"selectedIconPath": "static/luck_fill@2x.png",
 				"text": "易赚"

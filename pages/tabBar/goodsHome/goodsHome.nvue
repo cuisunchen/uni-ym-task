@@ -1,0 +1,226 @@
+<template>
+	<list class="goodsHome flex1 flex-column">
+		<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
+			<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
+			<view class="loadingIco row align-center"> 
+				<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
+				<view class="freshWrap flex-column all-center">
+					<text class="freshTit">{{refreshText}}</text>
+					<!-- <text class="freshTime">最后更新: 今天15:39</text> -->
+				</view>
+			</view>
+		</refresh>
+		<cell class="page-swiper">
+			<swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
+				<swiper-item v-for="(item,index) in bannerList">
+					<image class="swiperImg" :src="item.topImg" mode="widthFix"></image>
+				</swiper-item>
+			</swiper>	
+		</cell>
+		<cell>
+			<bar class="bar flex-shrink" @click="barClick"></bar>
+		</cell>
+		
+		<template class="wrap" v-for="(item,index) in goodsList" >
+			<header class="listTit row align-center flex-between">
+				<view class="titWrap row align-center flex-between">
+					<view class="leftBox row align-center">
+						<text class="label">{{item.title}}</text> 
+						<text class="line">丨</text> 
+						<text class="nums">红包奖励概率: {{index == 0 ? 50 : index == 1 ? 70 : index == 2 ? 94 : 97}}%</text>
+					</view>
+					<view class="rightBox row align-center" @click="goWatchMorePage(index)">
+						<text class="more">查看更多</text>
+						<uni-icons type="arrowright" color="#666" size="16"></uni-icons>
+					</view>
+				</view>
+			</header>
+			<cell class="listsWrap">
+				<view class="cardWrap" v-for="list in item.subList">
+					<goods-card @click="cardClick(list)" :data-obj="list"></goods-card>
+				</view>
+			</cell>
+			<cell v-if="index !== goodsList.length-1"><view class="emptyBox"></view></cell>
+		</template>
+		
+	</list>
+</template>
+
+<script>
+	import bar from './bar.vue'
+	import {unencryp} from '../../../common/utils/request.js'
+	import goodsCard from '@/components/goods-card/goods-card.nvue'
+	export default {
+		components:{bar,goodsCard},
+		data(){
+			return{
+				loadingStatus: true,   //  控制雪花动画是否显示
+				refreshing:false,				//  控制refresh是否显示
+				refreshText: "下拉可以刷新",
+				loading:false,
+				bannerList: [],
+				goodsList:[]
+			}
+		},
+		onNavigationBarButtonTap() {
+			uni.navigateTo({
+				url:'../../subPages/HM-search/HM-search'
+			})
+		},
+		onLoad(){
+			let userInfo = uni.getStorageSync('userInfo')
+			if(!userInfo){
+				return
+			}
+			uni.showLoading({
+				title:'加载中' 
+			})
+			this.getGoodsList()  
+		},
+		methods:{
+			getGoodsList(){
+				unencryp('/snap/getSnapUpList','get',{}).then(res => {
+					if(res.code == 200){
+						setTimeout(()=>{
+							this.goodsList = res.data.contentList
+							this.bannerList = res.data.topList
+							// console.log(this.goodsList)
+						},0)
+					}else{
+						res.msg || uni.showToast(res.msg)
+					}
+				})
+			},
+			onrefresh(){
+				if(this.loading){
+						//当正在调用接口获取数据时，此时的下拉不做任何操作
+						return;
+				}
+				this.loading = true;
+				this.refreshing = true
+				this.loadingStatus = false
+				this.refreshText = '加载中 ...'
+				setTimeout(()=>{
+						// 模拟网路请求
+						this.loadingStatus = true
+						this.refreshing = false
+						this.loading = false;
+						this.release = false
+						this.refreshText = '下拉可以刷新'
+				},2000)
+			},
+			onpullingdown(e){
+				if (this.refreshing) return;
+				if(e.pullingDistance >= 150){
+					this.release = true
+					this.refreshText = '释放立即刷新'
+				}else{
+					this.refreshText = '下拉可以刷新'
+					this.release = false
+				}
+			},
+			goWatchMorePage(nums){
+				uni.navigateTo({
+					url:'../../subPages/watchMore/watchMore?type=' + nums
+				})
+			},
+			barClick(data,index){
+				switch (index){
+					case 0:
+						uni.navigateTo({
+							url:'../../subPages/myOrder/myOrder'
+						})
+						break;
+					case 1:
+						uni.navigateTo({
+							url:'../../subPages/goodsPublicPage/goodsPublicPage?type=0'
+						})
+						break;
+					case 2:
+						uni.navigateTo({
+							url:'../../subPages/goodsPublicPage/goodsPublicPage?type=1'
+						})
+						break;
+					case 3:
+						uni.navigateTo({
+							url:'../../subPages/ptReward/ptReward'
+						})
+						break;
+				}
+			},
+			cardClick(item){
+				uni.navigateTo({
+					url:'../../subPages/goodsDetail/goodsDetail?groupType=' + item.snapUpPeopleMax + '&id=' + item.id
+				})
+			}
+		}
+	}
+</script>
+
+<style scoped>
+.goodsHome{
+	position: relative;
+	top: -4rpx;
+}
+.swiperImg{
+	width: 750rpx;
+	height: 300rpx;
+}
+.bar{
+	padding: 30rpx 0;
+	border-radius: 10rpx;
+	margin: 0 0 30rpx;
+	border-radius: 0;
+	background-color: #fff;
+}
+.img{
+	width: 98rpx;
+	height: 82rpx;
+	margin-bottom: 20rpx;
+}
+.listsWrap{
+	margin-bottom: 30rpx;
+	background-color: #f6f6f6;
+}
+.listTit{
+	width: 750rpx;
+	height: 80rpx;
+	position: sticky;
+	top: 0;
+	z-index: 9;
+	border-bottom-width: 1rpx;
+	border-style: solid;
+	border-color: #f6f6f6;
+}
+.titWrap{
+	width: 750rpx;
+	height: 80rpx;
+	padding-left: 20rpx;
+	background-color: #fff;
+}
+.label{
+	font-size: 28rpx;
+	font-weight: bold;
+}
+.line{
+	font-size: 22rpx;
+	margin: 0 10rpx;
+	color: #666;
+}
+.nums{
+	color: #666;
+	font-size: 26rpx;
+}
+.more{
+	color: #666;
+	font-size: 28rpx;
+	line-height: 26rpx;
+}
+.emptyBox{
+	height: 30rpx;
+}
+.cardWrap{
+	padding: 0 20rpx;
+	background-color: #fff;
+}
+</style>

@@ -15,13 +15,13 @@
 						<text class="line">丨</text> 
 						<text class="nums">红包奖励概率: {{index == 0 ? 50 : index == 1 ? 70 : index == 2 ? 94 : 97}}%</text>
 					</view>
-					<view class="rightBox flex align-center" @click="goWatchMorePage(0)">
+					<view class="rightBox flex align-center" @click="goWatchMorePage(index)">
 						<text class="more">查看更多</text>
 						<uni-icons type="arrowright" color="#666" size="16"></uni-icons>
 					</view>
 				</view>
 				<view class="cardWrap" v-for="list in item.subList">
-					<goods-card @click="cardClick(2)" :data-obj="list"></goods-card>
+					<goods-card @click="cardClick(list)" :data-obj="list"></goods-card>
 				</view>
 			</view>
 		</view>
@@ -57,7 +57,6 @@
 			uni.showLoading({
 				title:'加载中' 
 			})
-			// this.param.cityCode = uni.getStorageSync('location')? JSON.parse(uni.getStorageSync('location')).adcode : '440306'
 			this.getDatas()  
 		},
 		onNavigationBarButtonTap() {
@@ -65,13 +64,7 @@
 				url:'../../subPages/homeSearch/homeSearch'
 			})
 		},
-		// onNavigationBarSearchInputChanged (val) {
-		// 	console.log("你输入了信息")
-		// 	uni.showToast({
-		// 		title:'输入了'+ val
-		// 	})
-		// },
-		methods: {  
+		methods: {
 			async getDatas(){
 				let recommendData = await this.getRecommendData()
 				let dataObj = await this.getGoodsList()
@@ -151,9 +144,9 @@
 						break;
 				}
 			},
-			cardClick(type){
+			cardClick(item){
 				uni.navigateTo({
-					url:'../../subPages/goodsDetail/goodsDetail?groupType=' + type
+					url:'../../subPages/goodsDetail/goodsDetail?groupType=' + type + '&id=' + item.id
 				})
 			}
 		}

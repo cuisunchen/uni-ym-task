@@ -1,0 +1,132 @@
+<template>
+	<view class="listItem row" @click="goPage">
+		<view class="left">
+			<image class="img" :src="dataObj.homeTopImgUrl" lazy-load mode="aspectFill"></image>
+		</view>
+		<view class="right flex1 flex-column flex-between">
+			<text class="tit">{{dataObj.title}}</text>
+			<view class="texts row">
+				<view class="tagBox unread row all-center"><text class="txt">{{dataObj.tags}}</text></view>
+				<view class="tagBox sameCity row all-center"><text class="txt ">{{dataObj.rangeType}}</text></view>
+				<view class="tagBox hobby row all-center"><text class="txt">兴趣</text></view>
+				<view class="tagBox available row all-center"><text class="txt">{{dataObj.userGet}}</text></view>
+				<view class="tagBox unFinish row all-center"><text class="txt">{{dataObj.status}}</text></view>
+			</view>
+			
+			<view class="stytus row flex-end">
+				<text class="clickNum">点击量: </text> <text class="times row align-center">{{dataObj.clickNum}}</text>
+				<text class="income">收入(元): </text> 
+				<text class="money">{{dataObj.price}}</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		props:{
+			dataObj:{
+				type: Object,
+				default () {
+					return {}
+				}
+			}
+		},
+		methods:{
+			goPage(){
+				this.$emit('click')
+			}
+		}
+	}
+</script>
+
+<style scoped>
+.listItem{
+	padding: 20rpx;
+	background-color: #fff;
+	border-top-width: 1rpx;
+	border-style: solid;
+	border-color: #f6f6f6;
+}
+.left{
+	width: 160rpx;
+	height: 160rpx;
+	border-radius: 6rpx;
+	overflow: hidden;
+}
+.img{
+	width: 160rpx;
+	height: 160rpx;
+	border-radius: 6rpx;
+	background-color: #007AFF;
+}
+.right{
+	padding-left: 30rpx;
+}
+.tit{
+	height: 60rpx;
+	font-size: 26rpx;
+	line-height: 30rpx;
+	color: #000;
+	overflow:hidden;
+	text-overflow:ellipsis;  
+	lines: 2; 
+}
+.texts{
+	margin: 6rpx 0 10rpx;
+}
+.tagBox{
+	height: 36rpx;
+	padding: 0 10rpx;
+	border-radius: 6rpx;
+	margin-right: 10rpx;
+}
+.txt{
+	color: #fff;
+	height: 24rpx;
+	font-size: 24rpx;
+}
+.unread{
+	background-color: #AAAAAA;
+}
+.nearby{
+	background-color: #E7932E;
+}
+.sameCity{
+	background-color: #4CAFA3;
+}
+.country{
+	background-color: #FF3B30;
+}
+.hobby{
+	background-color: #358CBD;
+}
+.available{
+	background-color: #699E11;
+}
+.unFinish{
+	background-color: #D4BA88;
+}
+.stytus{
+	align-items: flex-end;
+}
+.times{
+	font-size: 28rpx;
+	margin:0 30rpx 0 6rpx;
+	color: red;
+}
+.money{
+	font-size: 28rpx;
+	line-height: 36rpx;
+	margin-left: 6rpx;
+	color: rgb(10, 173, 10);
+}
+.clickNum{
+	color: #666;
+	font-size: 26rpx;
+}
+.income{
+	color: #666;
+	font-size: 26rpx;
+}
+</style>

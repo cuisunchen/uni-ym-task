@@ -1,13 +1,13 @@
 <template>
 	<view class="sharePage page">
-		<image class="img" src="../../../static/other/share01@2x.png" mode="widthFix"></image>
+		<image class="img" :src="imgUrl" mode="widthFix"></image>
 	</view>
 </template>
 <script>
 	export default {
 		data() {
 			return {
-				
+				imgUrl:''
 			}
 		},
 		onNavigationBarButtonTap() {  
@@ -15,8 +15,20 @@
 				url:'../download/download'
 			})
 		},
+		onLoad() {
+			this.getImgUrl()
+		},
 		methods: {
-
+			getImgUrl(){
+				this.$request('/api/view/shareApp','get',{}).then(res => {
+					if(res.code == 200){
+						console.log(res)
+						this.imgUrl = res.data
+					}else{
+						this.showToast(res.msg)
+					}
+				})
+			},
 		}
 	}
 </script>

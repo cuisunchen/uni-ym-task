@@ -23,6 +23,9 @@
 				]
 			}
 		},
+		onLoad(opt) {
+			
+		},
 		methods: {
 			goPage(type){
 				uni.navigateTo({

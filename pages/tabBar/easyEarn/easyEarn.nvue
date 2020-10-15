@@ -1,0 +1,189 @@
+<template>
+	<view class="easyEarn">
+		<view class="recommendBox row">
+			<view class="recommendItem flex1 flex-column align-center" :class="{middleItem: index == 1}" v-for="(item,index) in recommendAd">
+				<image class="recommendImg" :src="item.homeTopImgUrl" mode="aspectFill" 
+							:style="{height:recomendItemHeight +'px',width: recomendItemHeight + 'px'}"></image>
+				<text class="recommendItemTit row flex-start" v-if="item.title">{{item.title}}</text>
+				<text class="recommendItemTit" v-else>广告位招租</text>
+			</view>
+		</view>
+		
+		<view class="qaWrap">
+			<view class="title row align-center flex-between">
+				<view class="row align-center">
+					<text class="tit">问答接单</text>
+					<text class="desc">- 简单选择即可</text>
+				</view>
+				<view class="moreWrap row align-center" @click="watchMore('qa')">
+					<text class="more">查看更多</text>
+					<uni-icons type="arrowright" size="16" color="#666"></uni-icons>
+				</view>
+			</view>
+			
+			<home-list-item v-for="(item,index) in questions" :key="item.id" :data-obj="item" @click="goDetail(item,index,'qa')"></home-list-item>
+		</view>
+		
+		<view class="glWrap">
+			<view class="title row align-center flex-between">
+				<view class="row align-center">
+					<text class="tit">好运接单</text>
+					<text class="desc">- 点击查看即可</text>
+				</view>
+				<view class="moreWrap row align-center" @click="watchMore('gl')">
+					<text class="more">查看更多</text>
+					<uni-icons type="arrowright" size="16" color="#666"></uni-icons>
+				</view>
+			</view>
+			
+			<gl-list-item v-for="(item,index) in goodLucks" :key="index" :data-obj="item" @click="goDetail(item,index,'gl')"></gl-list-item>
+		</view>
+	</view>
+</template>
+
+<script>
+	import homeListItem from "@/components/home-list-item/home-list-item.nvue"
+	import glListItem from "@/components/gl-list-item/gl-list-item.nvue"
+	import {unencryp,request} from "../../../common/utils/request.js"
+	export default {
+		components:{homeListItem,glListItem},
+		data() {
+			return {
+				recomendItemHeight:null,
+				recommendAd:[
+					{homeTopImgUrl:'../../../static/place/fang@2x.png',title:'广告位招租'},
+					{homeTopImgUrl:'../../../static/place/fang@2x.png',title:'广告位招租'},
+					{homeTopImgUrl:'../../../static/place/fang@2x.png',title:'广告位招租'}
+				],
+				questions:[],
+				goodLucks:[]
+			}
+		},
+		created() {
+			uni.getSystemInfo({
+				success:(res)=>{
+					this.recomendItemHeight = (res.windowWidth-40)/3
+				},
+				fail:(err) =>{
+					uni.showModal({
+						title:'提示',
+						content: JSON.stringify(err)
+					})
+				}
+			})
+		},
+		onShow() {
+			this.getDatas()
+		},
+		methods: {
+			getDatas(){
+				unencryp('/api/earn/easyEarnHome','get',{}).then(res => {
+					if(res.code == 200){
+						setTimeout(()=>{
+							let recommendAdList = res.data.top
+							for (let index in recommendAdList) {
+								this.$set(this.recommendAd,index,recommendAdList[index])
+							}
+							this.questions = res.data.qa
+							this.goodLucks = res.data.goodLuck
+						},0)
+					}
+				})
+			},
+			watchMore(type){
+				let url = ''
+				if(type=="qa"){
+					url = '../home/home'
+				}else{
+					url = '../goodluck/goodluck'
+				}
+				uni.navigateTo({
+					url
+				})
+			},
+			goDetail(data,index,type){
+				var strRegex = "((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)";
+				let re=new RegExp(strRegex);
+				if (!re.test(data.bigImg)) {
+					this.showToast('详情页地址有误,请联系客服')
+					return
+				}
+				this.userClick(data,index)
+				let pageType = ''
+				if(type=="qa"){
+					pageType = 'question'
+				}else{
+					pageType = 'goodluck'
+				}
+				uni.navigateTo({
+					url:'../../subPages/details/details?param='+ encodeURIComponent(JSON.stringify(data)) + '&type=' + pageType +'&index='+index
+				})
+			},
+			userClick(item,index){
+				let param = {homeAdId : item.id}
+				request('/api/userClick','post',param).then(res => {
+					if(res.code != 200){
+						this.showToast(res.msg || res.data)
+						return
+					}
+					item.clickNum ++
+					this.$set(this.questions,index,item)
+				})
+			}
+		}
+	}
+</script>
+
+<style scoped>
+.recommendBox{
+	padding: 20rpx 10px 10rpx;
+	background-color: #fff;
+}
+.recommendItem{
+	padding: 0;
+}
+.middleItem{
+	margin: 0 10px;
+}
+.recommendImg{
+	width: 100%;
+	height: 100%;
+	border-radius: 10rpx;
+}
+.recommendItemTit{
+	color: #333;
+	height: 72rpx;
+	line-height: 36rpx;
+	font-size: 28rpx;
+	margin-top: 20rpx;
+	overflow:hidden;  
+	text-overflow:ellipsis;  
+	lines: 2; 
+}
+.qaWrap{
+	margin: 20rpx 0;
+}
+.title{
+	height: 80rpx;
+	padding-left: 20rpx;
+	background-color: #fff;
+}
+.tit{
+	font-size: 32rpx;
+	margin-top: 6rpx;
+}
+.desc{
+	font-size:12px; 
+	color: #666;
+	margin-left: 10px;
+	margin-top: 6rpx;
+}
+.moreWrap{
+	height: 80rpx;
+}
+.more{
+	color: #999;
+	font-size: 26rpx;
+	margin-top: 6rpx;
+}
+</style>

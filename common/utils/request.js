@@ -111,10 +111,70 @@ const uploadRequest = (url,file) => {
 					})
 	})
 	return promise	
- 
+}
+
+const unencryp = (url, method='post', data, hasToken="true") => {
+	let token = uni.getStorageSync('token')
+	if(hasToken){
+		headers['Authorization'] =  token ? 'Bearer ' + token : '',
+		headers['Content-Type']= 'application/json;charset=utf-8'
+	}else{
+		headers['Authorization'] = '',
+		headers['Content-Type']= 'application/json;charset=utf-8'
+	}
+	let promise = new Promise((resolve, reject)=> {
+			return uni.request({
+					url: urlConfig + url,
+					method,
+					data,
+					dataType: 'json',
+					header: headers
+			}).then(res => {
+				uni.hideLoading()
+				if (encodeArr.includes(url)){
+					 let data = res[1].data
+					 resolve(data)
+					 return
+				}
+				if ((res[1].data.code && res[1].data.code == 200) || res[1].data.code == 999 
+						|| res[1].data.code == 500|| res[1].data.code == 555) {
+					resolve(res[1].data)
+				} else {
+					if(res[1].data.code == 502 || res[1].data.code == 501 || res[1].data.code == 503){
+						uni.showToast({
+							icon:'none',
+							title: res[1].data.msg,
+							duration: 2000 
+						}); 
+						// uni.clearStorage()
+						uni.removeStorageSync('token');
+						uni.removeStorageSync('userInfo');
+						uni.reLaunch({
+							url: '/pages/subPages/login/login'
+						});
+						return false
+					}else{
+						uni.showToast({
+							icon:'none',
+							title: res[1].data.msg,
+							duration: 2000 
+						});
+					}
+				}
+			}).catch(parmas => {
+				console.log('错误')
+				uni.showToast({
+					title:'连接失败,请检查网络是否正常',
+					icon: 'none'
+				})
+	　　　　reject(response)
+	　　})
+	})
+	return promise	
 }
 
 module.exports = {
 	request,
-	uploadRequest
+	uploadRequest,
+	unencryp
 } 

@@ -93,7 +93,6 @@
 			height: 320rpx;
 			padding: 30rpx;
 			overflow: hidden;
-			background-color: #007AFF;
 			.grayBg{
 				position: absolute;
 				top: 0;

@@ -1,0 +1,78 @@
+<template>
+	<view class="recommendBox row">
+		<view class="recommendItem flex1 flex-column align-center" :class="{middleItem: index == 1}" v-for="(item,index) in recommendAd">
+			<image class="recommendImg" :src="item.homeTopImgUrl" mode="aspectFill" 
+						:style="{height:recomendItemHeight +'px',width: recomendItemHeight + 'px'}"></image>
+			<text class="recommendItemTit">{{item.title}}</text>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		props:{
+			lists:{
+				type: Array,
+				default:[]
+			}
+		},
+		data(){
+			return{
+				recomendItemHeight:null,
+				recommendAd:[
+					{homeTopImgUrl:'../../../static/place/fang@2x.png',title:'广告位招租'},
+					{homeTopImgUrl:'../../../static/place/fang@2x.png',title:'广告位招租'},
+					{homeTopImgUrl:'../../../static/place/fang@2x.png',title:'广告位招租'}
+				],
+			}
+		},
+		created() {
+			console.log(this.lists)
+			// let recommendAdList = this.lists
+			for (let index in this.lists) {
+				this.$set(this.recommendAd,index,this.lists[index])
+			}
+			uni.getSystemInfo({
+				success:(res)=>{
+					this.recomendItemHeight = (res.windowWidth-40)/3
+				},
+				fail:(err) =>{
+					uni.showModal({
+						title:'提示',
+						content: JSON.stringify(err)
+					})
+				}
+			})
+		},
+	}
+</script>
+
+<style scoped>
+.recommendBox{
+	padding: 20rpx 10px 0;
+	background-color: #fff;
+}
+.recommendItem{
+	padding: 0;
+}
+.middleItem{
+	margin: 0 10px;
+}
+.recommendImg{
+	width: 100%;
+	height: 100%;
+	border-radius: 10rpx;
+}
+
+.recommendItemTit{
+	color: #333;
+	height: 72rpx;
+	line-height: 36rpx;
+	font-size: 28rpx;
+	margin-top: 16rpx;
+	margin-bottom: 10rpx;
+	overflow:hidden;  
+	text-overflow:ellipsis;  
+	lines: 2; 
+}
+</style>
