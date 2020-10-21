@@ -1,15 +1,16 @@
 <template>
 	<view class="homePage flex1 flex-column">
 		<view class="tabs row">
-			<view class="tabBox flex1 all-center" @click="tabClick(0)">
-				<text class="tab" :class="{active:tabIndex == 0}">全国</text>
+			<view class="tabBox flex1 all-center" @click="tabClick(0,'tab0')">
+				<text class="tab" id="tab0" :class="{active:tabIndex == 0}">全国</text>
 			</view>
-			<view class="tabBox flex1 all-center" @click="tabClick(1)">
-				<text class="tab" :class="{active:tabIndex == 1}">同城</text>
+			<view class="tabBox flex1 all-center" @click="tabClick(1,'tab1')">
+				<text class="tab" id="tab1" :class="{active:tabIndex == 1}">同城</text>
 			</view>
-			<view class="tabBox flex1 all-center" @click="tabClick(2)">
-				<text class="tab" :class="{active:tabIndex == 2}">附近</text>
+			<view class="tabBox flex1 all-center" @click="tabClick(2,'tab2')">
+				<text class="tab" id="tab2" :class="{active:tabIndex == 2}">附近</text>
 			</view>
+			<view class="underLine" :style="{width:lineWidth + 'px' ,left: lineLeft + 'px'}"></view>
 		</view>
 		
 		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false">
@@ -38,20 +39,34 @@
 		data(){
 			return{
 				tabIndex: 0,
-				
+				lineWidth:null,
+				lineLeft: '0',
 			}
 		},
-		// created() {
-		// 	 this.param.cityCode = uni.getStorageSync('location') ? JSON.parse(uni.getStorageSync('location')).adcode : '';
-		// 	 uni.showLoading({
-		// 	 	title:'加载中...'
-		// 	 })
-		// 	 this.getLists()
-		// 	 this.getRcommendDatas()
-		// },
+		mounted() {
+			this.$nextTick(() => {
+				let theNode = uni.createSelectorQuery().select(`#tab0`)
+				theNode.boundingClientRect((data)=>{
+					setTimeout(()=> {
+						this.lineLeft = data.left
+						this.lineWidth = data.width
+					}, 0);
+				}).exec()
+			})
+		},
 		methods:{
-			tabClick(i){
-				this.tabIndex = i
+			tabClick(index,id){
+				this.tabIndex = index
+				this.$nextTick(() => {
+					let theNode = uni.createSelectorQuery().select(`#${id}`)
+					theNode.boundingClientRect((data)=>{
+						setTimeout(()=> {
+							this.lineLeft = data.left
+							this.lineWidth = data.width
+							console.log(this.lineLeft)
+						}, 0);
+					}).exec()
+				})
 			},
 			getLists(type){
 				unencryp('/api/earn/easyMoreTask','post',this.param).then(res=>{
@@ -148,7 +163,16 @@
 	font-size: 32rpx;
 }
 .active{
-	color: #000;
+	color: #2C405A;
 }
-
+.underLine{
+	height: 4rpx;
+	background-color: #2C405A;
+	position: absolute;
+	left: 20rpx;
+	bottom: 0;
+	transition-property: left;
+	transition-duration:.3s;
+	transition-timing-function:ease
+}
 </style>

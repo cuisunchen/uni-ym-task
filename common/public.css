@@ -77,7 +77,9 @@ page{
 		-webkit-line-clamp: 2;
 		overflow: hidden;
 	/* #endif */
-	
+	overflow:hidden;
+	text-overflow:ellipsis;  
+	lines: 2; 
 }
 /* #ifndef APP-NVUE */
 button{
@@ -115,6 +117,6 @@ button{
 	margin-right: 20rpx;
 }
 .uni-icons{
-	margin-right: 20rpx;
+	/* margin-right: 20rpx; */
 	transform: rotate(0deg);
 }

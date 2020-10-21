@@ -1,53 +1,47 @@
 <template>
-	<view class="myOrderPage flex1 flex-column">
+	<view class="collectionADPage flex1 flex-column">
 		<header class="tabs row">
 			<view class="tabBox row all-center" v-for="(tab,index) in tabList" :key="index" @click="tabChange(index,tab.id)">
-				<text class="tab" :ref="tab.id" :class="{active:tabIndex == index}" :id="tab.id">{{tab.name}}</text>
+				<text class="tab" :class="{active:tabIndex == index}" :id="tab.id">{{tab.name}}</text>
 			</view>
-			<view class="underLine" :style="{width: lineWidth + 'px', left: lineLeft + 'px'}"></view>
+			<view class="underLine" :style="{width:lineWidth + 'px' ,left: lineLeft + 'px'}"></view>
 		</header>
-		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false">
-			<!-- 待发货 -->
-			<swiper-item>
-				<send-goods-card></send-goods-card>
-			</swiper-item>
-			<!-- 待收货 -->
-			<swiper-item>
-				<get-goods-card></get-goods-card>
-			</swiper-item>
-		</swiper>
+		<view class="con flex1" >
+			<swiper class="swiper flex1" :current="tabIndex" :indicator-dots="false" 
+						:autoplay="false" :duration="500" @change="swiperChage">
+				<swiper-item>
+					<goods-list></goods-list>
+				</swiper-item>
+				<swiper-item>
+					<ad-list></ad-list>
+				</swiper-item>
+			</swiper>
+		</view>
 	</view>
 </template>
-
 <script>
-	import sendGoodsCard from './send-good-card.nvue'
-	import getGoodsCard from './get-goods-card.nvue'
-	import {unencryp} from '../../../common/utils/request.js'
+	import adList from './adList.nvue'
+	import goodsList from './goodsList.nvue'
 	export default {
-		components:{sendGoodsCard,getGoodsCard},
+		components:{goodsList,adList},
 		data() {
 			return {
-				lineWidth: 0,
+				tabIndex: 0,
 				tabList: [
 					{
-						name:'待发货',
+						name:'商品收藏',
 						id:'tab0',
 						index:0
 					},
 					{
-						name:'待收货',
+						name:'广告收藏',
 						id:'tab1',
 						index:1
 					}
 				],
+				lineWidth:null,
 				lineLeft: '0',
-				tabIndex: 0,
 			}
-		},
-		onNavigationBarButtonTap() {
-			uni.navigateTo({
-				url:'../refundRecord/refundRecord'
-			})
 		},
 		mounted() {
 			this.$nextTick(() => {
@@ -56,29 +50,30 @@
 					setTimeout(()=> {
 						this.lineLeft = data.left
 						this.lineWidth = data.width
+						console.log(this.lineLeft)
 					}, 0);
 				}).exec()
 			})
-			uni.showLoading({
-				title:'数据加载中...'
-			})
 		},
 		methods: {
-			tabClick(item){
-				this.tabIndex = item.index
-			},
-			tabChange(index,id){ 
+			tabChange(index,id){
 				this.tabIndex = index
 				let theNode=uni.createSelectorQuery().select(`#${id}`)
 				theNode.boundingClientRect((data)=>{
 					this.lineLeft = data.left
 				}).exec()
 			},
+			swiperChage(e){
+				this.tabIndex = e.detail.current
+			}
 		}
 	}
 </script>
 
 <style scoped>
+.collectionADPage{
+	background-color: #f6f6f6;
+}
 .tabs{
 	height: 80rpx;
 	padding: 0 20rpx;
@@ -95,12 +90,12 @@
 	text-align: center;
 }
 .active{
-	color: #2C405A;
+	color: #000;
 }
 .underLine{
-	width: 80rpx;
+	width: 120rpx;
 	height: 4rpx;
-	background-color: #2C405A;
+	background-color: #000;
 	position: absolute;
 	left: 40rpx;
 	bottom: 0;

@@ -1,57 +1,88 @@
 <template>
-	<list class="goodsHome flex1 flex-column">
-		<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
-			<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
-			<view class="loadingIco row align-center"> 
-				<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
-				<view class="freshWrap flex-column all-center">
-					<text class="freshTit">{{refreshText}}</text>
-					<!-- <text class="freshTime">最后更新: 今天15:39</text> -->
+	<div class="flex1">
+		<list class="goodsHome flex1 flex-column">
+			<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
+				<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
+				<view class="loadingIco row align-center"> 
+					<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
+					<view class="freshWrap flex-column all-center">
+						<text class="freshTit">{{refreshText}}</text>
+						<!-- <text class="freshTime">最后更新: 今天15:39</text> -->
+					</view>
+				</view>
+			</refresh>
+			<cell class="page-swiper">
+				<swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
+					<swiper-item v-for="(item,index) in bannerList">
+						<image class="swiperImg" :src="item.topImg" mode="widthFix"></image>
+					</swiper-item>
+				</swiper>	
+			</cell>
+			<cell>
+				<bar class="bar flex-shrink" @click="barClick"></bar>
+			</cell>
+			
+			<template class="wrap" v-for="(item,index) in goodsList" >
+				<header class="listTit row align-center flex-between">
+					<view class="titWrap row align-center flex-between">
+						<view class="leftBox row align-center">
+							<text class="label">{{item.title}}</text> 
+							<text class="line">丨</text> 
+							<text class="nums">红包奖励概率: {{index == 0 ? 50 : index == 1 ? 70 : index == 2 ? 94 : 97}}%</text>
+						</view>
+						<view class="rightBox row align-center" @click="goWatchMorePage(index)">
+							<text class="more">查看更多</text>
+							<uni-icons type="arrowright" color="#666" size="16"></uni-icons>
+						</view>
+					</view>
+				</header>
+				<cell class="listsWrap">
+					<view class="cardWrap" v-for="list in item.subList">
+						<goods-card @click="cardClick(list)" :data-obj="list"></goods-card>
+					</view>
+				</cell>
+				<cell v-if="index !== goodsList.length-1"><view class="emptyBox"></view></cell>
+			</template>
+		</list>
+		<!-- <div> -->
+			<!-- <mUpdateAppTip @updateClose="updateClose" :update_title="update_title"
+						:is_forced_update="is_forced_update" :update_des="update_des" 
+						:update_type="update_type" :update_url="update_url" 
+						:is_update_app="is_update_app"></mUpdateAppTip> -->
+		<!-- </div> -->
+		<!-- <my-update :update_type="update_type" :update_url="update_url" ></my-update> -->
+		<view class="updateBox row all-center">
+			<view class="content">
+				<image class="updateBg" src="../../../static/app_update_bg.png" mode=""></image>
+				<view class="main">
+					<scroll-view scroll-y="true" class="flex1">
+						<text class="title">发现新的版本，请点击升级</text>
+						
+						<text class="item">1、优化了某些方案</text>
+						<text class="item">1、优化了某些方案{{is_update}}</text>
+					</scroll-view>
+					<view class="progress-box flex-column" v-if="update_type == 0 && is_update">
+						<progress class="progress" :percent="prpgress_num" activeColor="#1c89d6" stroke-width="6" />
+						<view class="progress-des">资源下载中，请稍后({{download_num_ed}}/{{download_num}}M)</view>
+					</view> 
+					<text>{{is_update}}</text>
+					<view class="btnWrap flex all-center" v-if="!is_update" @click="testClick">
+						<text class="btn">立即升级</text>
+					</view>
 				</view>
 			</view>
-		</refresh>
-		<cell class="page-swiper">
-			<swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
-				<swiper-item v-for="(item,index) in bannerList">
-					<image class="swiperImg" :src="item.topImg" mode="widthFix"></image>
-				</swiper-item>
-			</swiper>	
-		</cell>
-		<cell>
-			<bar class="bar flex-shrink" @click="barClick"></bar>
-		</cell>
-		
-		<template class="wrap" v-for="(item,index) in goodsList" >
-			<header class="listTit row align-center flex-between">
-				<view class="titWrap row align-center flex-between">
-					<view class="leftBox row align-center">
-						<text class="label">{{item.title}}</text> 
-						<text class="line">丨</text> 
-						<text class="nums">红包奖励概率: {{index == 0 ? 50 : index == 1 ? 70 : index == 2 ? 94 : 97}}%</text>
-					</view>
-					<view class="rightBox row align-center" @click="goWatchMorePage(index)">
-						<text class="more">查看更多</text>
-						<uni-icons type="arrowright" color="#666" size="16"></uni-icons>
-					</view>
-				</view>
-			</header>
-			<cell class="listsWrap">
-				<view class="cardWrap" v-for="list in item.subList">
-					<goods-card @click="cardClick(list)" :data-obj="list"></goods-card>
-				</view>
-			</cell>
-			<cell v-if="index !== goodsList.length-1"><view class="emptyBox"></view></cell>
-		</template>
-		
-	</list>
+		</view>
+	</div>
 </template>
 
 <script>
 	import bar from './bar.vue'
-	import {unencryp} from '../../../common/utils/request.js'
+	import {unencryp,request} from '../../../common/utils/request.js'
 	import goodsCard from '@/components/goods-card/goods-card.nvue'
+	import mUpdateAppTip from '@/components/maozai-update/updateAppTip.vue'
+	import myUpdate from '@/components/myUpdate.nvue'
 	export default {
-		components:{bar,goodsCard},
+		components:{bar,goodsCard,mUpdateAppTip,myUpdate},
 		data(){
 			return{
 				loadingStatus: true,   //  控制雪花动画是否显示
@@ -59,7 +90,20 @@
 				refreshText: "下拉可以刷新",
 				loading:false,
 				bannerList: [],
-				goodsList:[]
+				goodsList:[],
+				
+				version: '',
+				update_type:0,//0是热更新，1整包更新
+				update_url:'https://m.mafengwo.cn/app/download/redirect?app=com.mfw.roadbook&channel=MFW',//更新的地址
+				update_title:'发现新的版本，请点击升级',
+				update_des:[],
+				is_update_app:false,
+				is_forced_update:false,//是否强制升级
+				
+				prpgress_num:0,
+				download_num_ed: 0, //已经下载数
+				download_num: 0, //总下载数
+				is_update:false,
 			}
 		},
 		onNavigationBarButtonTap() {
@@ -67,7 +111,18 @@
 				url:'../../subPages/HM-search/HM-search'
 			})
 		},
-		onLoad(){
+		onShow(){ 
+			// uni.showModal({
+			// 	title:'系统升级',
+			// 	content:'1.系统升级'
+			// })
+			plus.runtime.getProperty(plus.runtime.appid, widgetInfo => {
+				this.version = widgetInfo.version;
+				this.getCheckVersion()
+			});
+			uni.$on('send', e =>{
+				this.$set(this.questions,e.index,e.data)
+			})
 			let userInfo = uni.getStorageSync('userInfo')
 			if(!userInfo){
 				return
@@ -78,6 +133,19 @@
 			this.getGoodsList()  
 		},
 		methods:{
+			testClick(){
+				console.log(11) 
+				//整包更新打开浏览器
+				if(this.update_type == 1) {
+					plus.runtime.openURL(encodeURI(this.update_url));
+					this.closeUpdate()
+					return 
+				} 
+				setTimeout(()=>{
+					this.is_update = true
+					console.log(this.is_update)
+				},0)
+			},
 			getGoodsList(){
 				unencryp('/snap/getSnapUpList','get',{}).then(res => {
 					if(res.code == 200){
@@ -86,6 +154,14 @@
 							this.bannerList = res.data.topList
 							// console.log(this.goodsList)
 						},0)
+						setTimeout(()=>{
+								// 模拟网路请求
+								this.loadingStatus = true
+								this.refreshing = false
+								this.loading = false;
+								this.release = false
+								this.refreshText = '下拉可以刷新'
+						},1200)
 					}else{
 						res.msg || uni.showToast(res.msg)
 					}
@@ -100,14 +176,7 @@
 				this.refreshing = true
 				this.loadingStatus = false
 				this.refreshText = '加载中 ...'
-				setTimeout(()=>{
-						// 模拟网路请求
-						this.loadingStatus = true
-						this.refreshing = false
-						this.loading = false;
-						this.release = false
-						this.refreshText = '下拉可以刷新'
-				},2000)
+				this.getGoodsList()
 			},
 			onpullingdown(e){
 				if (this.refreshing) return;
@@ -152,7 +221,115 @@
 				uni.navigateTo({
 					url:'../../subPages/goodsDetail/goodsDetail?groupType=' + item.snapUpPeopleMax + '&id=' + item.id
 				})
-			}
+			},
+			getCheckVersion(){
+				let param = {
+					"clientName": "android",
+					"version": this.version
+				}
+				request('/api/checkVersion','post',param).then(res => {
+					// 这里需要返回app下载链接
+					if(res.code == 200){
+						let downloadTxt = '';
+						this.update_des = []   
+						console.log(this.version)
+						console.log(res) 
+						if(this.version == res.data.version ){return}
+						if(this.version != res.data.version && res.data.forceUpdate == 'false'){
+							this.update_type = 0
+							downloadTxt = `版本号${res.data.version}精彩不容错过, 请及时更新!`
+							this.update_des.push(downloadTxt)
+						}else
+						if(this.version != res.data.version && res.data.forceUpdate == 'true'){
+							this.update_type = 0
+							this.is_forced_update = true
+							downloadTxt = `版本号${res.data.version}最新版本才能正常使用, 请及时更新!`
+							this.update_des.push(downloadTxt)
+							uni.hideTabBar()
+							this.update_url = res.data.downloadLink
+							this.updateApp()
+							return
+						}else{
+							this.getAlertData()
+							return
+						}
+						// this.updateApp()
+						//  缓存非强制更新下载弹框弹出时的时间   保证2个小时弹出一次
+						let storageDate = uni.getStorageSync('updateDate')
+						let nowDate = new Date().getTime()
+						let spaceTime = Math.floor((nowDate-storageDate)/1000/60/60)
+						if(storageDate){
+							if(spaceTime > 2 || spaceTime == 2){ // 每次弹出后更新缓存时间,清除缓存中弹框状态
+								this.update_url = res.data.downloadLink
+								this.updateApp()
+								wx.setStorage({
+									key: 'updateDate',
+									data: nowDate
+								})
+							}
+						}else{
+							this.update_url = res.data.downloadLink
+							this.updateApp()
+							wx.setStorage({
+								key: 'updateDate',
+								data: nowDate
+							})
+						}
+					}else{
+						uni.showToast({
+							title:res.msg
+						})
+					}
+				})
+			},
+			updateApp() {
+				// #ifdef APP-PLUS  
+				plus.runtime.getProperty(plus.runtime.appid, widgetInfo => {
+						//传当前的版本号和appid与后台校验是否返回新的信息
+						// {
+						//  version: widgetInfo.version,  //  应用版本号
+						//  appid: plus.runtime.appid
+						// }
+						//我这里直接模拟后台传回来的值
+						// this.update_type = 0//0是热更新，1整包更新
+						// this.update_url = 'http://www.guangyi009.com/apk/app-release.apk'//更新的地址
+						this.is_update_app = true,///是否强制更新，不能关闭
+						this.update_title = '发现新的版本，请点击升级'
+						
+						//  一下是更新弹框出现时禁止下拉刷新
+						const pages = getCurrentPages();
+						const page = pages[pages.length - 1];  
+						const currentWebview = page.$getAppWebview();
+						currentWebview.setStyle({  
+						  pullToRefresh: {  
+						    support: !this.is_update_app,  
+						    style: plus.os.name === 'Android' ? 'circle' : 'default'  
+						  }  
+						});  
+						// this.update_des = []
+				});
+				// #endif
+			},
+			updateClose(e) {
+				if(e){
+					uni.showToast({
+						title: e
+					})
+					return
+				}
+				this.is_update_app = false;
+				//  一下是更新弹框出现时禁止下拉刷新
+				const pages = getCurrentPages();
+				const page = pages[pages.length - 1];  
+				const currentWebview = page.$getAppWebview();
+				currentWebview.setStyle({  
+				  pullToRefresh: {  
+				    support: !this.is_update_app,  
+				    style: plus.os.name === 'Android' ? 'circle' : 'default'  
+				  }  
+				}); 
+				uni.showTabBar()
+			},
 		}
 	}
 </script>
@@ -161,6 +338,7 @@
 .goodsHome{
 	position: relative;
 	top: -4rpx;
+	/* background-color: #007AFF; */
 }
 .swiperImg{
 	width: 750rpx;
@@ -222,5 +400,67 @@
 .cardWrap{
 	padding: 0 20rpx;
 	background-color: #fff;
+}
+.updateBox{
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.3);
+	z-index: 10;
+}
+.text{
+	color: #fff;
+}
+.content{
+	width: 580rpx;
+	height: 734rpx;
+	margin-bottom: 400rpx;
+	position: relative;
+}
+.updateBg{
+	width: 580rpx;
+	height: 734rpx;
+}
+.main{
+	position: absolute;
+	top: 330rpx;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 99;
+	padding: 20rpx;
+	background-color: #fff;   
+		/* background-color: #07C160; */
+}
+.title{
+	color: #000;
+	font-size: 32rpx;
+	margin-bottom: 20rpx;
+}
+.item{
+	color: #666;
+	font-size: 28rpx;
+}
+
+
+.progress {
+	border-radius:35px;
+}
+.progress-des {
+	margin-top: 20rpx;
+	font-size: 28rpx;
+	color: #6C6C6C;
+}
+.btnWrap{
+	height: 80rpx;
+	border-radius: 10rpx;
+	background-color: #007AFF;
+}
+.btn{
+	color: #fff;
+	font-size: 30rpx;
+	font-weight: bold;
 }
 </style>

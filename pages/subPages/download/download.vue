@@ -5,7 +5,7 @@
 			<image class="yao" src="../../../static/other/yao.png" mode=""></image>
 			<view class="bot flex">
 				<view class="code flex all-center">
-					<image :src="qrcode" mode="aspectFill"></image>
+					<image :src="qrcode" @load="imgOnloag" mode="aspectFill"></image>
 				</view>
 			</view>
 		</view>
@@ -44,6 +44,9 @@
 					this.statusBarHeight = data.statusBarHeight + 45
 				}
 			})
+			uni.showLoading({
+				title:'加载中 ...'
+			})
 			this.getpic()
 		},
 		onNavigationBarButtonTap() {
@@ -58,7 +61,6 @@
 					 secret: '72a0c2867712bcae6089e3cf46482fa9' // 小程序秘钥
 					},
 					success:(res)=> {
-						this.showToast(res.data.access_token,5000)
 						uni.request({
 							 url: 'https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=' + res.data.access_token,
 							 method: 'POST',
@@ -69,9 +71,11 @@
 							 },
 							 success:(res)=> {
 								 if (res.statusCode == 200) {
-									 const arrayBuffer = new Uint8Array(res.data)
-									 let data = uni.arrayBufferToBase64(arrayBuffer);
-									 this.qrcode = 'data:image/jpeg;base64,' + data
+									 setTimeout(()=> {
+									 	const arrayBuffer = new Uint8Array(res.data)
+									 	let data = uni.arrayBufferToBase64(arrayBuffer);
+									 	this.qrcode = 'data:image/jpeg;base64,' + data
+									 }, 0);
 								 } 
 							 }
 						})
@@ -79,52 +83,55 @@
 				})
 			},
 			toImage() {
-					/* 获取屏幕信息 */
-					let ws = this.$mp.page.$getAppWebview();
-					let bitmap = new plus.nativeObj.Bitmap('downloadPage');
-						// 将webview内容绘制到Bitmap对象中
-						ws.draw( bitmap,
-							(e)=> {
-								/* 获取base64 */
-								// this.test= bitmap.toBase64Data();
-								/* 加载base64编码 */
-								bitmap.loadBase64Data(bitmap.toBase64Data(),
-									() => {
-										let timeStamp = new Date().getTime()
-										/* 保存图片 */
-										bitmap.save('_doc/share' + timeStamp + '.jpg',{},
-											async (i)=>{
-												uni.saveImageToPhotosAlbum({
-													filePath: i.target,
-													success: ()=> {
-														/* 清除 */
-														bitmap.clear();
-														this.showToast('下载成功,请到相册中查看')
-													},
-													fail(e) {
-														this.showToast('下载失败,请联系系统管理员')
-													}
-												});
+				/* 获取屏幕信息 */
+				let ws = this.$mp.page.$getAppWebview();
+				let bitmap = new plus.nativeObj.Bitmap('downloadPage');
+				// 将webview内容绘制到Bitmap对象中
+				ws.draw( bitmap,
+					(e)=> {
+						/* 获取base64 */
+						// this.test= bitmap.toBase64Data();
+						/* 加载base64编码 */
+						bitmap.loadBase64Data(bitmap.toBase64Data(),
+							() => {
+								let timeStamp = new Date().getTime()
+								/* 保存图片 */
+								bitmap.save('_doc/share' + timeStamp + '.jpg',{},
+									async (i)=>{
+										uni.saveImageToPhotosAlbum({
+											filePath: i.target,
+											success: ()=> {
+												/* 清除 */
+												bitmap.clear();
+												this.showToast('下载成功,请到相册中查看')
 											},
-											(e) => {
-												this.showToast('下载失败,请联系系统管理员' + JSON.stringify(e))
-												console.log('保存图片失败：' + JSON.stringify(e));
+											fail(e) {
+												this.showToast('下载失败,请联系系统管理员')
 											}
-										);
+										});
 									},
-									() => {
-										console.log('加载Base64图片数据失败：' + JSON.stringify(e));
+									(e) => {
+										this.showToast('下载失败,请联系系统管理员' + JSON.stringify(e))
+										console.log('保存图片失败：' + JSON.stringify(e));
 									}
 								);
 							},
-							(e) => {
-								console.log('截屏绘制图片失败：' + JSON.stringify(e));
-							},
-							{
-								check: true, // 设置为检测白屏
-								clip: { top: this.statusBarHeight +'px', left: '0px', height:'100%', width: '100%' } // 设置截屏区域
-							},
-						)
+							() => {
+								console.log('加载Base64图片数据失败：' + JSON.stringify(e));
+							}
+						);
+					},
+					(e) => {
+						console.log('截屏绘制图片失败：' + JSON.stringify(e));
+					},
+					{
+						check: true, // 设置为检测白屏
+						clip: { top: this.statusBarHeight +'px', left: '0px', height:'100%', width: '100%' } // 设置截屏区域
+					},
+				)
+			},
+			imgOnloag(e){
+				uni.hideLoading()
 			}
 		}
 	}
@@ -175,10 +182,12 @@
 		}
 		.code{
 			width: 250rpx;
-			height: 250rpx;
+			height: 284.5rpx;
+			border-radius: 10rpx;
 			image{
-				width: 100%;
-				height: 100%;
+				width: 250rpx;
+				height: 284.5rpx;
+				border-radius: 10rpx;
 			}
 		}
 	}

@@ -184,7 +184,6 @@
 					}
 					this.form.homeBigImgUrl = this.netUrl
 				}
-				
 				this.form.releaseTimes = this.chooseDays.map(item => item.date + ' 00:00:00')
 				let res = this.checkRecommend(this.form)
 				if(!res){
@@ -196,8 +195,10 @@
 				this.submitRequest()
 			},
 			submitRequest(){  
-				this.$request('/api/recommend','post',encodeURIComponent(JSON.stringify(this.form))).then(res => {
+				//encodeURIComponent(JSON.stringify(this.form))
+				this.$request('/api/recommend','post',JSON.stringify(this.form)).then(res => {
 					uni.hideLoading()
+					console.log(res)
 					if(res.code == 200){
 						if(uni.getSystemInfoSync().platform == 'android'){
 							uni.showModal({

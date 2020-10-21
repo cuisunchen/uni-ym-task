@@ -20,7 +20,6 @@ const request = (url, method='post', data, hasToken="true") => {
 		if(url == '/api/recommend' || url == '/api/goodLuck' || url == '/api/questions' || url == '/api/release'){
 			param = Object.keys(data).length > 0 ? getRsaCode(data) : data;
 		}
-		
 		let promise = new Promise((resolve, reject)=> {
 				return uni.request({
 						url: urlConfig + url,
@@ -30,7 +29,7 @@ const request = (url, method='post', data, hasToken="true") => {
 						header: headers
 				}).then(res => {
 					uni.hideLoading()
-					// console.log(res)
+					
 					if (encodeArr.includes(url)){
 						 let data = JSON.parse(deRsaCode(res[1].data))
 						 resolve(data)

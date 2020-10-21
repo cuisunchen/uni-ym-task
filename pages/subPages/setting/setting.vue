@@ -4,10 +4,6 @@
 			<cell icon-path="../../../static/gw.png" title="当前版本" :desc="version" :is-icon-show="false"></cell>
 			<cell v-for="(item,index) in lists" :key="index" :icon-path="item.iconUrl"  :desc-color="item.color"
 					:title="item.title" :desc="item.desc" :is-icon-show="item.isIconShow" @click="itemClick(item)"></cell>
-			<!-- <cell icon-path="../../../static/gw.png" title="官网" desc="" :is-icon-show="false" @click="copy"></cell> -->
-			<!-- <cell icon-path="../../../static/xcx.png" title="小程序" desc="" desc-color="red" :is-icon-show="false"></cell> -->
-			<!-- <cell icon-path="../../../static/gw1.png" title="官方微信" desc="" :is-icon-show="false"></cell> -->
-			<!-- <cell icon-path="../../../static/xq.png" title="设置兴趣" desc="" border-bottom-color="transparent" @click="goSubPage"></cell> -->
 		</view>
 		
 		<view class="btn">

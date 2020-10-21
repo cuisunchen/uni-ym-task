@@ -8,7 +8,7 @@
 			</view>
 		</refresh>
 		<cell v-for="item in lists" class="cell">
-			<my-order-card :data-obj="item" class="card"></my-order-card>
+			<my-order-card :data-obj="item" class="card" @click="cancelSend(item.id)"></my-order-card>
 		</cell>
 		<cell class="nodata flex1 flex-column all-center" v-if="lists.length == 0">
 			<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
@@ -19,43 +19,70 @@
 
 <script>
 	import myOrderCard from '@/components/myOrder-card/myOrder-card.nvue'
+	import {unencryp} from '../../../common/utils/request.js'
 	export default {
 		components:{myOrderCard},
-		props:{
-			lists:{
-				type: Array,
-				default(){
-					return []
-				}
-			}
-		},
 		data(){
 			return{
 				loadingStatus: true,   //  控制雪花动画是否显示
 				refreshing:false,				//  控制refresh是否显示
 				refreshText: "下拉可以刷新",
 				loading:false,
+				isNoMore: false,			// 控制是否可以加载更多
+				param:{
+					"pageNum": 1,
+					"pageSize": 10,
+					"type": 0
+				},
+				lists:[],
 			}
 		}, 
+		created() {
+			this.getLists()
+		},
 		methods:{
+			getLists(type){
+				unencryp('/snap/getDeliveryList','post',this.param).then(res=>{
+					if(res.code == 200){ 
+						setTimeout(()=> {
+							if(this.param.pageNum >= Math.ceil(res.data.maxSize/this.param.pageSize)){
+								this.isNoMore = true
+							}
+							if(type && type == 'loadMore'){
+								this.lists.push(...res.data.list)
+							}else{
+								this.lists = res.data.list
+							}
+						}, 0);
+						if(type == 'refresh'){
+							setTimeout(()=>{
+								this.loadingStatus = true
+								this.refreshing = false
+								this.loading = false;
+								this.release = false
+								this.refreshText = '下拉可以刷新'
+							},1200)
+						}
+					}else{
+						uni.showToast({
+							title:res.msg,
+							icon:'none'
+						})
+					}
+				})
+			},
 			onrefresh(){
 				if(this.loading){
 						//当正在调用接口获取数据时，此时的下拉不做任何操作
 						return;
 				}
+				this.param.pageNum = 1
+				this.isNoMore = false
 				this.loading = true;
 				this.refreshing = true
 				this.loadingStatus = false
 				this.refreshText = '加载中 ...'
-				this.$emit('refresh')
-				setTimeout(()=>{
-						// 模拟网路请求
-						this.loadingStatus = true
-						this.refreshing = false
-						this.loading = false;
-						this.release = false
-						this.refreshText = '下拉可以刷新'
-				},2000)
+				this.getLists('refresh')
 			},
 			onpullingdown(e){
 				if (this.refreshing) return;
@@ -67,8 +94,25 @@
 					this.release = false
 				}
 			},
+			cancelSend(id){
+				unencryp('/snap/cancelDelivery','post',{id}).then(res => {
+					if(res.code == 200){
+						uni.showToast('取消成功!')
+						uni.showToast({
+							title:'取消成功!',
+						})
+						this.$emit('refresh')
+					}else{
+						res.msg || uni.showToast(res.msg)
+					}
+				})
+			},
 			loadMore(){
-				this.$emit('loadMore')
+				if(this.isNoMore){
+					return
+				}
+				this.param.pageNum ++
+				this.getLists('loadMore')
 			},
 		}
 	}
@@ -77,7 +121,6 @@
 <style scoped>
 .lists{
 	width: 750rpx;
-	/* background-color: #18B566; */
 }
 .card{
 	margin-top: 20rpx;

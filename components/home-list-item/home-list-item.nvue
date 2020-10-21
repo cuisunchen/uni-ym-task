@@ -58,7 +58,6 @@
 	width: 160rpx;
 	height: 160rpx;
 	border-radius: 6rpx;
-	background-color: #007AFF;
 }
 .right{
 	padding-left: 30rpx;

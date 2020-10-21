@@ -1,15 +1,16 @@
 <template>
 	<view class="homePage flex1 flex-column">
 		<view class="tabs row">
-			<view class="tabBox flex1 all-center" @click="tabClick(0)">
-				<text class="tab" :class="{active:tabIndex == 0}">全国</text>
+			<view class="tabBox flex1 all-center" @click="tabClick(0,'tab0')">
+				<text class="tab" id="tab0" :class="{active:tabIndex == 0}">全国</text>
 			</view>
-			<view class="tabBox flex1 all-center" @click="tabClick(1)">
-				<text class="tab" :class="{active:tabIndex == 1}">同城</text>
+			<view class="tabBox flex1 all-center" @click="tabClick(1,'tab1')">
+				<text class="tab" id="tab1" :class="{active:tabIndex == 1}">同城</text>
 			</view>
-			<view class="tabBox flex1 all-center" @click="tabClick(2)">
-				<text class="tab" :class="{active:tabIndex == 2}">附近</text>
+			<view class="tabBox flex1 all-center" @click="tabClick(2,'tab2')">
+				<text class="tab" id="tab2" :class="{active:tabIndex == 2}">附近</text>
 			</view>
+			<view class="underLine" :style="{width:lineWidth + 'px' ,left: lineLeft + 'px'}"></view>
 		</view>
 		
 		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false">
@@ -38,94 +39,33 @@
 		data(){
 			return{
 				tabIndex: 0,
-				
+				lineWidth:null,
+				lineLeft: '0',
 			}
 		},
-		// created() {
-		// 	 this.param.cityCode = uni.getStorageSync('location') ? JSON.parse(uni.getStorageSync('location')).adcode : '';
-		// 	 uni.showLoading({
-		// 	 	title:'加载中...'
-		// 	 })
-		// 	 this.getLists()
-		// 	 this.getRcommendDatas()
-		// },
+		mounted() {
+			this.$nextTick(() => {
+				let theNode = uni.createSelectorQuery().select(`#tab0`)
+				theNode.boundingClientRect((data)=>{
+					setTimeout(()=> {
+						this.lineLeft = data.left
+						this.lineWidth = data.width
+					}, 0);
+				}).exec()
+			})
+		},
 		methods:{
-			tabClick(i){
-				this.tabIndex = i
-			},
-			getLists(type){
-				unencryp('/api/earn/easyMoreTask','post',this.param).then(res=>{
-					uni.hideLoading()
-					if(type == 'fresh'){
-						setTimeout(()=>{
-							this.showLoading = 'hide'
-							this.loadingStatus = true
-							this.release = false
-							this.refreshText = '下拉可以刷新'
-						},1500)
-					}
-					console.log(res)
-					if(res.code == 200){
-						setTimeout(()=>{
-							this.sumPage = res.data.sumPage
-							if(type && type == 'loadMore'){
-								this.lists.push(res.data.list)
-							}else{
-								this.lists = res.data.homeAdList
-							}
-						},0)
-					}else{
-						res.msg || uni.showToast(res.msg)
-					}
-				})
-			},
-			getRcommendDatas(){ 
-				unencryp('/api/earn/recommend','post',this.param).then(res=>{
-					uni.hideLoading()
-					console.log(res)
-					if(res.code == 200){
-						setTimeout(()=>{
-							this.recommendList = res.data
-						},0)
-					}else{
-						res.msg || uni.showToast(res.msg)
-					}
-				})
-			},
-			onrefresh(){
-				this.param.pageNum = 1
-				this.loadingStatus = false
-				this.showLoading = 'show'
-				this.refreshText = '加载中 ...'
-				this.getLists('fresh')
-			},
-			onpullingdown(e){
-				if(e.pullingDistance >= 150){
-					this.release = true
-					this.refreshText = '释放立即刷新'
-				}else{
-					this.refreshText = '下拉可以刷新'
-					this.release = false
-				}
-			},
-			loadMore(){
-				if(this.sumPage == this.param.pageNum){
-					return
-				}
-				console.log(123)
-				this.param.pageNum ++ 
-				this.getLists('loadMore')
-			},
-			goDetail(data,index){
-				var strRegex = "((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)";
-				let re=new RegExp(strRegex);
-				if (!re.test(data.bigImg)) {
-					this.showToast('详情页地址有误,请联系客服')
-					return
-				}
-				this.userClick(data,index)
-				uni.navigateTo({
-					url:'../../subPages/details/details?param='+ encodeURIComponent(JSON.stringify(data)) + '&type=question&index='+index
+			tabClick(index,id){
+				this.tabIndex = index
+				this.$nextTick(() => {
+					let theNode = uni.createSelectorQuery().select(`#${id}`)
+					theNode.boundingClientRect((data)=>{
+						setTimeout(()=> {
+							this.lineLeft = data.left
+							this.lineWidth = data.width
+							console.log(this.lineLeft)
+						}, 0);
+					}).exec()
 				})
 			}
 		}
@@ -148,7 +88,16 @@
 	font-size: 32rpx;
 }
 .active{
-	color: #000;
+	color: #2C405A;
 }
-
+.underLine{
+	height: 4rpx;
+	background-color: #2C405A;
+	position: absolute;
+	left: 20rpx;
+	bottom: 0;
+	transition-property: left;
+	transition-duration:.3s;
+	transition-timing-function:ease
+}
 </style>

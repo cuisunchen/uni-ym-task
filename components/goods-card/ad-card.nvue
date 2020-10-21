@@ -1,0 +1,79 @@
+<template>
+	<view class="adCard flex-column">
+		<view class="titBox row align-center">
+			<text class="date">{{dataObj.releaseTime}}</text>
+			<text class="tit">发布</text>
+		</view>
+		<view class="row">
+			<view class="leftBox">
+				<image class="img" :src="dataObj.topImage" mode=""></image>
+			</view>
+			<view class="rightBox flex1">
+				<text class="title">{{dataObj.title}}</text>
+				<text class="status">{{dataObj.status == 0 ? '进行中' : '已完成'}}</text>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		props:{
+			dataObj:{
+				type: Object,
+				default(){
+					return{}
+				}
+			}
+		},
+	}
+</script>
+
+<style scoped>
+.adCard{
+	border-radius: 10rpx;
+	background-color: #fff;
+}
+.titBox{
+	height: 80rpx;
+	border-bottom-width: 1rpx;
+	border-style: solid;
+	border-color: #f6f6f6;
+}
+.date{
+	color: #666;
+	font-size: 30rpx;
+}
+.tit{
+	color: #666;
+	font-size: 26rpx;
+	line-height: 24rpx;
+}
+.row{
+	padding: 20rpx;
+}
+.rightBox{
+	padding-left: 16rpx;
+}
+.img{
+	width: 160rpx;
+	height: 160rpx;
+	border-radius: 6rpx;
+	background-color: #007AFF;
+}
+.title{
+	color: #666;
+	height: 72rpx;
+	font-size: 28rpx;
+	line-height: 36rpx;
+	overflow:hidden;
+	text-overflow:ellipsis;  
+	lines: 2; 
+}
+.status{
+	color: #999;
+	font-size: 24rpx;
+	text-align: right;
+	margin-top: 20rpx;
+}
+</style>

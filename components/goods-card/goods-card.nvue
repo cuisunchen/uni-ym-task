@@ -1,35 +1,35 @@
 <template>
-	<view class="goodsCard row" @click="itemClick">
+	<view class="goodsCard row flex" @click="itemClick">
 		<view class="leftBox">
 			<image class="img" :src="dataObj.icon" mode=""></image>
 		</view>
 		<view class="rightBox flex1 flex-column flex-between"> 
 			<text class="title">{{dataObj.title}}</text>
 			
-			<view class="tags row">
+			<view class="tags row flex">
 				<view class="tag row all-center">
 					<text class="moneyIcon">￥</text>
 					<text class="tagTxt">红包奖励</text>
 				</view>
-				<view class="tag row all-center">
+				<view class="tag row flex all-center">
 					<text class="tagTxt">包邮</text>
 				</view>
-				<view class="tag row all-center">
+				<view class="tag row flex all-center">
 					<text class="tagTxt">正品保证</text>
 				</view>
 			</view>
 			
-			<view class="moneyBox row align-center">
+			<view class="moneyBox row flex align-center">
 				<text class="money">￥ {{dataObj.price}}</text>
 				<text class="status flex all-center">{{dataObj.snapUpPeople}}/{{dataObj.snapUpPeopleMax}}</text>
 			</view>
 			
-			<view class="info row">
+			<view class="info row flex">
 				<view class="left flex1 flex-column flex-between">
 					<text class="tit">{{dataObj.ruleDes}}</text>
-					<view class="desc row"><text class="descLabel">未拼中立得</text><text class="descMoney">{{dataObj.rebatePrice}}元</text></view>
+					<view class="desc row flex"><text class="descLabel">未拼中立得</text><text class="descMoney">{{dataObj.rebatePrice}}元</text></view>
 				</view>
-				<view class="right row all-center">
+				<view class="right row flex all-center">
 					<uni-icons class="icon" type="pulldown" color='#ff0000'></uni-icons>
 				</view>
 			</view>
@@ -45,11 +45,6 @@
 				default(){
 					return{}
 				}
-			}
-		},
-		watch:{
-			dataObj(val){
-				console.log(val)
 			}
 		},
 		methods:{
@@ -105,12 +100,12 @@
 	border-radius: 50%;
 	text-align: center;
 	line-height: 30rpx;
+	margin-right: 10rpx;
 }
 .tagTxt{
 	color: #ff0000;
 	font-size: 24rpx; 
 	line-height: 30rpx;
-	margin-left: 10rpx;
 }
 .money{
 	color: #000;

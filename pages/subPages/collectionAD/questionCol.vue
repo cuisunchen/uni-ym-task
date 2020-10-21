@@ -1,8 +1,5 @@
 <template>
-	<scroll-view scroll-y :refresher-enabled="true" :refresher-triggered="triggered" :refresher-threshold="true"
-				 @scrolltolower="infiniteScroll" class="nationwideList" 
-				@refresherrefresh="refresh">
-		
+	<view class="nationwideList">
 		<view class="listWrap" v-if="questions.length > 0">
 			<home-list-item v-for="(item,index) in questions" :key="item.id" :data-obj="item" @click="qsDetail(item,index)"></home-list-item>
 			<uni-load-more v-if="questions.length > 8 || pullupLoadingType == 'loading'" :status="pullupLoadingType"></uni-load-more>
@@ -11,7 +8,7 @@
 				<image class="img" src="../../../static/noData.png" mode="scaleToFill"></image>
 				<view class="desc">暂无数据</view>
 		</view>
-	</scroll-view>
+	</view>
 </template>
 
 <script>

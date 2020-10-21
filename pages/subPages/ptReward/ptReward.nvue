@@ -1,9 +1,9 @@
 <template>
 	<view class="wrap">
 		<list class="ptReward flex1 flex-column" loadmoreoffset="10" @loadmore="loadMore">
-			<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="showLoading">
+			<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
 				<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
-				<view class="loadingIco row align-center">
+				<view class="loadingIco row align-center"> 
 					<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
 					<text class="freshTit">{{refreshText}}</text>
 				</view>
@@ -13,7 +13,7 @@
 				<view class="grayBg"></view>
 				<view class="info">
 					<text class="ptLabel">拼团奖励总额(元)</text>
-					<text class="totalMoney">1296.08</text>
+					<text class="totalMoney">{{totalAmount}}</text>
 				</view>
 				<text class="desc">拼团奖励总额,为您实际收到的奖励总额(可随时提现),是总额奖励的2/3,剩余1/3返给您的上家,快去分享吧 ~~~</text>
 			</cell>
@@ -65,25 +65,26 @@
 				
 				lineWidth:null,
 				lineLeft:null,
-				loadingStatus: true,
-				release:false,
+				loadingStatus: true,   //  控制雪花动画是否显示
+				refreshing:false,				//  控制refresh是否显示
 				refreshText: "下拉可以刷新",
+				loading:false,
+				isNoMore: false,			// 控制是否可以加载更多
 				nowYear: '',
 				sumAmount:'',
+				totalAmount:'',
 				lists:[],
 				visible: false,
 				years:[2020,2030],
 				year:null,
 				months:[1,2,3],
 				month:null,
-				// param:{
-				// 	"pageNum": 1,
-				// 	"pageSize": 10
-				// },
-				maxPageNum:null,
 				param:{
-					yearMonth: ''
-				}
+					"pageNum": 1,
+					"pageSize": 10,
+					"yearMonth": ""
+				},
+				maxPageNum:null,
 			}
 		},
 		onNavigationBarButtonTap() {
@@ -118,38 +119,49 @@
 			getLists(type){
 				unencryp('/snap/snapUpReward','post',this.param).then(res=>{
 					uni.hideLoading()
-					if(res.code == 200 && res.data.list.length > 0){
+					if(res.code == 200){
 						setTimeout(()=>{
-							if(res.data.maxSize >= this.param.pageNum){
-								this.maxPageNum = res.data.maxSize
+							if(res.data.list.length < this.param.pageSize){
+								this.isNoMore = true
 							}
 							//  此处有问题,需要等接口改正后完善
 							if(type && type == 'loadMore'){
-								this.lists.push(res.data.list) 
+								this.lists.push(...res.data.list) 
 							}else{
 								this.lists = res.data.list
-								this.sumAmount = res.data.sumAmount.toString()
+								this.sumAmount = String(res.data.sumAmount.toFixed(2))
+								this.totalAmount = String(res.data.totalAmount.toFixed(2))
 							}
 						},0)
+						if(type == 'refresh'){
+							setTimeout(()=>{
+								this.loadingStatus = true
+								this.refreshing = false
+								this.loading = false;
+								this.release = false
+								this.refreshText = '下拉可以刷新'
+							},1200)
+						}
 					}else{
 						res.msg || uni.showToast(res.msg)
 					}
 				})
 			},
 			onrefresh(){
+				if(this.loading){
+						//当正在调用接口获取数据时，此时的下拉不做任何操作
+						return;
+				}
+				this.param.pageNum = 1
+				this.isNoMore = false
+				this.loading = true;
+				this.refreshing = true
 				this.loadingStatus = false
-			  this.showLoading = 'show'
 				this.refreshText = '加载中 ...'
-				setTimeout(res=>{
-						// 模拟网路请求
-						this.num=4;
-						this.showLoading = 'hide'
-						this.loadingStatus = true
-						this.release = false
-						this.refreshText = '下拉可以刷新'
-				},2000)
+				this.getLists('refresh')
 			},
 			onpullingdown(e){
+				if (this.refreshing) return;
 				if(e.pullingDistance >= 150){
 					this.release = true
 					this.refreshText = '释放立即刷新'
@@ -159,6 +171,10 @@
 				}
 			},
 			loadMore(){
+				if(this.isNoMore){
+					return
+				}
+				this.param.pageNum ++
 				this.getLists('loadMore')
 			},
 			showPicker(){

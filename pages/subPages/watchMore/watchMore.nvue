@@ -1,115 +1,45 @@
 <template>
 	<view class="watchMore flex1 flex-column">
 		<header class="tabs row align-center">
-			<text class="tab flex1 row all-center" :class="{active:tabIndex == index}" :id="tab.id" v-for="(tab,index) in tabList" :key="index" @click="tabChange(index,tab.id)">{{tab.name}}</text>
+			<text class="tab flex1 row all-center" :class="{active:tabIndex == index}" 
+				:id="tab.id" v-for="(tab,index) in tabList" :key="index" 
+				@click="tabChange(index,tab.id)">{{tab.name}}</text>
 			<view class="underLine" :style="{width:lineWidth + 'px' ,left: lineLeft + 'px'}"></view>
 		</header>
 		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false">
 			<!-- 2人团 -->
 			<swiper-item class="swiperItem flex1 flex-column">
-				<list class="lists flex1" @loadmore="loadMore(0)">
-					<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
-						<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
-						<view class="loadingIco row align-center"> 
-							<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
-							<view class="freshWrap flex-column all-center">
-								<text class="freshTit">{{refreshText}}</text>
-								<!-- <text class="freshTime">最后更新: 今天15:39</text> -->
-							</view>
-						</view>
-					</refresh>
-					<cell v-for="i in lists2" class="cell" @click="cardClick(2,i)">
-						<goods-card :data-obj="i"></goods-card>
-					</cell>
-					<cell class="nodata flex1 flex-column all-center" v-if="lists2.length == 0">
-						<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
-						<text class="nodatadesc">暂无数据</text>
-					</cell>
-				</list>
+				<pt2></pt2>
 			</swiper-item>
 			<!-- 10人团 -->
 			<swiper-item class="swiperItem flex1 flex-column">
-				<list class="lists flex1" @loadmore="loadMore(1)">
-					<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
-						<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
-						<view class="loadingIco row align-center"> 
-							<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
-							<view class="freshWrap flex-column all-center">
-								<text class="freshTit">{{refreshText}}</text>
-								<!-- <text class="freshTime">最后更新: 今天15:39</text> -->
-							</view>
-						</view>
-					</refresh>
-					<cell v-for="i in lists10" class="cell" @click="cardClick(10,i)">
-						<goods-card :data-obj="i"></goods-card>
-					</cell>
-					<cell class="nodata flex1 flex-column all-center" v-if="lists10.length == 0">
-						<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
-						<text class="nodatadesc">暂无数据</text>
-					</cell>
-				</list>
+				<pt10></pt10>
 			</swiper-item>
 			<!-- 50人团 -->
 			<swiper-item class="swiperItem flex1 flex-column">
-				<list class="lists flex1" @loadmore="loadMore(2)">
-					<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
-						<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
-						<view class="loadingIco row align-center"> 
-							<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
-							<view class="freshWrap flex-column all-center">
-								<text class="freshTit">{{refreshText}}</text>
-								<!-- <text class="freshTime">最后更新: 今天15:39</text> -->
-							</view>
-						</view>
-					</refresh>
-					<cell v-for="i in lists50" class="cell" @click="cardClick(50 ,i)">
-						<goods-card :data-obj="i"></goods-card>
-					</cell>
-					<cell class="nodata flex1 flex-column all-center" v-if="lists50.length == 0">
-						<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
-						<text class="nodatadesc">暂无数据</text>
-					</cell>
-				</list>
+				<pt50></pt50>
 			</swiper-item>
 			<!-- 100人团 -->
 			<swiper-item class="swiperItem flex1 flex-column">
-				<list class="lists flex1" @loadmore="loadMore(3)">
-					<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
-						<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
-						<view class="loadingIco row align-center"> 
-							<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
-							<view class="freshWrap flex-column all-center">
-								<text class="freshTit">{{refreshText}}</text>
-								<!-- <text class="freshTime">最后更新: 今天15:39</text> -->
-							</view>
-						</view>
-					</refresh>
-					<cell v-for="i in lists100" class="cell" @click="cardClick(100 ,i)">
-						<goods-card :data-obj="i"></goods-card>
-					</cell>
-					<cell class="nodata flex1 flex-column all-center" v-if="lists100.length == 0">
-						<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
-						<text class="nodatadesc">暂无数据</text>
-					</cell>
-				</list>
+				<pt100></pt100>
 			</swiper-item>
 		</swiper>
 	</view>
 </template>
 
 <script>
+	import pt2 from './pt2.nvue'
+	import pt10 from './pt10.nvue'
+	import pt50 from './pt50.nvue'
+	import pt100 from './pt100.nvue'
 	import myOrderCard from '@/components/myOrder-card/myOrder-card.nvue'
-	import goodsCard from '@/components/goods-card/goods-card.nvue'
-	import urlConfig from '@/common/utils/config.js'
 	import {unencryp} from "../../../common/utils/request.js"
 	export default {
-		components:{myOrderCard,goodsCard},
+		components:{myOrderCard,pt2,pt10,pt50,pt100},
 		data() {
 			return {
-				loadingStatus: true,   //  控制雪花动画是否显示
-				refreshing:false,				//  控制refresh是否显示
-				refreshText: "下拉可以刷新",
-				loading:false,
+				lineWidth:null,
+				lineLeft: '0',
 				tabList: [
 					{
 						name:'2人拼团',
@@ -128,190 +58,29 @@
 						id:'tab3'
 					}
 				],
-				current: 0,
-				showLoading:'false',
 				lineLeft: '0',
 				tabIndex: 0,
-				param2:{
-					"pageNum": 1,
-					"pageSize": 10,
-					"type": 2
-				},
-				param10:{
-					"pageNum": 1,
-					"pageSize": 10,
-					"type": 10
-				},
-				param50:{
-					"pageNum": 1,
-					"pageSize": 10,
-					"type": 50
-				},
-				param100:{
-					"pageNum": 1,
-					"pageSize": 10,
-					"type": 100
-				},
-				lists2:[],
-				lists10:[],
-				lists50:[],
-				lists100:[],
-				app:null
 			}
 		},
-		mounted (){
-			uni.showLoading({
-				title:'加载中 ...'
-			})
-			this.getLists()
-		},
-		onLoad(opt) {
-			this.tabIndex = opt.type
-			console.log(this.tabIndex)
+		mounted() {
 			this.$nextTick(() => {
-				let theNode=uni.createSelectorQuery().select(`#tab${opt.type}`)
+				let theNode = uni.createSelectorQuery().select(`#tab0`)
 				theNode.boundingClientRect((data)=>{
-					this.lineLeft = data.left + 10
-					this.lineWidth = data.width - 20
+					setTimeout(()=> {
+						this.lineLeft = data.left + 10
+						this.lineWidth = data.width - 20
+						console.log(this.lineLeft)
+					}, 0);
 				}).exec()
 			})
 		},
 		methods: {
-			getLists(){
-				let param = {};
-				switch (this.tabIndex.toString()){
-					case '0':
-						param = this.param2
-						break;
-					case '1':
-						param = this.param10
-						break;
-					case '2':
-						param = this.param50
-						break;
-					case '3':
-						param = this.param100
-						break;
-				}
-				uni.request({
-					url:urlConfig + '/snap/getSnapUpListByType',
-					method:'post',
-					header: {
-						'Authorization': 'Bearer ' + uni.getStorageSync('token'),//自定义请求头信息
-						'Content-Type':'application/json;charset=utf-8'
-					},
-					data:param,
-					success: (res) => {
-						if(res.data.code == 200){
-							switch (this.tabIndex.toString()){
-								case '0':
-									this.lists2 = res.data.data.list
-									break;
-								case '1':
-									this.lists10 = res.data.data.list
-									break;
-								case '2':
-									this.lists50 = res.data.data.list
-									break;
-								case '3':
-									this.lists100 = res.data.data.list
-									break;
-							}
-						}else{
-							if(res.data.code == 502 || res.data.code == 501 || res.data.code == 503){
-								uni.showToast({
-									icon:'none',
-									title: res.data.msg,
-									duration: 2000 
-								}); 
-								uni.removeStorageSync('token');
-								uni.removeStorageSync('userInfo');
-								uni.reLaunch({
-									url: '/pages/subPages/login/login'
-								});
-							}else{
-								uni.showToast({
-									icon:'none',
-									title: res.data.msg,
-									duration: 2000 
-								});
-							}
-						}
-					},
-					fail:(err)=>{
-						console.log('错误')
-						uni.showToast({
-							title:'连接失败,请检查网络是否正常',
-							icon: 'none'
-						})
-					},
-					complete: () => {
-						uni.hideLoading()
-					}
-				})
-			},
-			onrefresh(){
-				if(this.loading){
-						//当正在调用接口获取数据时，此时的下拉不做任何操作
-						return;
-				}
-				this.loading = true;
-				this.refreshing = true
-				this.loadingStatus = false
-				this.refreshText = '加载中 ...'
-				setTimeout(()=>{
-						// 模拟网路请求
-						this.loadingStatus = true
-						this.refreshing = false
-						this.loading = false;
-						this.release = false
-						this.refreshText = '下拉可以刷新'
-				},2000)
-			},
-			onpullingdown(e){
-				if (this.refreshing) return;
-				if(e.pullingDistance >= 150){
-					this.release = true
-					this.refreshText = '释放立即刷新'
-				}else{
-					this.refreshText = '下拉可以刷新'
-					this.release = false
-				}
-			},
-			loadMore(index){
-				console.log(index)
-				// this.getList()
-			},
 			tabChange(index,id){
 				this.tabIndex = index
-				switch (index){
-					case 2:
-						this.param2.type = 2
-						break;
-					case 10:
-						this.param10.type = 10
-						break;
-					case 50:
-						this.param50.type = 50
-						break;
-					case 100:
-						this.param100.type = 100
-						break;
-				}
 				let theNode=uni.createSelectorQuery().select(`#${id}`)
 				theNode.boundingClientRect((data)=>{
 					this.lineLeft = data.left + 10
-					this.getLists()
 				}).exec()
-			},
-			change(index) {
-				this.current = index;
-			},
-			cardClick(type,item){
-				console.log(type,item)
-				uni.navigateTo({
-					url: '../goodsDetail/goodsDetail?groupType=' + type + '&id=' + item.id
-				})
 			}
 		}
 	}
@@ -331,12 +100,12 @@
 	text-align: center;
 }
 .active{
-	color: #000;
+	color: #2C405A;
 }
 .underLine{
 	width: 100rpx;
-	height: 2rpx;
-	background-color: #000;
+	height: 4rpx;
+	background-color: #2C405A;
 	position: absolute;
 	left: 20rpx;
 	bottom: 0;

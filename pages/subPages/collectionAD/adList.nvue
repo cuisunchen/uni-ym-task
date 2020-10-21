@@ -1,5 +1,5 @@
 <template>
-	<list class="lists" loadmoreoffset="10" @loadmore="loadMore">
+	<list class="lists flex1" loadmoreoffset="10" @loadmore="loadMore">
 		<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
 			<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
 			<view class="loadingIco row align-center">
@@ -7,8 +7,8 @@
 				<text class="freshTit">{{refreshText}}</text>
 			</view>
 		</refresh>
-		<cell v-for="item in lists" class="cell">
-			<my-order-card :data-obj="item" class="card" :has-send="false"></my-order-card>
+		<cell v-for="(item,index) in lists" class="cell">
+			<ad-card class="adCard" :class="{noBorder: index == lists.length - 1}" @click="cardClick(item)" :data-obj="item"></ad-card>
 		</cell>
 		<cell class="nodata flex1 flex-column all-center" v-if="lists.length == 0">
 			<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
@@ -18,23 +18,24 @@
 </template>
 
 <script>
-	import myOrderCard from '@/components/myOrder-card/myOrder-card.nvue'
-	import {unencryp} from '../../../common/utils/request.js'
-	export default {
-		components:{myOrderCard},
+	import adCard from '@/components/goods-card/ad-card.nvue'
+	import {unencryp,request} from '../../../common/utils/request.js'
+	export default{
+		components:{adCard},
 		data(){
 			return{
+				refreshing: false,
 				loadingStatus: true,
 				release:false,
 				refreshText: "下拉可以刷新",
 				loading:false,
-				isNoMore: false,			// 控制是否可以加载更多
 				param:{
+					"homeType": 6, // 商品收藏
 					"pageNum": 1,
-					"pageSize": 10,
-					"type": 1
+					"pageSize": 10
 				},
-				lists:[],
+				isNoMore: false,			// 控制是否可以加载更多
+				lists:[]
 			}
 		},
 		created() {
@@ -42,18 +43,19 @@
 		},
 		methods:{
 			getLists(type){
-				unencryp('/snap/getDeliveryList','post',this.param).then(res=>{
-					if(res.code == 200){ 
-						setTimeout(()=> {
-							if(this.param.pageNum >= Math.ceil(res.data.maxSize/this.param.pageSize)){
+				request('/api/view/getMyCollect','post',this.param).then(res => {
+					uni.stopPullDownRefresh();
+					if(res.code == 200){
+						setTimeout(()=>{
+							if(this.param.pageNum >= res.data.sumPage){
 								this.isNoMore = true
 							}
 							if(type && type == 'loadMore'){
-								this.lists.push(...res.data.list)
+								this.lists.push(...res.data.homeAdList)
 							}else{
-								this.lists = res.data.list
+								this.lists = res.data.homeAdList
 							}
-						}, 0);
+						},0)
 						if(type == 'refresh'){
 							setTimeout(()=>{
 								this.loadingStatus = true
@@ -98,18 +100,28 @@
 				if(this.isNoMore){
 					return
 				}
-				this.param.pageNum ++
+				this.param.pageNum ++ 
 				this.getLists('loadMore')
 			},
+			cardClick(item){
+				uni.navigateTo({
+					url:'../../subPages/goodsDetail/goodsDetail?groupType=' + item.snapUpPeopleMax + '&id=' + item.id
+				})
+			}
 		}
 	}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .lists{
-	width: 750rpx;
 }
-.card{
+.cell{
+	padding: 0 20rpx;
+}
+.adCard{
 	margin-top: 20rpx;
+}
+.noBorder{
+	border-bottom-width: 0;
 }
 </style>

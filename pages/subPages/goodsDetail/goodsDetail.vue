@@ -149,6 +149,12 @@
 		onUnload() {
 			clearInterval(this.timer)
 		},
+		onShow() {
+			this.getMemberList()
+		},
+		onPullDownRefresh() {
+			this.getMemberList('refresh')
+		},
 		onLoad(opt) {
 			this.groupType = opt.groupType
 			switch (opt.groupType){
@@ -167,11 +173,6 @@
 			}
 			this.goodsId = opt.id
 			this.getDetail(opt.id)
-			this.getMemberList(opt.id)
-			
-			this.timer = setInterval(()=>{
-				this.getMemberList(opt.id)
-			},10000)
 		},
 		methods:{
 			collect(){   //  截流处理
@@ -199,8 +200,13 @@
 					})
 				})
 			},
-			getMemberList(id){
-				this.$unencryp('/snap/getSnapUpPlays','post',{id}).then(res => {
+			getMemberList(type){
+				this.$unencryp('/snap/getSnapUpPlays','post',{id:this.goodsId}).then(res => {
+					if(type == 'refresh'){
+						setTimeout(()=> {
+							uni.stopPullDownRefresh();
+						}, 1000);
+					}
 					if(res.code == 200){
 						this.memberList = res.data
 					}else{

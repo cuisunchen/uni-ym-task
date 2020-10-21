@@ -27,8 +27,6 @@
 			}
 		},
 		created() {
-			console.log(this.lists)
-			// let recommendAdList = this.lists
 			for (let index in this.lists) {
 				this.$set(this.recommendAd,index,this.lists[index])
 			}

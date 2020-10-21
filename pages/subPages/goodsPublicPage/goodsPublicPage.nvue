@@ -1,30 +1,27 @@
 <template>
 	<view class="myPinTuan flex1 flex-column">
-		<header class="tabs row align-center">
-			<text class="tab" :class="{active:tabIndex == index}" :id="tab.id" v-for="(tab,index) in tabList" :key="index" @click="tabChange(index,tab.id)">{{tab.name}}</text>
-			<view class="underLine" :style="{width:lineWidth + 'px' ,left: lineLeft + 'px'}"></view>
+		<header class="tabs row">
+			<view class="tabBox row all-center" v-for="(tab,index) in tabList" :key="index" @click="tabChange(index,tab.id)">
+				<text class="tab" :class="{active:tabIndex == index}" :id="tab.id">{{tab.name}}</text>
+			</view>
+			<view class="underLine" :style="{width: lineWidth + 'px',left: lineLeft + 'px'}"></view>
 		</header>
 		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false">
-			<swiper-item class="swiperItem flex1 flex-column">
-				<join-card :lists="lists1" @refresh="onRefresh" @loadMore="loadMore"></join-card>
+			<swiper-item>
+				<join-card ></join-card>
 			</swiper-item>
 			<swiper-item>
-				<pt-card :lists="lists2" @refresh="onRefresh" @loadMore="loadMore"></pt-card>
+				<pt-card></pt-card>
 			</swiper-item>
 		</swiper>
 	</view>
 </template>
 
 <script>
-	import IjoinPtCard from '@/components/I-join-pt-card/I-join-pt-card.nvue'
-	import ptIng from '@/components/pt-ing/ptIng.nvue'
-	import uniIcons from "@/components/uni-icons/uni-icons.vue"
-	import {unencryp} from '../../../common/utils/request.js'
-	import urlConfig from '@/common/utils/config.js'
 	import joinCard from './join-card.nvue'
 	import ptCard from './pt-card.nvue'
 	export default {
-		components:{IjoinPtCard,ptIng,uniIcons,joinCard,ptCard},
+		components:{joinCard,ptCard},
 		data() {
 			return {
 				lineWidth:null,
@@ -39,116 +36,33 @@
 						id:'tab1'
 					}
 				],
-				current: 0,
 				tabIndex: 0,
-				lists1:[],
-				lists2:[],
-				isNoMore1: false,
-				isNoMore2:false,
-				param1:{  // 拼团中
-					"pageNum": 1,
-					"pageSize": 10,
-					"type": 0
-				},
-				param2:{ // 我参与的
-					"pageNum": 1,
-					"pageSize": 10,
-					"type": 1
-				},
 			}
 		},
 		mounted() { 
 			uni.showLoading({
 				title:'数据加载中...'
 			})
-			this.getLists()
 		},
 		onLoad(opt) {
 			this.tabIndex = opt.type
 			this.$nextTick(() => {
 				let theNode=uni.createSelectorQuery().select(`#tab${opt.type}`)
 				theNode.boundingClientRect((data)=>{
-					this.lineLeft = data.left + 10
-					this.lineWidth = data.width - 20
+					setTimeout(()=> {
+						this.lineLeft = data.left
+						this.lineWidth = data.width
+					}, 0);
 				}).exec()
 			})
 		},
 		methods: {
-			getLists(type){
-				let param = {};
-				switch (this.tabIndex.toString()){
-					case '0':
-						param = this.param2
-						break;
-					case '1':
-						param = this.param1
-						break;
-				}
-				unencryp('/snap/getMyBuyingList','post',param).then(res=>{
-					uni.hideLoading()
-					if(res.code == 200){
-						if(this.tabIndex == 0){
-							if(res.data.pageNum == param.pageNum && res.data.list.length < param.pageSize){
-								this.isNoMore1 = true
-							}
-							if(type && type == 'loadMore'){
-								this.lists1.push(res.data.list)
-							}else{
-								this.lists1 = res.data.list
-							}
-						}else{
-							if(res.data.pageNum == param.pageNum && res.data.list.length < param.pageSize){
-								this.isNoMore2 = true
-							}
-							if(type && type == 'loadMore'){
-								this.lists2 = res.data.list
-							}else{
-								this.lists2 = res.data.list
-							}
-						}
-					}else{
-						res.msg || uni.showToast(res.msg)
-					}
-				})
-			},
-			onRefresh(){
-				if(this.tabIndex == 0){
-					this.param2.pageNum = 1
-				}else{
-					this.param1.pageNum = 1 
-				}
-				this.getLists()
-			},
-			loadMore(){
-				if(this.tabIndex == 0){
-					if(this.isNoMore1){
-						return
-					}
-					this.param1.pageNum ++ 
-				}else{
-					if(this.isNoMore2){
-						return
-					}
-					this.param2.pageNum ++ 
-				}
-				this.getLists('loadMore')
-			},
-			onpullingdown(e){
-				if(e.pullingDistance >= 150){
-					this.release = true
-					this.refreshText = '释放立即刷新'
-				}else{
-					this.refreshText = '下拉可以刷新'
-					this.release = false
-				}
-			},
 			tabChange(index,id){
 				this.tabIndex = index
 				let theNode=uni.createSelectorQuery().select(`#${id}`)
 				theNode.boundingClientRect((data)=>{
-					this.lineLeft = data.left + 10
+					this.lineLeft = data.left
 				}).exec()
-				this.getLists()
 			}
 		}
 	}
@@ -161,20 +75,25 @@
 	background-color: #fff;
 	position: relative;
 }
+.tabBox{
+	height: 80rpx;
+	padding: 0 20rpx;
+}
 .tab{
+	width: 120rpx;
 	color: #666;
 	font-size: 28rpx;
-	padding: 0 10px;
+	text-align: center;
 }
 .active{
-	color: #000;
+	color: #2C405A;
 }
 .underLine{
-	width: 100rpx;
-	height: 2rpx;
-	background-color: #000;
+	width: 120rpx;
+	height: 4rpx;
+	background-color: #2C405A;
 	position: absolute;
-	left: 20rpx;
+	left: 40rpx;
 	bottom: 0;
 	transition-property: left;
 	transition-duration:.3s;

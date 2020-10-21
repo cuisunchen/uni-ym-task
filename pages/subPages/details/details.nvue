@@ -64,6 +64,7 @@
 				dataObj:{},
 				type:'',
 				tabType: '',
+				from:'',   // 页面的来源,从哪里进来的
 				screenHeight: null,
 				imgHeight:null,
 				statusBarHeight:null,
@@ -81,6 +82,7 @@
 			this.dataObj = JSON.parse(decodeURIComponent(option.param))
 			this.dataIndex = option.index
 			this.tabType = option.tabType
+			this.from = option.from
 			this.isCollectAd()
 			if(this.dataObj.bigImg.indexOf('jpg') < 0 && this.dataObj.bigImg.indexOf('jpeg') < 0 && this.dataObj.bigImg.indexOf('png') < 0){
 				this.dataObj.webViewShow = true
@@ -220,13 +222,15 @@
 				let currentWidth = uni.getSystemInfoSync().windowWidth   //  图片展示的宽度
 				let imgHeight = e.detail.height   //  图片实际高度
 				this.imgHeight = currentWidth/(imgWidth/imgHeight)
-				if(this.type == 'goodLuck'){
-					this.handleLottery()
+				if(this.type == 'goodluck'){
+					setTimeout(()=>{
+						this.handleLottery()
+					},0)
 				}
 			},
 			onPageFinish(){
 				uni.hideLoading()
-				if(this.type == 'goodLuck'){
+				if(this.type == 'goodluck'){
 					this.handleLottery()
 				}
 			},
@@ -260,7 +264,7 @@
 				
 				if(res.index == 2){
 					uni.navigateTo({
-						url: '../answerQs/answerQs?param=' + encodeURIComponent(JSON.stringify(this.dataObj))+ "&index=" + this.dataIndex
+						url: '../answerQs/answerQs?param=' + encodeURIComponent(JSON.stringify(this.dataObj))+ "&index=" + this.dataIndex + '&from=' + this.from
 					})
 				}
 				

@@ -42,6 +42,7 @@
 			this.dataObj = JSON.parse(decodeURIComponent(option.param))
 			this.dataObj.clickNum++
 			this.dataIndex = option.index
+			this.from  = option.from
 			this.adId = this.dataObj.id
 			this.getChooseList()
 		},
@@ -64,7 +65,6 @@
 				this.$request('/api/view/replyQA','post',param).then(res => {
 						this.submitLoading = false
 						this.dataObj.tags = '已读'
-						// console.log(res)
 						if(res.code == 200){
 							if(res.data.isFinish){
 								this.dataObj.status = '已完成'
@@ -128,9 +128,15 @@
 				 })
 			},
 			goBackHome(){
-				uni.switchTab({
-					url:'../../tabBar/home/home'
-				})
+				if(this.from && this.from == 'easyEarn'){
+					uni.switchTab({
+						url: '../../tabBar/easyEarn/easyEarn'
+					})
+				}else{
+					uni.navigateTo({
+						url: '../../tabBar/home/home'
+					})
+				}
 			},
 			bindChange (e) {
 				const val = e.detail.value

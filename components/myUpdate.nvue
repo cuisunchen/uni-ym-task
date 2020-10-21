@@ -1,0 +1,201 @@
+<template>
+	<view class="updateBox row all-center">
+		<view class="content">
+			<image class="updateBg" src="../../../static/app_update_bg.png" mode=""></image>
+			<view class="main">
+				<scroll-view scroll-y="true" class="flex1">
+					<text class="title">发现新的版本，请点击升级</text>
+					
+					<text class="item">1、优化了某些方案</text>
+					<text class="item">1、优化了某些方案{{is_update}}</text>
+				</scroll-view>
+				<view class="progress-box flex-column" v-if="update_type == 0 && is_update">
+					<progress class="progress" :percent="prpgress_num" activeColor="#1c89d6" stroke-width="6" />
+					<view class="progress-des">资源下载中，请稍后({{download_num_ed}}/{{download_num}}M)</view>
+				</view> 
+				<text>{{is_update}}</text>
+				<view class="btnWrap flex all-center" v-if="!is_update" @click="testClick">
+					<text class="btn">立即升级</text>
+				</view>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	export default {
+		props:{
+			is_update_app:{
+				type:Boolean
+			},
+			is_forced_update:{
+				type:Boolean
+			},
+			update_url:{
+				type:String
+			},
+			update_type:{
+				type:[Number,String]//0是热更新，1整包更新
+			},
+			update_title:{
+				type:String
+			},
+			update_des:{
+				type:Array
+			},
+		},
+		data(){
+			return{
+				prpgress_num:0,
+				download_num_ed: 0, //已经下载数
+				download_num: 0, //总下载数
+				is_update:false,
+			}
+		},
+		onUnload() {
+			this.closeUpdate() 
+		},
+		methods:{
+			testClick: function(){
+				//整包更新打开浏览器
+				if(this.update_type == 1) {
+					plus.runtime.openURL(encodeURI(this.update_url));
+					this.closeUpdate()
+					return 
+				} 
+				setTimeout(()=>{
+					this.is_update = true
+					console.log(this.is_update)
+				},0)
+			},
+			//确定更新
+			downloadBtn() {
+				//整包更新打开浏览器
+				if(this.update_type == 1) {
+					plus.runtime.openURL(encodeURI(this.update_url));
+					this.closeUpdate()
+					return
+				}
+				this.is_update = true
+				console.log(this.is_update)
+				return
+				//下载更新文件 
+				const downloadTask = uni.downloadFile({
+					url:this.update_url,
+					success: res => {
+						console.log(res) 
+						if (res.statusCode == 200) {
+							this.installBtn(res.tempFilePath);
+							return;
+						}
+					}
+				});
+			
+				downloadTask.onProgressUpdate(res => {
+					this.prpgress_num = res.progress;
+					console.log(this.prpgress_num)
+					this.download_num_ed = (res.totalBytesWritten / Math.pow(1024.00, 2)).toFixed(2);
+					this.download_num = (res.totalBytesExpectedToWrite / Math.pow(1024.00, 2)).toFixed(2);
+				});
+			},
+			//点击安装
+			installBtn(path) { 
+				plus.runtime.install(path, {
+					force: false
+				}, res => {
+					this.$emit('updateClose',{})
+					//更新完重启app
+					plus.runtime.restart();
+				},err => {
+					//重置更新的参数
+					this.prpgress_num = 0
+					this.download_num_ed = 0
+					this.download_num = 0
+					this.is_update = false
+					this.$emit('updateClose',{})
+					uni.showModal({
+						title: '更新失败',
+						content: err.message,
+						showCancel: false,
+						success: res => {
+						}
+					});
+			
+				});
+			},
+			//取消更新
+			closeUpdate() {
+				if(parseFloat(this.download_num_ed) > 0) {
+					this.$emit('updateClose','升级中，请勿关闭~')
+					return getApp().globalData.hint('升级中，请勿关闭~');
+				}
+				
+				this.$emit('updateClose','')
+			}
+		}
+	}
+</script>
+
+<style scoped>
+.updateBox{
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.3);
+	z-index: 10;
+}
+.text{
+	color: #fff;
+}
+.content{
+	width: 580rpx;
+	height: 734rpx;
+	margin-bottom: 200rpx;
+	position: relative;
+}
+.updateBg{
+	width: 580rpx;
+	height: 734rpx;
+}
+.main{
+	/* position: absolute;
+	top: 330rpx;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 99; */
+	padding: 20rpx;
+	background-color: #fff;     
+}
+.title{
+	color: #000;
+	font-size: 32rpx;
+	margin-bottom: 20rpx;
+}
+.item{
+	color: #666;
+	font-size: 28rpx;
+}
+
+
+.progress {
+	border-radius:35px;
+}
+.progress-des {
+	margin-top: 20rpx;
+	font-size: 28rpx;
+	color: #6C6C6C;
+}
+.btnWrap{
+	height: 80rpx;
+	border-radius: 10rpx;
+	background-color: #007AFF;
+}
+.btn{
+	color: #fff;
+	font-size: 30rpx;
+	font-weight: bold;
+}
+</style>

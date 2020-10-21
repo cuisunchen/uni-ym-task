@@ -1,14 +1,17 @@
 <template>
-	<list class="lists" loadmoreoffset="10" @loadmore="loadMore">
+	<list class="lists flex1" @loadmore="loadMore(0)">
 		<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
 			<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
-			<view class="loadingIco row align-center">
+			<view class="loadingIco row align-center"> 
 				<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
-				<text class="freshTit">{{refreshText}}</text>
+				<view class="freshWrap flex-column all-center">
+					<text class="freshTit">{{refreshText}}</text>
+					<!-- <text class="freshTime">最后更新: 今天15:39</text> -->
+				</view>
 			</view>
 		</refresh>
-		<cell v-for="item in lists" class="cell">
-			<my-order-card :data-obj="item" class="card" :has-send="false"></my-order-card>
+		<cell v-for="(item,index) in lists" :key="index" class="cell" @click="cardClick(2,item)">
+			<goods-card class="goodsCard" :data-obj="item"></goods-card>
 		</cell>
 		<cell class="nodata flex1 flex-column all-center" v-if="lists.length == 0">
 			<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
@@ -18,23 +21,23 @@
 </template>
 
 <script>
-	import myOrderCard from '@/components/myOrder-card/myOrder-card.nvue'
-	import {unencryp} from '../../../common/utils/request.js'
+	import goodsCard from '@/components/goods-card/goods-card.nvue'
+	import {unencryp} from "../../../common/utils/request.js"
 	export default {
-		components:{myOrderCard},
+		components:{goodsCard},
 		data(){
 			return{
-				loadingStatus: true,
-				release:false,
+				loadingStatus: true,   //  控制雪花动画是否显示
+				refreshing:false,				//  控制refresh是否显示
 				refreshText: "下拉可以刷新",
 				loading:false,
-				isNoMore: false,			// 控制是否可以加载更多
 				param:{
 					"pageNum": 1,
 					"pageSize": 10,
-					"type": 1
+					"type": 2
 				},
 				lists:[],
+				isNoMore: false,			// 控制是否可以加载更多
 			}
 		},
 		created() {
@@ -42,8 +45,8 @@
 		},
 		methods:{
 			getLists(type){
-				unencryp('/snap/getDeliveryList','post',this.param).then(res=>{
-					if(res.code == 200){ 
+				unencryp('/snap/getSnapUpListByType','post',this.param).then(res=>{
+					if(res.code == 200){
 						setTimeout(()=> {
 							if(this.param.pageNum >= Math.ceil(res.data.maxSize/this.param.pageSize)){
 								this.isNoMore = true
@@ -63,11 +66,6 @@
 								this.refreshText = '下拉可以刷新'
 							},1200)
 						}
-					}else{
-						uni.showToast({
-							title:res.msg,
-							icon:'none'
-						})
 					}
 				})
 			},
@@ -101,15 +99,24 @@
 				this.param.pageNum ++
 				this.getLists('loadMore')
 			},
+			cardClick(type,item){
+				uni.navigateTo({
+					url: '../goodsDetail/goodsDetail?groupType=' + type + '&id=' + item.id
+				})
+			}
 		}
 	}
 </script>
 
 <style scoped>
-.lists{
-	width: 750rpx;
+.cell{
+	padding: 0 20rpx;
+	background-color: #fff;
 }
-.card{
-	margin-top: 20rpx;
+.goodsCard{
+	border-bottom-width: 0;
+	border-top-width: 1rpx;
+	border-style: solid;
+	border-color: #f6f6f6;
 }
 </style>

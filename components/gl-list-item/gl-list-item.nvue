@@ -69,6 +69,7 @@
 .readBox{
 	padding: 4rpx;
 	border-radius: 4rpx;
+	margin-right: 10rpx;
 	background-color: rgba(76, 175 , 163 , 0.4);
 }
 .statusBox{
@@ -78,13 +79,13 @@
 }
 .read{
 	color: #fff;
-	height: 24rpx;
-	font-size: 25rpx;
+	font-size: 24rpx;
+	line-height: 30rpx;
 }
 .status{
 	color: #fff;
-	font-size: 25rpx;
-	height: 24rpx;
+	font-size: 24rpx;
+	line-height: 30rpx;
 }
 .data{
 	color: #fff;

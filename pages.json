@@ -866,6 +866,7 @@
             "style" : {
 							"navigationBarTitleText": "详情",
 							"navigationBarTextStyle":"black",
+							"enablePullDownRefresh": true,
 							"app-plus": {
 								"bounce": "vertical",
 								"titleNView": false

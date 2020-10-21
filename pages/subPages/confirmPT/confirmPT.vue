@@ -79,6 +79,7 @@
 </template>
 
 <script>
+	import {unencryp} from '../../../common/utils/request.js'
 	export default {
 		data() {
 			return {
@@ -113,7 +114,6 @@
 					"id": this.info.id
 				}
 				this.$unencryp('/snap/purchase','post',param).then(res => {
-					console.log(res)
 					if(res.code == 200){
 						this.userPayAd(res.data.id)
 					}else{
@@ -125,42 +125,50 @@
 				this.$request('/api/pay/userPayAd','post',{homeAdId: id}).then(res => {
 					if(res.code == 200){
 						uni.requestPayment({
-						    provider: 'alipay',
-						    orderInfo: res.data, //微信、支付宝订单数据
-						    success: (res) => {
-									let rawdata = JSON.parse(res.rawdata)
-									if(rawdata.resultStatus == '9000'){
-										uni.showModal({
-											title:'恭喜您,订单支付成功!',
-											content:'如有疑问,请联系客服',
-											showCancel:false,
-											success: () => {
-												uni.navigateBack({
-													delta:1
-												})
-											}
-										})
-									}else
-									if(rawdata.resultStatus == '8000'){
-										this.showToast('订单处理中,请稍等片刻!')
-									}else
-									if(rawdata.resultStatus == '4000'){
-										this.showToast('订单支付失败')
-									}else
-									if(rawdata.resultStatus == '6002'){
-										this.showToast('网络连接出错')
+							provider: 'alipay',
+							orderInfo: res.data, //微信、支付宝订单数据
+							success: (res) => {
+								let rawdata = JSON.parse(res.rawdata)
+								if(rawdata.resultStatus == '9000'){
+									uni.showModal({
+										title:'恭喜您,订单支付成功!',
+										content:'如有疑问,请联系客服',
+										showCancel:false,
+										success: () => {
+											uni.navigateBack({
+												delta:1
+											})
+										}
+									})
+								}else
+								if(rawdata.resultStatus == '8000'){
+									this.showToast('订单处理中,请稍等片刻!')
+								}else
+								if(rawdata.resultStatus == '4000'){
+									this.showToast('订单支付失败')
+								}else
+								if(rawdata.resultStatus == '6002'){
+									this.showToast('网络连接出错')
+								}
+							},
+							fail: (err)=> {
+								uni.showModal({
+									title:'很遗憾,订单支付失败!',
+									content:'如有疑问,请联系客服',
+									showCancel:false,
+									success: (res)=> {
+										if (res.confirm) {
+											this.cancelPurchase(id)
+										}
 									}
-						    },
-						    fail: (err)=> {
-						    	uni.showModal({
-						    		title:'很遗憾,订单支付失败!',
-						    		content:'如有疑问,请联系客服',
-						    		showCancel:false,
-						    	})
-						    }
+								})
+							}
 						});
 					}
 				})
+			},
+			cancelPurchase(id){
+				unencryp('/snap/cancelPurchase','post',{id})
 			},
 			goAddress(){
 				uni.navigateTo({
