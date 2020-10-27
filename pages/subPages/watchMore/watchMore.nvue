@@ -1,12 +1,12 @@
 <template>
 	<view class="watchMore flex1 flex-column">
-		<header class="tabs row align-center">
-			<text class="tab flex1 row all-center" :class="{active:tabIndex == index}" 
-				:id="tab.id" v-for="(tab,index) in tabList" :key="index" 
-				@click="tabChange(index,tab.id)">{{tab.name}}</text>
-			<view class="underLine" :style="{width:lineWidth + 'px' ,left: lineLeft + 'px'}"></view>
+		<header class="tabs row">
+			<view class="tabBox flex1 row all-center" v-for="(tab,index) in tabList" :key="index" @click="tabChange(index,tab.id)">
+				<text class="tab" :ref="tab.id" :class="{active:tabIndex == index}" :id="tab.id">{{tab.name}}</text>
+			</view>
+			<!-- <view class="underLine" :style="{width: lineWidth + 'px', left: lineLeft + 'px'}"></view> -->
 		</header>
-		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false">
+		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false" @change="swiperChange">
 			<!-- 2人团 -->
 			<swiper-item class="swiperItem flex1 flex-column">
 				<pt2></pt2>
@@ -75,6 +75,9 @@
 			})
 		},
 		methods: {
+			swiperChange(e){
+				this.tabIndex = e.detail.current
+			},
 			tabChange(index,id){
 				this.tabIndex = index
 				let theNode=uni.createSelectorQuery().select(`#${id}`)
@@ -96,11 +99,14 @@
 .tab{
 	color: #666;
 	font-size: 28rpx;
-	padding: 0 10px;
+	line-height: 76rpx;
 	text-align: center;
 }
 .active{
 	color: #2C405A;
+	border-bottom-width: 4rpx;
+	border-bottom-color: #2C405A;
+	border-style: solid;
 }
 .underLine{
 	width: 100rpx;

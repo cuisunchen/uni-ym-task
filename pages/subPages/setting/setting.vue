@@ -68,7 +68,6 @@
 		},
 		methods: {
 			itemClick(e){
-				console.log(e.copyText)
 				if(e.title == '设置兴趣'){
 					uni.navigateTo({
 						url:'../interest/interest'
@@ -91,7 +90,6 @@
 							 this.lists[1].copyText = res.data.xiaoChengXu
 							 this.lists[2].desc = '- ' + res.data.guanWechat
 							 this.lists[2].copyText = res.data.guanWechat
-							 console.log(this.lists)
 						}
 				 })
 			},

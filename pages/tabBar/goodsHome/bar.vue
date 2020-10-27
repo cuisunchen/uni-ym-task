@@ -1,7 +1,7 @@
 <template>
 	<view class="bar flex">
 		<view class="item flex1 flex-column align-center" v-for="(item,index) in barList" @click="itemClick(item,index)">
-			<image class="img" :src="item.img" mode=""></image>
+			<image class="img" :class="{joinImg:index == 1}" :src="item.img" mode="scaleToFill"></image>
 			<text class="title">{{item.title}}</text>
 		</view>
 	</view>
@@ -15,19 +15,19 @@
 				default(){
 					return [
 						{
-							img:'../../../static/biaoqing.png',
+							img:'../../../static/jishiben.png',
 							title:'我的订单'
 						},
 						{
-							img:'../../../static/lipin.png',
+							img:'../../../static/jinritemai.png',
 							title:'我参与的'
 						},
 						{
-							img:'../../../static/jishiben.png',
+							img:'../../../static/biaoqing.png',
 							title:'我拼团中'
 						},
 						{
-							img:'../../../static/qiche.png',
+							img:'../../../static/lipin.png',
 							title:'拼团奖励'
 						}
 					]
@@ -64,6 +64,12 @@
 		width: 98rpx;
 		height: 82rpx;
 		margin-bottom: 20rpx;
+	}
+	.joinImg{
+		width: 88rpx;
+		// height: 95.7rpx;
+		// margin-top: -13.7rpx;
+		// background-color: #007AFF;
 	}
 	
 	.title{

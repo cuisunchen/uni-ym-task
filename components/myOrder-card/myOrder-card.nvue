@@ -1,5 +1,5 @@
 <template>
-	<div class="myOrderCard flex-column">
+	<div class="myOrderCard flex-column" @click="goOrderDetail">
 		<text class="cardTitle">{{dataObj.type}}</text>
 		<view class="main">
 			<view class="goodsInfo row">
@@ -8,13 +8,13 @@
 				</view>
 				<view class="content flex1 flex-column flex-between">
 					<text class="title">{{dataObj.title}}</text>
-					<text class="nums">数量: {{dataObj.number}}</text>
+					<text class="nums">拼中时间: {{dataObj.winTime}}</text>
 				</view>
 			</view>  
 			<view class="handleBox row align-center flex-between" v-if="hasSend">
 				<view class="leftBox row align-center">
 					<text class="label">12小时内可取消发货</text> 
-					<uni-icons type="info" size="18" color="#999"></uni-icons>
+					<text @click="needKnow"><uni-icons type="info" size="18" color="#999"></uni-icons></text>
 				</view>
 				<view class="btn">
 					<button class="mini-btn" type="warn" size="mini" @click="cancelSend">取消发货</button>
@@ -44,7 +44,20 @@
 			}
 		},
 		methods:{
-			cancelSend(){
+			goOrderDetail(){
+				this.$emit('cardClick')
+			},
+			needKnow($event){
+				$event.stopPropagation()
+				uni.showModal({
+					title:'取消发货须知',
+					content: '货款将退回到您的账户余额中,会扣除部分手续费~~~',
+					showCancel: false,
+					confirmText: '朕知道了'
+				})
+			},
+			cancelSend($event){
+				$event.stopPropagation()
 				this.$emit('click')
 			}
 		}

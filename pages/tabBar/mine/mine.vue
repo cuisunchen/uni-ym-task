@@ -39,7 +39,7 @@
 				<view class="group2">
 					<cell icon-path="../../../static/tz.png" title="我的消息" :desc-color="userInfo.unreadNum > 0?'red': ''" :desc="userInfo.unreadNum == 0 ? '- 未有新的消息' :`- 您有${userInfo.unreadNum}条未读消息` " @click="goSubPage('myMessage')"></cell>
 					<cell icon-path="../../../static/fk.png" title="问题反馈" desc="- 有问题就告诉我们" @click="goSubPage('feedBack')"></cell>
-					<cell icon-path="../../../static/sc.png" title="收藏广告" desc="- 收藏有用信息" @click="goSubPage('collectionAD')"></cell>
+					<cell icon-path="../../../static/sc.png" title="我的收藏" desc="- 收藏感兴趣的东西" @click="goSubPage('collectionAD')"></cell>
 					<cell icon-path="../../../static/sz.png" title="偏好设置" desc="- 官网、小程序、兴趣等" border-bottom-color="transparent" @click="goSubPage('setting')"></cell>
 					
 				</view>

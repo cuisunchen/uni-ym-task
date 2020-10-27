@@ -1,58 +1,56 @@
 <template>
-	<view class="wrap">
-		<list class="ptReward flex1 flex-column" loadmoreoffset="10" @loadmore="loadMore">
-			<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
-				<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
-				<view class="loadingIco row align-center"> 
-					<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
-					<text class="freshTit">{{refreshText}}</text>
+	<list class="ptReward flex1 flex-column" loadmoreoffset="10" @loadmore="loadMore">
+		<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
+			<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
+			<view class="loadingIco row align-center"> 
+				<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
+				<text class="freshTit">{{refreshText}}</text>
+			</view>
+		</refresh>
+		<cell class="head">
+			<image class="topBg" src="../../../static/mineBg.jpeg" mode="aspectFill"></image>
+			<view class="grayBg"></view>
+			<view class="info">
+				<text class="ptLabel">拼团奖励总额(元)</text>
+				<text class="totalMoney">{{(totalAmount/100).toFixed(2)}}</text>
+			</view>
+			<text class="desc">拼团奖励总额,为您实际收到的奖励总额(可随时提现),是总额奖励的9/10,剩余1/10返给您的上家,快去分享吧 ~~~</text>
+		</cell>
+		<cell class="pickerBox">
+			<view class="detailTit row flex-between align-center">
+				<text class="detailTitLabel">奖励明细</text>
+				<view class="datePicker row align-center" @click="showPicker">
+					<text class="selectedDate">{{array[0][index[0]]}}-{{array[1][index[1]]}} 获得奖励 {{(sumAmount/100).toFixed(2) || '-'}} 元</text>
+					<uni-icons type="arrowright" size="16" color="#999"></uni-icons>
 				</view>
-			</refresh>
-			<cell class="head">
-				<image class="topBg" src="../../../static/mineBg.jpeg" mode="aspectFill"></image>
-				<view class="grayBg"></view>
-				<view class="info">
-					<text class="ptLabel">拼团奖励总额(元)</text>
-					<text class="totalMoney">{{totalAmount}}</text>
-				</view>
-				<text class="desc">拼团奖励总额,为您实际收到的奖励总额(可随时提现),是总额奖励的2/3,剩余1/3返给您的上家,快去分享吧 ~~~</text>
-			</cell>
-			<cell class="pickerBox">
-				<view class="detailTit row flex-between align-center">
-					<text class="detailTitLabel">奖励明细</text>
-					<view class="datePicker row align-center" @click="showPicker">
-						<text class="selectedDate">{{array[0][index[0]]}}-{{array[1][index[1]]}} 获得奖励 {{sumAmount || '-'}} 元</text>
-						<uni-icons type="arrowright" size="16" color="#999"></uni-icons>
+			</view>
+			<view class="uni-list-cell-db">
+				<picker mode="multiSelector" :value="index" @change="bindPickerChange" :range="array">
+					<view class="uni-input"></view>
+				</picker>
+			</view>
+		</cell>
+		<cell v-for="(item,index) in lists" :key="index" class="item row align-center flex-between" :class="{'itemNoBoder': index == lists.length -1}">
+			<view class="itemLeft flex-column">
+				<view class="line1 row align-center">
+					<text class="itemtit">拼团奖励</text>
+					<view class="moneyBox row align-center">
+						<text class="moneyNum flex-column flex-start">{{item.amount}}</text>
+						<text class="moneyUnit">元</text>
 					</view>
 				</view>
-				<view class="uni-list-cell-db">
-					<picker mode="multiSelector" :value="index" @change="bindPickerChange" :range="array">
-						<view class="uni-input"></view>
-					</picker>
-				</view>
-			</cell>
-			<cell v-for="(item,index) in lists" :key="index" class="item row align-center flex-between" :class="{'itemNoBoder': index == lists.length -1}">
-				<view class="itemLeft flex-column">
-					<view class="line1 row align-center">
-						<text class="itemtit">拼团奖励</text>
-						<view class="moneyBox row align-center">
-							<text class="moneyNum flex-column flex-start">12.08</text>
-							<text class="moneyUnit">元</text>
-						</view>
-					</view>
-					<text class="itemDate">2020-09-04 07:00:06</text>
-				</view>
-				<view class="itemRight row">
-					<text class="earnMoney">+ 8.05</text>
-					<image class="hbImg" src="../../../static/hb.png" mode=""></image>
-				</view>
-			</cell>
-			<cell class="nodata flex1 flex-column all-center" v-if="lists && lists.length == 0">
-				<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
-				<text class="nodatadesc">暂无奖励,赶快去赚米吧 ~~</text>
-			</cell>
-		</list>
-	</view>
+				<text class="itemDate">{{item.time}}</text>
+			</view>
+			<view class="itemRight row">
+				<text class="earnMoney">+ {{item.realAmount}}</text>
+				<image class="hbImg" src="../../../static/hb.png" mode=""></image>
+			</view>
+		</cell>
+		<cell class="nodata flex1 flex-column all-center" v-if="lists && lists.length == 0">
+			<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
+			<text class="nodatadesc">暂无奖励,赶快去赚米吧 ~~</text>
+		</cell>
+	</list>
 </template>
 
 <script>
@@ -143,7 +141,20 @@
 							},1200)
 						}
 					}else{
-						res.msg || uni.showToast(res.msg)
+						uni.showToast({
+							title: res.msg,
+							icon:'none',
+							duration: 2000,
+							success:() => {
+								setTimeout(()=>{
+									this.loadingStatus = true
+									this.refreshing = false
+									this.loading = false;
+									this.release = false
+									this.refreshText = '下拉可以刷新'
+								},1200)
+							}
+						})
 					}
 				})
 			},
@@ -228,7 +239,7 @@
 .desc{
 	color: #fff;
 	font-size: 26rpx;
-	padding: 20rpx;
+	padding: 16rpx 10rpx;
 	margin-top: 50rpx;
 	line-height: 36rpx;
 	border-radius: 10rpx;

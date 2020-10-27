@@ -5,7 +5,7 @@
 				<image class="addrImg" src="../../../static/dizhi@2x.png" mode=""></image>
 				<view class="con flex-column flex1">
 					<view class="name">
-						<text class="label">收货者姓名</text>
+						<text class="label">{{info.name?info.name:'收货者姓名'}}</text>
 						<text class="phoneNum">{{info.tel || '手机号'}}</text>
 					</view>
 					<view class="addr">{{info.addr || '地址'}}</view>
@@ -18,12 +18,12 @@
 					<view class="goodsImg flex-shrink">
 						<image class="img" :src="info.goodsImg" mode=""></image>
 					</view>
-					<view class="content flex-column">
+					<view class="content flex1 flex-column flex-between">
 						<view class="title ellipsis_two">{{info.goodsTitle}}</view>
 						<view class="tags">
 							<u-tag class="tag" text="免运费" color="#ff0000" bg-color="#ffeeec" mode="light" size="mini" border-color="transparent"/>
 							<u-tag class="tag" text="数量: 1" color="#ff0000" bg-color="#ffeeec" mode="light" size="mini" border-color="transparent"/>
-							<u-tag class="tag" text="尺寸: L" color="#ff0000" bg-color="#ffeeec" mode="light" size="mini" border-color="transparent"/>
+							<u-tag v-if="info.attributeName" class="tag" :text="info.attributeName + ':' + info.attributeValue" color="#ff0000" bg-color="#ffeeec" mode="light" size="mini" border-color="transparent"/>
 						</view>
 						<view class="price flex flex-end align-center">
 							<text class="label">单价:</text>
@@ -97,6 +97,7 @@
 			if(addr.addr){
 				addr.addr = addr.addr.replace(/-/g,'').replace(/~/,'')
 				this.info = {...this.info,...addr}
+				
 			}
 		},
 		onLoad(opt) {
@@ -214,7 +215,6 @@
 			margin-top: 20rpx;
 			background-color: #fff;
 			.goodsInfo{
-				margin-right: 16rpx;
 				padding-bottom: 20rpx;
 				border-bottom: 1rpx solid #f6f6f6;
 				.goodsImg{

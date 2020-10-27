@@ -8,7 +8,7 @@
 			</view>
 		</refresh>
 		<cell class="recommendBox">
-			<recommend-list :lists="recommendData" @click="goDetail"></recommend-list>
+			<recommend-list :lists="recommendList" @click="goDetail"></recommend-list>
 		</cell>
 		<cell class="empty"></cell>
 		<cell class="cell">
@@ -83,7 +83,19 @@
 							}
 						},0)
 					}else{
-						res.msg || uni.showToast(res.msg)
+						uni.showToast({
+							title: res.msg,
+							icon:'none',
+							duration: 2000,
+							success:() => {
+								setTimeout(()=>{
+									this.showLoading = 'hide'
+									this.loadingStatus = true
+									this.release = false
+									this.refreshText = '下拉可以刷新'
+								},1200)
+							}
+						})
 					}
 				})
 			},
@@ -95,7 +107,19 @@
 							this.recommendList = res.data
 						},0)
 					}else{
-						res.msg || uni.showToast(res.msg)
+						uni.showToast({
+							title: res.msg,
+							icon:'none',
+							duration: 2000,
+							success:() => {
+								setTimeout(()=>{
+									this.showLoading = 'hide'
+									this.loadingStatus = true
+									this.release = false
+									this.refreshText = '下拉可以刷新'
+								},1200)
+							}
+						})
 					}
 				})
 			},
@@ -123,22 +147,36 @@
 				this.getLists('loadMore')
 			},
 			goDetail(data,index){
+				let type=''
+				if(index == 'recommand'){
+					type = 'recommand'
+					data.bigImg = data.homeBigImgUrl
+				}else{
+					type = 'question'
+					this.userClick(data,index)
+				}
 				var strRegex = "((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)";
 				let re=new RegExp(strRegex);
 				if (!re.test(data.bigImg)) {
-					this.showToast('详情页地址有误,请联系客服')
+					uni.showToast({
+						title:'详情页地址有误,请联系客服',
+						icon: 'none'
+					})
 					return
 				}
-				this.userClick(data,index)
 				uni.navigateTo({
-					url:'../../subPages/details/details?param='+ encodeURIComponent(JSON.stringify(data)) + '&type=question&index='+index
+					url:'../../subPages/details/details?param='+ encodeURIComponent(JSON.stringify(data)) + '&type='+ type + '&index='+index
 				})
 			},
 			userClick(item,index){
 				let param = {homeAdId : item.id}
 				request('/api/userClick','post',param).then(res => {
 					if(res.code != 200){
-						this.showToast(res.msg || res.data)
+						uni.showToast({
+							title: res.msg || res.data,
+							icon:'none',
+							duration: 2000,
+						})
 						return
 					}
 					item.clickNum ++

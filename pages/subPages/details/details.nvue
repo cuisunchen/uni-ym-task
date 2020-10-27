@@ -97,6 +97,9 @@
 			this.screenHeight = uni.getSystemInfoSync().windowHeight
 			this.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
 			this.fabShow = true
+			if(this.type == 'swiper' || this.type == 'cover' || this.type == 'recommand'){
+				this.fabShow = false
+			}
 			let pages = getCurrentPages();  
 			this.prevPage = pages[pages.length - 2]; 
 		},
@@ -238,7 +241,7 @@
 				//  封面进入详情后,点击返回回到首页
 				if(this.type == 'cover'){
 					uni.reLaunch({
-						url:'../../tabBar/home/home'
+						url:'../../tabBar/goodsHome/goodsHome'
 					})
 				}else{
 					uni.navigateBack({

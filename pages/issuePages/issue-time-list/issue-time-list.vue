@@ -79,25 +79,25 @@
 					break;
 				case 4: 
 					this.tag = '推荐型'
-					this.issuType = '首页-今日推荐'
+					this.issuType = '易赚推荐'
 					this.maxNum = 3
 					break;
 				case 5:
 						this.tag = '推荐型'
-						this.issuType = '好运-全国推荐'
-						this.maxNum = 3
+						this.issuType = '全国推荐'
+						this.maxNum = 6
 						break;
 				case 6:
 						this.tag = '推荐型'
-						this.issuType = '好运-同城推荐'
+						this.issuType = '同城推荐'
 						this.rangeType = '同城'
-						this.maxNum = 3
+						this.maxNum = 6
 						break;
 				case 7:
 						this.tag = '推荐型'
-						this.issuType = '好运-附近推荐'
+						this.issuType = '附近推荐'
 						this.rangeType = '附近(同县/区)'
-						this.maxNum = 3
+						this.maxNum = 6
 						break;
 			}
 			if(this.chooseDays.length > 0){

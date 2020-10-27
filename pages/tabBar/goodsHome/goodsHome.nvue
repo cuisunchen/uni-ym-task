@@ -13,7 +13,7 @@
 			</refresh>
 			<cell class="page-swiper">
 				<swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
-					<swiper-item v-for="(item,index) in bannerList">
+					<swiper-item v-for="(item,index) in bannerList" :key="index" @click="goDetail(item)">
 						<image class="swiperImg" :src="item.topImg" mode="widthFix"></image>
 					</swiper-item>
 				</swiper>	
@@ -44,29 +44,21 @@
 				<cell v-if="index !== goodsList.length-1"><view class="emptyBox"></view></cell>
 			</template>
 		</list>
-		<!-- <div> -->
-			<!-- <mUpdateAppTip @updateClose="updateClose" :update_title="update_title"
-						:is_forced_update="is_forced_update" :update_des="update_des" 
-						:update_type="update_type" :update_url="update_url" 
-						:is_update_app="is_update_app"></mUpdateAppTip> -->
-		<!-- </div> -->
-		<!-- <my-update :update_type="update_type" :update_url="update_url" ></my-update> -->
-		<view class="updateBox row all-center">
+		<view class="updateBox row all-center" v-if="isUpdateShow" @click="closeUpdate">
 			<view class="content">
 				<image class="updateBg" src="../../../static/app_update_bg.png" mode=""></image>
 				<view class="main">
 					<scroll-view scroll-y="true" class="flex1">
 						<text class="title">发现新的版本，请点击升级</text>
 						
-						<text class="item">1、优化了某些方案</text>
-						<text class="item">1、优化了某些方案{{is_update}}</text>
+						<text class="item" v-for="(item,index) in update_des" :key="index">{{index+1}}、{{item}}</text>
 					</scroll-view>
 					<view class="progress-box flex-column" v-if="update_type == 0 && is_update">
 						<progress class="progress" :percent="prpgress_num" activeColor="#1c89d6" stroke-width="6" />
 						<view class="progress-des">资源下载中，请稍后({{download_num_ed}}/{{download_num}}M)</view>
 					</view> 
-					<text>{{is_update}}</text>
-					<view class="btnWrap flex all-center" v-if="!is_update" @click="testClick">
+					<text class="updateDesc">新版本体验更顺畅哦,赶快升级吧~~~</text>
+					<view class="btnWrap flex all-center" v-if="!is_update" @click="downloadBtn">
 						<text class="btn">立即升级</text>
 					</view>
 				</view>
@@ -85,6 +77,7 @@
 		components:{bar,goodsCard,mUpdateAppTip,myUpdate},
 		data(){
 			return{
+				show:true,
 				loadingStatus: true,   //  控制雪花动画是否显示
 				refreshing:false,				//  控制refresh是否显示
 				refreshText: "下拉可以刷新",
@@ -92,9 +85,11 @@
 				bannerList: [],
 				goodsList:[],
 				
+				isUpdateShow:false,  //  是否显示升级框
 				version: '',
 				update_type:0,//0是热更新，1整包更新
-				update_url:'https://m.mafengwo.cn/app/download/redirect?app=com.mfw.roadbook&channel=MFW',//更新的地址
+				// update_url:'https://m.mafengwo.cn/app/download/redirect?app=com.mfw.roadbook&channel=MFW',//更新的地址
+				update_url:'',
 				update_title:'发现新的版本，请点击升级',
 				update_des:[],
 				is_update_app:false,
@@ -104,6 +99,8 @@
 				download_num_ed: 0, //已经下载数
 				download_num: 0, //总下载数
 				is_update:false,
+				
+				titleNView: null,
 			}
 		},
 		onNavigationBarButtonTap() {
@@ -112,10 +109,6 @@
 			})
 		},
 		onShow(){ 
-			// uni.showModal({
-			// 	title:'系统升级',
-			// 	content:'1.系统升级'
-			// })
 			plus.runtime.getProperty(plus.runtime.appid, widgetInfo => {
 				this.version = widgetInfo.version;
 				this.getCheckVersion()
@@ -133,18 +126,65 @@
 			this.getGoodsList()  
 		},
 		methods:{
-			testClick(){
-				console.log(11) 
+			downloadBtn() {
 				//整包更新打开浏览器
 				if(this.update_type == 1) {
 					plus.runtime.openURL(encodeURI(this.update_url));
 					this.closeUpdate()
-					return 
-				} 
-				setTimeout(()=>{
-					this.is_update = true
-					console.log(this.is_update)
-				},0)
+					return
+				}
+				this.is_update = true 
+				//下载更新文件 
+				const downloadTask = uni.downloadFile({
+					url:this.update_url,
+					success: res => {
+						if (res.statusCode == 200) {
+							this.installBtn(res.tempFilePath);
+							return;
+						}else{
+							uni.showModal({
+								title:'提示',
+								content:'请求资源有误,请联系客服!!'
+							})
+						}
+					}
+				});
+			
+				downloadTask.onProgressUpdate(res => {
+					this.prpgress_num = res.progress;
+					this.download_num_ed = (res.totalBytesWritten / Math.pow(1024.00, 2)).toFixed(2);
+					this.download_num = (res.totalBytesExpectedToWrite / Math.pow(1024.00, 2)).toFixed(2);
+				});
+			},
+			//点击安装
+			installBtn(path) { 
+				plus.runtime.install(path, {
+					force: false
+				}, res => {
+					//更新完重启app
+					plus.runtime.restart();
+				},err => {
+					//重置更新的参数
+					this.prpgress_num = 0
+					this.download_num_ed = 0
+					this.download_num = 0
+					this.is_update = false
+					uni.showModal({
+						title: '更新失败',
+						content: err.message,
+						showCancel: false,
+						success: res => {
+						}
+					});
+			
+				});
+			},
+			closeUpdate(){
+				if(this.is_forced_update){
+					return
+				}
+				this.isUpdateShow = false
+				uni.showTabBar()
 			},
 			getGoodsList(){
 				unencryp('/snap/getSnapUpList','get',{}).then(res => {
@@ -152,7 +192,6 @@
 						setTimeout(()=>{
 							this.goodsList = res.data.contentList
 							this.bannerList = res.data.topList
-							// console.log(this.goodsList)
 						},0)
 						setTimeout(()=>{
 								// 模拟网路请求
@@ -231,29 +270,40 @@
 					// 这里需要返回app下载链接
 					if(res.code == 200){
 						let downloadTxt = '';
-						this.update_des = []   
-						console.log(this.version)
-						console.log(res) 
+						this.update_des = []  
 						if(this.version == res.data.version ){return}
 						if(this.version != res.data.version && res.data.forceUpdate == 'false'){
-							this.update_type = 0
-							downloadTxt = `版本号${res.data.version}精彩不容错过, 请及时更新!`
-							this.update_des.push(downloadTxt)
+							setTimeout(()=>{
+								this.isUpdateShow = true
+								this.update_type = 0
+								downloadTxt = `版本号${res.data.version}精彩不容错过, 请及时更新!`
+								this.update_des.push(downloadTxt)
+							},0)
 						}else
 						if(this.version != res.data.version && res.data.forceUpdate == 'true'){
-							this.update_type = 0
-							this.is_forced_update = true
-							downloadTxt = `版本号${res.data.version}最新版本才能正常使用, 请及时更新!`
-							this.update_des.push(downloadTxt)
-							uni.hideTabBar()
-							this.update_url = res.data.downloadLink
-							this.updateApp()
+							setTimeout(()=>{
+								this.isUpdateShow = true
+								this.update_type = 0
+								this.is_forced_update = true
+								downloadTxt = ['最新版本修改了部分已知问题,并进行了一些性能优化',]
+								this.update_des.push(...downloadTxt)
+								
+								let pages = getCurrentPages()
+								let page = pages[pages.length - 1];
+								let currentWebview = page.$getAppWebview();
+								this.titleNView = currentWebview.getStyle().titleNView
+								this.titleNView.buttons[0].width = 0   //  隐藏头部右边的按钮
+								currentWebview.setStyle({
+									titleNView:this.titleNView
+								})
+								uni.hideTabBar()
+								this.update_url = res.data.downloadLink 
+							},0)
 							return
 						}else{
 							this.getAlertData()
 							return
 						}
-						// this.updateApp()
 						//  缓存非强制更新下载弹框弹出时的时间   保证2个小时弹出一次
 						let storageDate = uni.getStorageSync('updateDate')
 						let nowDate = new Date().getTime()
@@ -261,7 +311,6 @@
 						if(storageDate){
 							if(spaceTime > 2 || spaceTime == 2){ // 每次弹出后更新缓存时间,清除缓存中弹框状态
 								this.update_url = res.data.downloadLink
-								this.updateApp()
 								wx.setStorage({
 									key: 'updateDate',
 									data: nowDate
@@ -269,7 +318,6 @@
 							}
 						}else{
 							this.update_url = res.data.downloadLink
-							this.updateApp()
 							wx.setStorage({
 								key: 'updateDate',
 								data: nowDate
@@ -282,53 +330,17 @@
 					}
 				})
 			},
-			updateApp() {
-				// #ifdef APP-PLUS  
-				plus.runtime.getProperty(plus.runtime.appid, widgetInfo => {
-						//传当前的版本号和appid与后台校验是否返回新的信息
-						// {
-						//  version: widgetInfo.version,  //  应用版本号
-						//  appid: plus.runtime.appid
-						// }
-						//我这里直接模拟后台传回来的值
-						// this.update_type = 0//0是热更新，1整包更新
-						// this.update_url = 'http://www.guangyi009.com/apk/app-release.apk'//更新的地址
-						this.is_update_app = true,///是否强制更新，不能关闭
-						this.update_title = '发现新的版本，请点击升级'
-						
-						//  一下是更新弹框出现时禁止下拉刷新
-						const pages = getCurrentPages();
-						const page = pages[pages.length - 1];  
-						const currentWebview = page.$getAppWebview();
-						currentWebview.setStyle({  
-						  pullToRefresh: {  
-						    support: !this.is_update_app,  
-						    style: plus.os.name === 'Android' ? 'circle' : 'default'  
-						  }  
-						});  
-						// this.update_des = []
-				});
-				// #endif
-			},
-			updateClose(e) {
-				if(e){
-					uni.showToast({
-						title: e
-					})
+			goDetail(data,index){
+				data.bigImg = data.topContentImg
+				var strRegex = "((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)";
+				let re=new RegExp(strRegex);
+				if (!re.test(data.topContentImg)) {
+					this.showToast('详情页地址有误,请联系客服')
 					return
 				}
-				this.is_update_app = false;
-				//  一下是更新弹框出现时禁止下拉刷新
-				const pages = getCurrentPages();
-				const page = pages[pages.length - 1];  
-				const currentWebview = page.$getAppWebview();
-				currentWebview.setStyle({  
-				  pullToRefresh: {  
-				    support: !this.is_update_app,  
-				    style: plus.os.name === 'Android' ? 'circle' : 'default'  
-				  }  
-				}); 
-				uni.showTabBar()
+				uni.navigateTo({
+					url:'../../subPages/details/details?param='+ encodeURIComponent(JSON.stringify(data)) + '&type=swiper&index='+index + '&from=easyEarn'
+				})
 			},
 		}
 	}
@@ -338,7 +350,6 @@
 .goodsHome{
 	position: relative;
 	top: -4rpx;
-	/* background-color: #007AFF; */
 }
 .swiperImg{
 	width: 750rpx;
@@ -416,7 +427,7 @@
 .content{
 	width: 580rpx;
 	height: 734rpx;
-	margin-bottom: 400rpx;
+	margin-bottom: 150rpx;
 	position: relative;
 }
 .updateBg{
@@ -432,7 +443,6 @@
 	z-index: 99;
 	padding: 20rpx;
 	background-color: #fff;   
-		/* background-color: #07C160; */
 }
 .title{
 	color: #000;
@@ -453,8 +463,15 @@
 	font-size: 28rpx;
 	color: #6C6C6C;
 }
+.updateDesc{
+	color: red;
+	line-height: 40rpx;
+	font-size: 24rpx;
+	text-align: center;
+}
 .btnWrap{
 	height: 80rpx;
+	margin-bottom: 20rpx;
 	border-radius: 10rpx;
 	background-color: #007AFF;
 }

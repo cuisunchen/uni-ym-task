@@ -11,13 +11,13 @@
 			</view>
 		</refresh>
 		<cell class="recommendBox row">
-			<view class="recommendItem flex1 flex-column align-center" :class="{middleItem: index == 1}" v-for="(item,index) in recommendAd">
+			<view class="recommendItem flex1 flex-column align-center" :class="{middleItem: index == 1}" 
+					v-for="(item,index) in recommendAd" :key="index" @click="goRecommandDetail(item,'recommand')">
 				<image class="recommendImg" :src="item.homeTopImgUrl" mode="aspectFill" 
 							:style="{height:recomendItemHeight +'px',width: recomendItemHeight + 'px'}"></image>
 				<view class="titleBox flex-column all-center">
 					<text class="recommendItemTit row flex-start">{{item.title}}</text>
 				</view>
-				<!-- <text class="recommendItemTit row flex-start">{{item.title}}</text> -->
 			</view>
 		</cell>
 		<cell class="emptyBox"></cell>
@@ -67,7 +67,7 @@
 				loading:false,
 				recomendItemHeight:null,
 				recommendAd:[
-					{homeTopImgUrl:'../../../static/place/fang@2x.png',title:'广告位招租广告位招租广告位招租广告位招租'},
+					{homeTopImgUrl:'../../../static/place/fang@2x.png',title:'广告位招租'},
 					{homeTopImgUrl:'../../../static/place/fang@2x.png',title:'广告位招租'},
 					{homeTopImgUrl:'../../../static/place/fang@2x.png',title:'广告位招租'}
 				],
@@ -160,11 +160,27 @@
 				let pageType = ''
 				if(type=="qa"){
 					pageType = 'question'
-				}else{
+				}else if(type=="gl"){
 					pageType = 'goodluck'
 				}
 				uni.navigateTo({
 					url:'../../subPages/details/details?param='+ encodeURIComponent(JSON.stringify(data)) + '&type=' + pageType +'&index='+index + '&from=easyEarn'
+				})
+			},
+			goRecommandDetail(data,index){
+				if(data.title == '广告位招租'){return}
+				data.bigImg = data.homeBigImgUrl
+				var strRegex = "((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)";
+				let re=new RegExp(strRegex);
+				if (!re.test(data.bigImg)) {
+					uni.showToast({
+						title:'详情页地址有误,请联系客服',
+						icon: 'none'
+					})
+					return
+				}
+				uni.navigateTo({
+					url:'../../subPages/details/details?param='+ encodeURIComponent(JSON.stringify(data)) + '&type=recommand&index='+index + '&from=easyEarn'
 				})
 			},
 			userClick(item,index){

@@ -115,7 +115,7 @@
 			switch (opt.type){
 				case 'recommend-home':
 					uni.setNavigationBarTitle({
-					　　title:'发布首页-今日推荐'
+					　　title:'易赚顶部-全国推荐'
 					})
 					this.form.cityCode = 0
 					this.form.homeType = 4
@@ -123,7 +123,7 @@
 					break;
 				case 'recommend-GL1':
 					uni.setNavigationBarTitle({
-					　　title:'发布好运-祝您好运推荐'
+					　　title:'全国推荐'
 					})
 					this.form.cityCode = 0
 					this.form.homeType = 5
@@ -132,7 +132,7 @@
 				case 'recommend-GL2':
 					this.pickerText = '请选择发布城市'
 					uni.setNavigationBarTitle({
-					　　title:'发布好运-同城活动推荐'
+					　　title:'同城推荐'
 					})
 					this.form.homeType = 6
 					this.rangeType = 2
@@ -141,7 +141,7 @@
 				case 'recommend-GL3':
 					this.pickerText = '请选择发布位置'
 					uni.setNavigationBarTitle({
-					　　title:'发布好运-附近活动推荐'
+					　　title:'附近推荐'
 					})
 					this.form.homeType = 7
 					this.rangeType = 3
@@ -195,10 +195,11 @@
 				this.submitRequest()
 			},
 			submitRequest(){  
+				console.log(this.form)
 				//encodeURIComponent(JSON.stringify(this.form))
-				this.$request('/api/recommend','post',JSON.stringify(this.form)).then(res => {
+				this.$request('/api/recommend','post',encodeURIComponent(JSON.stringify(this.form))).then(res => {
 					uni.hideLoading()
-					console.log(res)
+					// console.log(res)
 					if(res.code == 200){
 						if(uni.getSystemInfoSync().platform == 'android'){
 							uni.showModal({

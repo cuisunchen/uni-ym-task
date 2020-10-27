@@ -46,19 +46,10 @@
 			
 			<view class="tip">
 				<view class="title">注意事项</view>
-				<view class="item flex align-center"><text class="dot"></text><text class="flex1">提现的微信号/支付宝只能绑定一次,绑定后不能更改</text></view>
-				<view class="item flex align-center">
-					<text class="dot"></text>
-					<text class="flex1">
-						每月
-						<text v-for="(date,index) in dateLimit" :key="index">{{date}}号<text v-if="index != dateLimit.length-1">、</text></text>
-						为提现日,可提现
-					</text>
-				</view>
-				<view class="item flex align-center"><text class="dot"></text><text class="flex1">2个工作日内平台审核到账</text></view>
+				<view class="item flex align-center"><text class="dot"></text><text class="flex1">提现账号只能绑定一次,如需更改,请联系客服</text></view>
+				<view class="item flex align-center"><text class="dot"></text><text class="flex1">申请提现后,1个工作日内平台审核到账</text></view>
 				<view class="item flex align-center"><text class="dot"></text><text class="flex1">手续费:提现金额的5%</text></view>
-				<view class="item flex align-center"><text class="dot"></text><text class="flex1">新手和LV5会员可随时提现</text></view>
-				<view class="item flex align-center"><text class="dot"></text><text class="flex1">违规操作,异常账号,平台拒绝提现</text></view>
+				<view class="item flex align-center"><text class="dot"></text><text class="flex1">如有违规操作,或异常账号,平台拒绝提现</text></view>
 			</view>
 			
 			<view class="btnBox">

@@ -7,8 +7,8 @@
 				<text class="freshTit">{{refreshText}}</text>
 			</view>
 		</refresh>
-		<cell v-for="item in lists" class="cell">
-			<my-order-card :data-obj="item" class="card" :has-send="false"></my-order-card>
+		<cell v-for="(item,index) in lists" :key="index" class="cell">
+			<my-order-card :data-obj="item" class="card" :has-send="false" @cardClick="goOrderDetail(item)"></my-order-card>
 		</cell>
 		<cell class="nodata flex1 flex-column all-center" v-if="lists.length == 0">
 			<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
@@ -41,6 +41,16 @@
 			this.getLists()
 		},
 		methods:{
+			goOrderDetail(item){
+				item.typeStatusTxt = '拼中了,已发货请注意查收'
+				item.dateTime = item.winTime
+				item.name = item.consigneeName
+				item.phone = item.consigneePhone
+				item.address = item.addressInfo
+				uni.navigateTo({
+					url:'../orderDetail/orderDetail?datas=' + JSON.stringify(item)
+				})
+			},
 			getLists(type){
 				unencryp('/snap/getDeliveryList','post',this.param).then(res=>{
 					if(res.code == 200){ 

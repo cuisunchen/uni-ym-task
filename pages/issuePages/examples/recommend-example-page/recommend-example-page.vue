@@ -14,10 +14,10 @@
 			
 			<view class="card">
 				<view class="title flex all-center">广告在APP内显示位置</view>
-				<view class="desc">1. 首页-今日推荐: 全国所有用户显示</view>
-				<view class="desc">2. 好运-祝您好运: 全国所有用户显示</view>
-				<view class="desc">3. 好运-同城: 发布位置对应城市的所有用户显示</view>
-				<view class="desc">4. 好运-附近: 发布位置对应县/区的所有用户显示</view>
+				<view class="desc">1. 易赚界面顶部: 全国所有用户显示</view>
+				<view class="desc">2. 问答/好运-全国顶部: 全国所有用户显示</view>
+				<view class="desc">3. 问答/好运-同城顶部: 同城所有用户显示</view>
+				<view class="desc">4. 问答/好运-附近顶部: 同县/区所有用户显示</view>
 			</view>
 		</view>
 	</view>

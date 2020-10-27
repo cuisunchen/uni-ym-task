@@ -1,13 +1,13 @@
 <template>
-	<div class="ptIng row">
+	<div class="ptIng row" @click="goOrderDetail">
 		<view class="goodsImg flex-shrink">
-			<image class="img" src="../../../static/pic1.jpeg" mode=""></image>
+			<image class="img" :src="dataObj.icon" mode=""></image>
 		</view>
 		<view class="content flex1 flex-column flex-between">
-			<text class="title">阿克苏的看法开发规划阿克苏的看法开发规划阿克苏的看法开发规划</text>
+			<text class="title">{{dataObj.title}}</text>
 			<view class="status row align-center flex-between">
 				<view class="tag row all-center">
-					<text class="tagTxt">2人团</text>
+					<text class="tagTxt">{{dataObj.adTypeName}}</text>
 				</view>
 				<!-- <uni-tag text="2人团" type="error" size="small"></uni-tag> -->
 				<text class="statusTxt">正在拼团,请稍后</text>
@@ -16,12 +16,12 @@
 				<view class="totalPrice row align-center">
 					<text class="label">合计:</text>
 					<text class="totalUnit">￥</text>
-					<text class="totalNum">59.90</text>
+					<text class="totalNum">{{dataObj.price}}</text>
 				</view>
 				<view class="reward row align-center">
 					<text class="label">奖励:</text>
 					<text class="rewardUnit">￥</text>
-					<text class="rewardNum">9.90</text>
+					<text class="rewardNum">{{dataObj.returnPrice}}</text>
 				</view>
 			</view>
 		</view>
@@ -30,7 +30,19 @@
 
 <script>
 	export default {
-		
+		props:{
+			dataObj:{
+				type: Object,
+				default(){
+					return {}
+				}
+			}
+		},
+		methods:{
+			goOrderDetail(){
+				this.$emit('click')
+			}
+		}
 	}
 </script>
 

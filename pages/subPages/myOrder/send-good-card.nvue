@@ -8,7 +8,7 @@
 			</view>
 		</refresh>
 		<cell v-for="item in lists" class="cell">
-			<my-order-card :data-obj="item" class="card" @click="cancelSend(item.id)"></my-order-card>
+			<my-order-card :data-obj="item" class="card" @click="cancelSend(item)" @cardClick="goOrderDetail(item)"></my-order-card>
 		</cell>
 		<cell class="nodata flex1 flex-column all-center" v-if="lists.length == 0">
 			<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
@@ -38,11 +38,25 @@
 			}
 		}, 
 		created() {
+			uni.showLoading({
+				title: '加载中 ...'
+			})
 			this.getLists()
 		},
 		methods:{
+			goOrderDetail(item){
+				item.typeStatusTxt = '拼中了,12个小时内可取消发货'
+				item.dateTime = item.winTime
+				item.name = item.consigneeName
+				item.phone = item.consigneePhone
+				item.address = item.addressInfo
+				uni.navigateTo({
+					url:'../orderDetail/orderDetail?datas=' + JSON.stringify(item)
+				})
+			},
 			getLists(type){
 				unencryp('/snap/getDeliveryList','post',this.param).then(res=>{
+					uni.hideLoading()
 					if(res.code == 200){ 
 						setTimeout(()=> {
 							if(this.param.pageNum >= Math.ceil(res.data.maxSize/this.param.pageSize)){
@@ -94,16 +108,28 @@
 					this.release = false
 				}
 			},
-			cancelSend(id){
-				unencryp('/snap/cancelDelivery','post',{id}).then(res => {
-					if(res.code == 200){
-						uni.showToast('取消成功!')
-						uni.showToast({
-							title:'取消成功!',
-						})
-						this.$emit('refresh')
-					}else{
-						res.msg || uni.showToast(res.msg)
+			cancelSend(item){
+				uni.showModal({
+					title: '温馨提示',
+					content: `确定取消发货?取消发货后,退款${item.refundAmount}元,可随时提现,请在退款记录中查询`,
+					cancelText: '确定',
+					confirmText: '取消',
+					success: (res) => {
+						if(res.cancel){
+							uni.showLoading({
+								title:'加载中'
+							})
+							unencryp('/snap/cancelDelivery','post',{id:item.id}).then(res => {
+								if(res.code == 200){
+									uni.showToast({
+										title:'取消成功!',
+									})
+									this.getLists()
+								}else{
+									res.msg || uni.showToast(res.msg)
+								}
+							})
+						}
 					}
 				})
 			},

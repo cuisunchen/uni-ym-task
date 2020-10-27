@@ -10,23 +10,23 @@
 		<list class="lists flex1">
 			<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
 				<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
-				<view class="loadingIco row align-center">
+				<view class="loadingIco row align-center"> 
 					<uni-icons class="uni-icons" v-if="loadingStatus" :class="{'refreshRotate': release}" type="pulldown" size="24" color="#999"></uni-icons>
 					<text class="freshTit">{{refreshText}}</text>
 				</view>
 			</refresh>
-			<cell v-for="item in lists">
+			<cell v-for="(item,index) in lists" :key="index">
 				<view class="callBox row align-center">
 					<view class="userImgBox">
-						<image class="userImg" src="../../../static/pic1.jpeg" mode="aspectFill"></image>
+						<image class="userImg" :src="item.avatar" mode="aspectFill"></image>
 					</view>
 					<view class="con flex1 flex-column flex-between">
 						<view class="info row flex-between align-center">
-							<text class="tel">137****0372</text>
-							<text class="date">2020-09-07</text>
+							<text class="tel">{{item.phone}}</text>
+							<text class="date">{{item.dateTime}}</text>
 						</view>
 						<view class="idNum">
-							<text class="idNumCon">拼团编号: pt001</text>
+							<text class="idNumCon">拼团编号: pt{{index > 10 && index < 100 ? '0' + (index+1) : '00' + (index+1)}}</text>
 						</view>
 					</view>
 				</view>
@@ -45,27 +45,40 @@
 	export default {
 		data() {
 			return {
-				loadingStatus: true,
-				release:false,
+				loadingStatus: true,   //  控制雪花动画是否显示
+				refreshing:false,				//  控制refresh是否显示
 				refreshText: "下拉可以刷新",
 				loading:false,
 				lists:[],
-				groupType:''
+				groupType:'',
+				goodsId: null
 			}
 		},
 		onLoad(opt) {
-			this.lists = opt.lists
+			this.goodsId = opt.id
 			this.groupType = Number(opt.groupType)
-			// this.getLists()
+			this.getLists()
 		},
 		methods:{
-			getLists(){
-				unencryp('/snap/getSnapUpPlays','post',{id:this.id}).then(res => {
-					console.log(res)
+			getLists(type){
+				unencryp('/snap/getSnapUpPlays','post',{id:this.goodsId}).then(res => {
 					if(res.code == 200){
-						
+						setTimeout(()=>{
+							this.lists = res.data
+						},0)
+						if(type == 'refresh'){
+							setTimeout(()=>{
+								this.loadingStatus = true
+								this.refreshing = false
+								this.loading = false;
+								this.release = false
+								this.refreshText = '下拉可以刷新'
+							},1200)
+						}
 					}else{
-						
+						uni.showToast({
+							title: res.msg
+						})
 					}
 				})
 			},
@@ -78,14 +91,7 @@
 				this.refreshing = true
 				this.loadingStatus = false
 				this.refreshText = '加载中 ...'
-				setTimeout(res=>{
-						// 模拟网路请求
-					this.loadingStatus = true
-					this.refreshing = false
-					this.loading = false;
-					this.release = false
-					this.refreshText = '下拉可以刷新'
-				},2000)
+				this.getLists('refresh')
 			},
 			onpullingdown(e){
 				if (this.refreshing) return;

@@ -10,10 +10,10 @@
 			<view class="tabBox flex1 all-center" @click="tabClick(2,'tab2')">
 				<text class="tab" id="tab2" :class="{active:tabIndex == 2}">附近</text>
 			</view>
-			<view class="underLine" :style="{width:lineWidth + 'px' ,left: lineLeft + 'px'}"></view>
+			<!-- <view class="underLine" :style="{width:lineWidth + 'px' ,left: lineLeft + 'px'}"></view> -->
 		</view>
 		
-		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false">
+		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false" @change="swiperChange">
 			<!-- 全国 -->
 			<swiper-item>
 				<nationwide-list></nationwide-list>
@@ -55,6 +55,9 @@
 			})
 		},
 		methods:{
+			swiperChange(e){
+				this.tabIndex = e.detail.current
+			},
 			tabClick(index,id){
 				this.tabIndex = index
 				this.$nextTick(() => {
@@ -63,7 +66,6 @@
 						setTimeout(()=> {
 							this.lineLeft = data.left
 							this.lineWidth = data.width
-							console.log(this.lineLeft)
 						}, 0);
 					}).exec()
 				})
@@ -79,7 +81,6 @@
 							this.refreshText = '下拉可以刷新'
 						},1500)
 					}
-					console.log(res)
 					if(res.code == 200){
 						setTimeout(()=>{
 							this.sumPage = res.data.sumPage
@@ -97,7 +98,6 @@
 			getRcommendDatas(){ 
 				unencryp('/api/earn/recommend','post',this.param).then(res=>{
 					uni.hideLoading()
-					console.log(res)
 					if(res.code == 200){
 						setTimeout(()=>{
 							this.recommendList = res.data
@@ -127,7 +127,6 @@
 				if(this.sumPage == this.param.pageNum){
 					return
 				}
-				console.log(123)
 				this.param.pageNum ++ 
 				this.getLists('loadMore')
 			},
@@ -160,10 +159,14 @@
 }
 .tab{
 	color: #666;
+	line-height: 76rpx;
 	font-size: 32rpx;
 }
 .active{
 	color: #2C405A;
+	border-bottom-width: 4rpx;
+	border-bottom-color: #2C405A;
+	border-style: solid;
 }
 .underLine{
 	height: 4rpx;

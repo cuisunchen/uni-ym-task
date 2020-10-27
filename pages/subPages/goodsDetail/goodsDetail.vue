@@ -1,5 +1,5 @@
 <template>
-	<view class="goodsDetail flex-column">
+	<view class="goodsDetail flex-column" v-if="!pageHide">
 		<view class="back flex all-center" @click="goBack">
 			<u-icon class="uicon" name="arrow-left" size="40" color="#000"></u-icon>
 		</view>
@@ -47,7 +47,7 @@
 				<view class="title flex align-center">
 					<u-icon name="clock" color="#ff0000" size="36"></u-icon>
 					<text class="titLabel">历史成团:</text>
-					<text class="num">{{detailInfo.historicalVolume}}</text>
+					<text class="num">{{detailInfo.fakeDataBasic}}</text>
 				</view>
 				<view class="rule flex all-center">
 					<image class="ruleImg" :src="ruleImg" mode="widthFix"></image>
@@ -74,7 +74,7 @@
 						<swiper-item v-for="mem in 2" v-if="memberList.length == 0">
 							<view class="userInfo flex flex-between align-center">
 								<view class="left flex align-center">
-									<image class="userImg" src="../../../static/other/ste@2x.png" mode=""></image>
+									<image class="userImg" src="../../../static/timg01@2x.png" mode=""></image>
 									<text class="tel">欢迎您参与此次拼团</text>
 								</view>
 							</view>
@@ -82,7 +82,7 @@
 					</swiper>
 					<view class="right flex align-center">
 						<text>还差</text>
-						<text class="num">12</text>
+						<text class="num">{{detailInfo.snapUpPeopleMax - detailInfo.snapUpPeople}}</text>
 						<text>人成团</text>
 					</view>
 				</view>
@@ -134,6 +134,7 @@
 		},
 		data() {
 			return {
+				pageHide: false,  // 控制当商品下载时,让页面显示空白
 				ruleImg:'../../../static/pt2.png',
 				goodsId:'',
 				detailInfo:{},
@@ -150,6 +151,7 @@
 			clearInterval(this.timer)
 		},
 		onShow() {
+			this.getDetail(this.goodsId)
 			this.getMemberList()
 		},
 		onPullDownRefresh() {
@@ -172,7 +174,6 @@
 					break;
 			}
 			this.goodsId = opt.id
-			this.getDetail(opt.id)
 		},
 		methods:{
 			collect(){   //  截流处理
@@ -221,13 +222,19 @@
 						this.attributeValue = res.data.attributeValues[0]
 						this.collectType = res.data.collect
 					}else{
-						this.showToast(res.msg)
+						this.showToast(res.msg,'none',1500)
+						if(res.code == 999){
+							this.pageHide = true
+							setTimeout(()=>{
+								uni.navigateBack()
+							},1500)
+						}
 					}
 				})
 			},
 			goMemberList(){
 				uni.navigateTo({
-					url: '../ptMemberList/ptMemberList?lists=' + this.memberList + '&groupType=' + this.groupType
+					url: '../ptMemberList/ptMemberList?id=' + this.goodsId + '&groupType=' + this.groupType
 				})
 			},
 			openSize(){
@@ -245,14 +252,17 @@
 					goodsTitle: this.detailInfo.title,
 					goodsImg: this.detailInfo.topImages[0],
 					attributeValue: this.attributeValue,
-					id: this.detailInfo.id
+					id: this.detailInfo.id,
+					attributeName: this.detailInfo.attributeName,
+					attributeValues: this.detailInfo.attributeValues
 				}
 				uni.setStorage({
 					key:'addr',
 					data:{
+						name: this.detailInfo.shippingAddress.name,
 						tel: this.detailInfo.shippingAddress.phone,
 						addr: this.detailInfo.shippingAddress.addressInfo,
-						addressId: this.detailInfo.shippingAddress.id,
+						addressId: this.detailInfo.shippingAddress.id
 					}
 				})
 				uni.navigateTo({
@@ -270,7 +280,6 @@
 
 <style lang="scss" scoped>
 .goodsDetail{
-	height: 100%;
 	background-color: #f6f6f6;
 	.back{
 		position: fixed;
@@ -286,6 +295,7 @@
 		}
 	}
 	.main{
+		padding-bottom: 90rpx;
 		overflow-y: scroll;
 		-webkit-overflow-scrolling: touch;
 	}
@@ -428,6 +438,7 @@
 				width: 50rpx;
 				height: 50rpx;
 				margin-right: 20rpx;
+				border-radius: 6rpx;
 			}
 		}
 	}
@@ -456,6 +467,10 @@
 		}
 	}
 	.footer{
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
 		height: 90rpx;
 		.collection{
 			color: #666;

@@ -25,7 +25,8 @@
 			})
 		},
 		onShow() {
-			this.getAddrList()
+			this.lists = []
+			this.getAddrList() 
 		},
 		onLoad(opt) {
 			if(opt.addressId){
@@ -51,7 +52,6 @@
 				})
 			},
 			addrChange(item){
-				console.log(item)
 				uni.showLoading({
 					title:'请求连接中...'
 				})
@@ -61,6 +61,7 @@
 						uni.setStorage({
 							key:'addr',
 							data:{
+								name: item.name,
 								tel: item.phone,
 								addr: item.addressInfo,
 								addressId: item.id,

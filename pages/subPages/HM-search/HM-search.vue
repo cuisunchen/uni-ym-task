@@ -62,6 +62,7 @@
 </template>
 
 <script>
+	import {unencryp} from '../../../common/utils/request.js'
 	//引用mSearch组件，如不需要删除即可
 	import mSearch from '@/components/mehaotian-search-revision/mehaotian-search-revision.vue';
 	import goodsCard from '@/components/goods-card/goods-card.vue'
@@ -86,6 +87,18 @@
 			}
 		},
 		onLoad() {
+			uni.showLoading({
+				title:'加载中 ...'
+			})
+			unencryp('/snap/goods/getPopularSearchesList','get').then(res => {
+				this.laodding = false
+				console.log(res)
+				if(res.code == 200){
+					
+				}else{
+					this.showToast(res.msg)
+				}
+			})
 			this.init();
 		},
 		components: {
@@ -188,9 +201,9 @@
 				this.keyword = keyword;
 				this.param.goodsName = keyword
 				this.saveKeyword(keyword); //保存为历史 
-				console.log(this.param)
 				this.$unencryp('/snap/popularSearches','post',this.param).then(res => {
 					this.laodding = false
+					console.log(res)
 					if(res.code == 200){
 						this.noInput = false
 						if(res.data.list.length == 0){

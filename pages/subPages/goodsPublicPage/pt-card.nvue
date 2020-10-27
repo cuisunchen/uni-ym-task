@@ -7,8 +7,8 @@
 				<text class="freshTit">{{refreshText}}</text>
 			</view>
 		</refresh>
-		<cell v-for="item in lists" class="cell">
-			<pt-ing class="card" :data-obj="item"></pt-ing>
+		<cell v-for="(item,index) in lists" :key="index" class="cell">
+			<pt-ing class="card" :data-obj="item" @click="goOrderDetail(item)"></pt-ing>
 		</cell>
 		<cell class="nodata flex1 flex-column all-center" v-if="lists.length == 0">
 			<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
@@ -22,6 +22,11 @@
 	import {unencryp} from '../../../common/utils/request.js'
 	export default {
 		components:{ptIng},
+		props:{
+			tabIndex:{
+				type: Number
+			}
+		},
 		data(){
 			return {
 				loadingStatus: true,
@@ -37,10 +42,31 @@
 				lists:[]
 			}
 		},
+		watch:{
+			tabIndex(val){
+				if(val == 1){
+					uni.showLoading({
+						title:'加载中 ...'
+					})
+					this.getLists()
+				}
+			}
+		},
 		created() {
-			this.getLists()
+			if(this.tabIndex == 1){
+				uni.showLoading({
+					title:'加载中 ...'
+				})
+				this.getLists()
+			}
 		},
 		methods:{
+			goOrderDetail(item){
+				item.typeStatusTxt = '正在拼团,请稍后'
+				uni.navigateTo({
+					url:'../orderDetail/orderDetail?datas=' + JSON.stringify(item)
+				})
+			},
 			getLists(type){
 				unencryp('/snap/getMyBuyingList','post',this.param).then(res=>{
 					uni.hideLoading()
@@ -96,7 +122,6 @@
 				}
 			},
 			loadMore(){
-				console.log(this.isNoMore)
 				if(this.isNoMore){
 					return
 				}

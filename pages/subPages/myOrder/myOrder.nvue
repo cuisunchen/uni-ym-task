@@ -4,9 +4,9 @@
 			<view class="tabBox row all-center" v-for="(tab,index) in tabList" :key="index" @click="tabChange(index,tab.id)">
 				<text class="tab" :ref="tab.id" :class="{active:tabIndex == index}" :id="tab.id">{{tab.name}}</text>
 			</view>
-			<view class="underLine" :style="{width: lineWidth + 'px', left: lineLeft + 'px'}"></view>
+			<!-- <view class="underLine" :style="{width: lineWidth + 'px', left: lineLeft + 'px'}"></view> -->
 		</header>
-		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false">
+		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false" @change="swiperChange">
 			<!-- 待发货 -->
 			<swiper-item>
 				<send-goods-card></send-goods-card>
@@ -50,20 +50,20 @@
 			})
 		},
 		mounted() {
-			this.$nextTick(() => {
-				let theNode = uni.createSelectorQuery().select(`#tab0`)
-				theNode.boundingClientRect((data)=>{
-					setTimeout(()=> {
-						this.lineLeft = data.left
-						this.lineWidth = data.width
-					}, 0);
-				}).exec()
-			})
-			uni.showLoading({
-				title:'数据加载中...'
-			})
+			// this.$nextTick(() => {
+			// 	let theNode = uni.createSelectorQuery().select(`#tab0`)
+			// 	theNode.boundingClientRect((data)=>{
+			// 		setTimeout(()=> {
+			// 			this.lineLeft = data.left
+			// 			this.lineWidth = data.width
+			// 		}, 0);
+			// 	}).exec()
+			// })
 		},
 		methods: {
+			swiperChange(e){
+				this.tabIndex = e.detail.current
+			},
 			tabClick(item){
 				this.tabIndex = item.index
 			},
@@ -91,11 +91,15 @@
 }
 .tab{
 	color: #666;
+	line-height: 76rpx;
 	font-size: 28rpx;
 	text-align: center;
 }
 .active{
 	color: #2C405A;
+	border-bottom-width: 4rpx;
+	border-bottom-color: #2C405A;
+	border-style: solid;
 }
 .underLine{
 	width: 80rpx;

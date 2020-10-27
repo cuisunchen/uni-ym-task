@@ -77,13 +77,10 @@
 					return
 				}
 				this.is_update = true
-				console.log(this.is_update)
-				return
 				//下载更新文件 
 				const downloadTask = uni.downloadFile({
 					url:this.update_url,
 					success: res => {
-						console.log(res) 
 						if (res.statusCode == 200) {
 							this.installBtn(res.tempFilePath);
 							return;
@@ -129,7 +126,6 @@
 					this.$emit('updateClose','升级中，请勿关闭~')
 					return getApp().globalData.hint('升级中，请勿关闭~');
 				}
-				
 				this.$emit('updateClose','')
 			}
 		}

@@ -1,26 +1,26 @@
 <template>
-	<div class="IjoinPTcard">
+	<div class="IjoinPTcard" @click="cardClick">
 		<view class="cardTitle row align-center flex-end">
 			<text class="cardTitleTxt">拼团奖励:</text>
-			<text class="cardTitMoney" :class="{blueFont:dataObj.win}">+{{dataObj.returnPrice}}元</text>
+			<text class="cardTitMoney" :class="{blueFont:dataObj.win}">+{{dataObj.win ? '0.00' : dataObj.returnPrice}}元</text>
 			<image class="cardHB" src="../../../static/hb.png" mode=""></image>
 		</view>
 		<view class="main">
 			<view class="goodsInfo row">
 				<view class="goodsImg flex-shrink">
-					<image class="img" src="../../../static/pic1.jpeg" mode=""></image>
+					<image class="img" :src="dataObj.icon" mode=""></image>
 				</view>
 				<view class="content flex1 flex-column flex-between">
 					<text class="title">{{dataObj.title}}</text>
 					<view class="status row align-center flex-end">
-						<text class="statusTxt" v-if="!dataObj.win">未拼中,预付款已退回</text>
-						<text class="statusTxt blueFont"v-else>拼中了,请及时查收,12小时内可取消发货</text>
+						<text class="statusTxt" v-if="!dataObj.win">未拼中,预付款已退回并获得奖励</text>
+						<text class="statusTxt blueFont"v-else>拼中了,可12个小时内取消发货</text>
 					</view>
 				</view>
 			</view>  
 			<view class="handleBox row align-center flex-between">
 				<view class="btn flex all-center" :class="{blueBg:dataObj.win}">
-					<text class="btntxt">再拼一单</text>
+					<text class="btntxt" @click="onceMore">再拼一单</text>
 				</view>
 				<view class="leftBox row align-center">
 					<text class="label">合计:</text> 
@@ -42,10 +42,15 @@
 				}
 			}
 		},
-		data(){
-			return{
+		methods:{
+			cardClick(){
+				this.$emit('cardClick')
+			},
+			onceMore($event){
+				$event.stopPropagation()
+				this.$emit('click')
 			}
-		},
+		}
 	}
 </script>
 

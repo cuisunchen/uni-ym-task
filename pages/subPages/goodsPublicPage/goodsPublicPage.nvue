@@ -4,14 +4,14 @@
 			<view class="tabBox row all-center" v-for="(tab,index) in tabList" :key="index" @click="tabChange(index,tab.id)">
 				<text class="tab" :class="{active:tabIndex == index}" :id="tab.id">{{tab.name}}</text>
 			</view>
-			<view class="underLine" :style="{width: lineWidth + 'px',left: lineLeft + 'px'}"></view>
+			<!-- <view class="underLine" :style="{width: lineWidth + 'px',left: lineLeft + 'px'}"></view> -->
 		</header>
-		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false">
+		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false" @change="swiperChange">
 			<swiper-item>
-				<join-card ></join-card>
+				<join-card :tab-index="tabIndex"></join-card>
 			</swiper-item>
 			<swiper-item>
-				<pt-card></pt-card>
+				<pt-card :tab-index="tabIndex"></pt-card>
 			</swiper-item>
 		</swiper>
 	</view>
@@ -46,17 +46,20 @@
 		},
 		onLoad(opt) {
 			this.tabIndex = opt.type
-			this.$nextTick(() => {
-				let theNode=uni.createSelectorQuery().select(`#tab${opt.type}`)
-				theNode.boundingClientRect((data)=>{
-					setTimeout(()=> {
-						this.lineLeft = data.left
-						this.lineWidth = data.width
-					}, 0);
-				}).exec()
-			})
+			// this.$nextTick(() => {
+			// 	let theNode=uni.createSelectorQuery().select(`#tab${opt.type}`)
+			// 	theNode.boundingClientRect((data)=>{
+			// 		setTimeout(()=> {
+			// 			this.lineLeft = data.left
+			// 			this.lineWidth = data.width
+			// 		}, 0);
+			// 	}).exec()
+			// })
 		},
 		methods: {
+			swiperChange(e){
+				this.tabIndex = e.detail.current
+			},
 			tabChange(index,id){
 				this.tabIndex = index
 				let theNode=uni.createSelectorQuery().select(`#${id}`)
@@ -80,6 +83,7 @@
 	padding: 0 20rpx;
 }
 .tab{
+	line-height: 76rpx;
 	width: 120rpx;
 	color: #666;
 	font-size: 28rpx;
@@ -87,6 +91,9 @@
 }
 .active{
 	color: #2C405A;
+	border-bottom-width: 4rpx;
+	border-bottom-color: #2C405A;
+	border-style: solid;
 }
 .underLine{
 	width: 120rpx;

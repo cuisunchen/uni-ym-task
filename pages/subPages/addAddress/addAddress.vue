@@ -18,7 +18,7 @@
 				<textarea type="text" v-model="info.addressInfo" placeholder-class="line" placeholder="街道、楼牌等" />
 			</view>
 		</view>
-		<u-picker mode="region" ref="uPicker" v-model="show" v-if="areaCode" :area-code='areaCode' @confirm="addressConfirm" />	
+		<u-picker mode="region" ref="uPicker" v-model="show" v-if="areaCode.length>0" :area-code='areaCode' @confirm="addressConfirm" />	
 	</view>
 </template>
 

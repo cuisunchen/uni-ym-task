@@ -1,7 +1,7 @@
 <script>
 export default {
 	onLaunch: function() {
-		console.log('App Launch');
+		console.log('App Launch')
 		// #ifdef APP-NVUE
 		plus.screen.lockOrientation('portrait-primary');   //  控制app竖屏正方向锁死
 		// #endif

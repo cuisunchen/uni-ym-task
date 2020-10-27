@@ -1,6 +1,7 @@
 <template>
 	<view class="recommendBox row">
-		<view class="recommendItem flex1 flex-column align-center" :class="{middleItem: index == 1}" v-for="(item,index) in recommendAd">
+		<view class="recommendItem flex1 flex-column align-center" :class="{middleItem: index == 1}" 
+					v-for="(item,index) in recommendAd" :key="index" @click="carClick(item)">
 			<image class="recommendImg" :src="item.homeTopImgUrl" mode="aspectFill" 
 						:style="{height:recomendItemHeight +'px',width: recomendItemHeight + 'px'}"></image>
 			<text class="recommendItemTit">{{item.title}}</text>
@@ -14,6 +15,17 @@
 			lists:{
 				type: Array,
 				default:[]
+			}
+		},
+		data(){
+			return{
+			}
+		},
+		watch:{
+			lists(val){
+				for (let index in val) {
+					this.$set(this.recommendAd,index,val[index])
+				}
 			}
 		},
 		data(){
@@ -42,6 +54,12 @@
 				}
 			})
 		},
+		methods:{
+			carClick(item){
+				if(item.title == '广告位招租'){return}
+				this.$emit('click',item,'recommand')
+			},
+		}
 	}
 </script>
 
