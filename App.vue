@@ -8,7 +8,7 @@ export default {
 	},
 	onShow: function() {
 		console.log('App Show');
-		this.getLocation()
+		// this.getLocation()
 		const userInfo = uni.getStorageSync('userInfo');
 		const token = uni.getStorageSync('token');
 		if(!token){

@@ -40,7 +40,7 @@
 						</view>
 					</view>
 					<view class="keyword" v-if="forbid==''">
-						<view v-for="(keyword,index) in hotKeywordList" @tap="doSearch(keyword)" :key="index">{{keyword}}</view>
+						<view v-for="(keyword,index) in hotKeywordList" @tap="doSearch(keyword.name)" :key="index">{{keyword.name}}</view>
 					</view>
 					<view class="hide-hot-tis" v-else>
 						<view>当前搜热门搜索已隐藏</view>
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-	import {unencryp} from '../../../common/utils/request.js'
+	import {unencryp,request} from '../../../common/utils/request.js'
 	//引用mSearch组件，如不需要删除即可
 	import mSearch from '@/components/mehaotian-search-revision/mehaotian-search-revision.vue';
 	import goodsCard from '@/components/goods-card/goods-card.vue'
@@ -87,18 +87,6 @@
 			}
 		},
 		onLoad() {
-			uni.showLoading({
-				title:'加载中 ...'
-			})
-			unencryp('/snap/goods/getPopularSearchesList','get').then(res => {
-				this.laodding = false
-				console.log(res)
-				if(res.code == 200){
-					
-				}else{
-					this.showToast(res.msg)
-				}
-			})
 			this.init();
 		},
 		components: {
@@ -132,7 +120,17 @@
 			//加载热门搜索
 			loadHotKeyword() {
 				//定义热门搜索关键字，可以自己实现ajax请求数据再赋值
-				this.hotKeywordList = ['键盘', '鼠标', '显示器', '电脑主机', '蓝牙音箱', '笔记本电脑', '鼠标垫', 'USB', 'USB3.0'];
+				uni.showLoading({
+					title:'加载中 ...'
+				})
+				unencryp('/snap/goods/getPopularSearchesList','get').then(res => {
+					this.laodding = false
+					if(res.code == 200){
+						this.hotKeywordList = res.data
+					}else{
+						this.showToast(res.msg)
+					}
+				})
 			}, 
 			//监听输入
 			inputChange(event) {
@@ -201,9 +199,7 @@
 				this.keyword = keyword;
 				this.param.goodsName = keyword
 				this.saveKeyword(keyword); //保存为历史 
-				this.$unencryp('/snap/popularSearches','post',this.param).then(res => {
-					this.laodding = false
-					console.log(res)
+				this.$request('/snap/popularSearches','post',this.param).then(res => {
 					if(res.code == 200){
 						this.noInput = false
 						if(res.data.list.length == 0){

@@ -63,7 +63,6 @@
 			}
 		},
 		created() {
-			console.log(this.dataIndex)
 			this.value = this.lists[0]
 			// #ifdef APP-PLUS
 			this.current=Number(this.dataIndex)

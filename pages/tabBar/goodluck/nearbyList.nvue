@@ -1,5 +1,5 @@
 <template>
-	<list class="lists flex1" loadmoreoffset="10" @loadmore="loadMore">
+	<list class="lists flex1" show-scrollbar="false" loadmoreoffset="10" @loadmore="loadMore">
 		<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="showLoading">
 			<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
 			<view class="loadingIco row align-center">
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-	import {unencryp} from '../../../common/utils/request.js'
+	import {unencryp,request} from '../../../common/utils/request.js'
 	import recommendList from "@/components/recommend-list/recommend-list.nvue"
 	import glListItem from "@/components/gl-list-item/gl-list-item.nvue"
 	export default {
@@ -50,7 +50,15 @@
 				}
 			}
 		},
+		onUnload() {
+			uni.$off('sendNearbyGL')
+		},
 		created() {
+			uni.$on('sendNearbyGL', (data) => {
+				setTimeout(()=>{
+					this.$set(this.goodLucks,data.index,data.data)
+				},0)
+			})
 			 this.param.cityCode = uni.getStorageSync('location') ? JSON.parse(uni.getStorageSync('location')).adcode : '';
 			 uni.showLoading({
 			 	title:'加载中...'
@@ -63,7 +71,7 @@
 				this.tabIndex = i
 			},
 			getLists(type){
-				unencryp('/api/earn/easyMoreTask','post',this.param).then(res=>{
+				request('/api/earn/easyMoreTask','post',this.param).then(res=>{
 					uni.hideLoading()
 					if(type == 'fresh'){
 						setTimeout(()=>{
@@ -100,7 +108,7 @@
 				})
 			},
 			getRcommendDatas(){ 
-				unencryp('/api/earn/recommend','post',this.param).then(res=>{
+				request('/api/earn/recommend','post',this.param).then(res=>{
 					uni.hideLoading()
 					if(res.code == 200){
 						setTimeout(()=>{
@@ -144,7 +152,7 @@
 					type = 'recommand'
 					data.bigImg = data.homeBigImgUrl
 				}else{
-					type = 'question'
+					type = 'goodluck'
 					this.userClick(data,index)
 				}
 				var strRegex = "((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)";
@@ -157,7 +165,8 @@
 					return
 				}
 				uni.navigateTo({
-					url:'../../subPages/details/details?param='+ encodeURIComponent(JSON.stringify(data)) + '&type='+ type + '&index='+index
+					url:'../../subPages/details/details?param='+ encodeURIComponent(JSON.stringify(data)) + 
+					'&type='+ type + '&index=' + index + '&tabType=nearGL'
 				})
 			},
 			userClick(item,index){

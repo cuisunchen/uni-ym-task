@@ -1,5 +1,5 @@
 <template>
-	<list class="lists" loadmoreoffset="10" @loadmore="loadMore">
+	<list class="lists" show-scrollbar="false" loadmoreoffset="10" @loadmore="loadMore">
 		<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
 			<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
 			<view class="loadingIco row align-center"> 
@@ -10,6 +10,9 @@
 		<cell v-for="item in lists" class="cell">
 			<my-order-card :data-obj="item" class="card" @click="cancelSend(item)" @cardClick="goOrderDetail(item)"></my-order-card>
 		</cell>
+		<cell v-if="isNoMore && lists.length > 5">
+			<text class="botLine">------ 我也是有底线的哦 !!! -------</text>
+		</cell>
 		<cell class="nodata flex1 flex-column all-center" v-if="lists.length == 0">
 			<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
 			<text class="nodatadesc">暂无数据</text>
@@ -19,7 +22,7 @@
 
 <script>
 	import myOrderCard from '@/components/myOrder-card/myOrder-card.nvue'
-	import {unencryp} from '../../../common/utils/request.js'
+	import {unencryp,request} from '../../../common/utils/request.js'
 	export default {
 		components:{myOrderCard},
 		data(){
@@ -55,7 +58,7 @@
 				})
 			},
 			getLists(type){
-				unencryp('/snap/getDeliveryList','post',this.param).then(res=>{
+				request('/snap/getDeliveryList','post',this.param).then(res=>{
 					uni.hideLoading()
 					if(res.code == 200){ 
 						setTimeout(()=> {
@@ -119,14 +122,20 @@
 							uni.showLoading({
 								title:'加载中'
 							})
-							unencryp('/snap/cancelDelivery','post',{id:item.id}).then(res => {
+							request('/snap/cancelDelivery','post',{id:item.id}).then(res => {
+								console.log(res)
+								uni.hideLoading()
 								if(res.code == 200){
 									uni.showToast({
 										title:'取消成功!',
 									})
 									this.getLists()
 								}else{
-									res.msg || uni.showToast(res.msg)
+									uni.showToast({
+										title:res.msg,
+										icon: 'none',
+										duration: 3000
+									})
 								}
 							})
 						}

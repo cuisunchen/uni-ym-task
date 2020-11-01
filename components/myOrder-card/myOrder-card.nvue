@@ -4,7 +4,7 @@
 		<view class="main">
 			<view class="goodsInfo row">
 				<view class="goodsImg flex-shrink">
-					<image class="img" :src="dataObj.icon" mode=""></image>
+					<image class="img" :src="dataObj.icon" mode="aspectFill"></image>
 				</view>
 				<view class="content flex1 flex-column flex-between">
 					<text class="title">{{dataObj.title}}</text>
@@ -14,7 +14,7 @@
 			<view class="handleBox row align-center flex-between" v-if="hasSend">
 				<view class="leftBox row align-center">
 					<text class="label">12小时内可取消发货</text> 
-					<text @click="needKnow"><uni-icons type="info" size="18" color="#999"></uni-icons></text>
+					<view @click="needKnow"><uni-icons type="info" size="18" color="#999"></uni-icons></view>
 				</view>
 				<view class="btn">
 					<button class="mini-btn" type="warn" size="mini" @click="cancelSend">取消发货</button>
@@ -86,13 +86,13 @@
 .goodsImg{
 	width: 140rpx;
 	height: 140rpx;
-	border-radius: 10rpx;
+	/* border-radius: 10rpx; */
 	overflow: hidden;
 }
 .img{
 	width: 100%;
 	height: 100%;
-	border-radius: 10rpx;
+	/* border-radius: 10rpx; */
 }
 .content{
 	margin-left: 20rpx;

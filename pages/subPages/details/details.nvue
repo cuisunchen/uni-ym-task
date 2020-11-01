@@ -70,7 +70,6 @@
 				statusBarHeight:null,
 				isCollect:false,     //  广告是否收藏
 				fabText:'',
-				prevPage: null,  	//上一个页面的实例
 				dataIndex:null,
 				fabShow: false
 			}
@@ -100,8 +99,6 @@
 			if(this.type == 'swiper' || this.type == 'cover' || this.type == 'recommand'){
 				this.fabShow = false
 			}
-			let pages = getCurrentPages();  
-			this.prevPage = pages[pages.length - 2]; 
 		},
 		onUnload() {
 			uni.hideToast()
@@ -195,13 +192,14 @@
 						'index':this.dataIndex,
 					}
 					// uni.$emit('sendGL',paras)
-					if(this.tabType = 1){
-						uni.$emit('sendNation',paras)
-					}else
-					if(this.tabType = 2){
-						uni.$emit('sendSameCity',paras)
-					}else{
-						uni.$emit('sendNearby',paras)
+					if(this.type == 'goodluck' && this.tabType == 'earnGl'){
+						uni.$emit('sendGlEarn',paras)
+					}else if(this.type == 'goodluck' && this.tabType == 'nationGL'){
+						uni.$emit('sendNationGL',paras)
+					}else if(this.type == 'goodluck' && this.tabType == 'cityGL'){
+						uni.$emit('sendSameCityGL',paras)
+					}else if(this.type == 'goodluck' && this.tabType == 'nearGL'){
+						uni.$emit('sendNearbyGL',paras)
 					}
 				})
 			},
@@ -267,7 +265,8 @@
 				
 				if(res.index == 2){
 					uni.navigateTo({
-						url: '../answerQs/answerQs?param=' + encodeURIComponent(JSON.stringify(this.dataObj))+ "&index=" + this.dataIndex + '&from=' + this.from
+						url: '../answerQs/answerQs?param=' + encodeURIComponent(JSON.stringify(this.dataObj))+ "&index=" + this.dataIndex + 
+								'&from=' + this.from + '&tabType=' + this.tabType
 					})
 				}
 				

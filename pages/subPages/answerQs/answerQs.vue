@@ -35,13 +35,15 @@
 				qsInfo:{},
 				submitLoading:false,
 				dataObj:{},
-				dataIndex:null
+				dataIndex:null,
+				tabType:''
 			}
 		},
 		onLoad(option) {
 			this.dataObj = JSON.parse(decodeURIComponent(option.param))
 			this.dataObj.clickNum++
 			this.dataIndex = option.index
+			this.tabType = option.tabType
 			this.from  = option.from
 			this.adId = this.dataObj.id
 			this.getChooseList()
@@ -115,7 +117,16 @@
 							})
 						}
 						let paras = {'data':this.dataObj,'index':this.dataIndex}
-						uni.$emit('send',paras)
+						
+						if(this.tabType && this.tabType == 'earnQa'){
+							uni.$emit('sendQaEarn',paras)
+						}else if(this.tabType && this.tabType == 'nationQA'){
+							uni.$emit('sendNationQa',paras)
+						}else if(this.tabType && this.tabType == 'cityQA'){
+							uni.$emit('sendSameCityQa',paras)
+						}else if(this.tabType && this.tabType == 'nearQA'){
+							uni.$emit('sendNearbyQa',paras)
+						}
 				})
 			},
 			getChooseList(){

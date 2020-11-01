@@ -1,5 +1,5 @@
 <template>
-  <list :id="pageId" class="page" :bounce="false" fixFreezing="true">
+  <list :id="pageId" class="page" show-scrollbar="false" :bounce="false" fixFreezing="true">
     <cell>
       <view class="tabs" :style="'height:' + pageHeight + 'px'">
         <scroll-view ref="tabbar1" id="tab-bar" class="tab-bar" :scroll="false" :scroll-x="true" :show-scrollbar="false"

@@ -1,5 +1,5 @@
 <template>
-	<list class="lists flex1" loadmoreoffset="10" @loadmore="loadMore">
+	<list class="lists flex1" show-scrollbar="false" loadmoreoffset="10" @loadmore="loadMore">
 		<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
 			<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
 			<view class="loadingIco row align-center"> 
@@ -8,7 +8,10 @@
 			</view>
 		</refresh>
 		<cell v-for="item in lists" class="cell">
-			<ijoin-pt-card class="card" :data-obj="item" @click="onceMore(item)" @cardClick="goOrderDetail(item)"></ijoin-pt-card>
+			<ijoin-pt-card class="card" :data-obj="item" @click="onceMore(item)" @cardClick="goOrderDetail(item)"></ijoin-pt-card>	
+		</cell>
+		<cell v-if="isNoMore && lists.length > 5">
+			<text class="botLine">------ 我也是有底线的哦 !!! -------</text>
 		</cell>
 		<cell class="nodata flex1 flex-column all-center" v-if="lists.length == 0">
 			<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
@@ -19,7 +22,7 @@
 
 <script>
 	import IjoinPtCard from '@/components/I-join-pt-card/I-join-pt-card.nvue'
-	import {unencryp} from '../../../common/utils/request.js'
+	import {unencryp,request} from '../../../common/utils/request.js'
 	export default {
 		components:{IjoinPtCard},
 		props:{
@@ -45,21 +48,20 @@
 		watch:{
 			tabIndex(val){
 				if(val == 0){
+					uni.showLoading({
+						title:'加载中 ...'
+					})
 					this.getLists()
 				}
 			}
 		},
-		created() {
-			uni.showLoading({
-				title:'加载中 ...'
-			})
-			if(this.tabIndex == 0){
-				this.getLists()
-			}
-		},
 		methods:{
 			goOrderDetail(item){
-				item.typeStatusTxt = '拼中了,可12个小时内取消发货'
+				if(item.win){
+					item.typeStatusTxt = '拼中了,可12个小时内取消发货'
+				}else{
+					item.typeStatusTxt = '未拼中,预付款已退回并获得奖励'
+				}
 				uni.navigateTo({
 					url:'../orderDetail/orderDetail?datas=' + JSON.stringify(item)
 				})
@@ -79,7 +81,7 @@
 				})
 			},
 			getLists(type){
-				unencryp('/snap/getMyBuyingList','post',this.param).then(res=>{
+				request('/snap/getMyBuyingList','post',this.param).then(res=>{
 					uni.hideLoading()
 					if(res.code == 200){
 						setTimeout(()=>{
@@ -90,7 +92,6 @@
 								this.lists.push(...res.data.list)
 							}else{
 								this.lists = res.data.list
-								console.log(this.lists)
 							}
 						},0)
 						if(type == 'refresh'){

@@ -1,5 +1,5 @@
 <template>
-	<list class="lists flex1" @loadmore="loadMore(1)">
+	<list class="lists flex1" show-scrollbar="false" @loadmore="loadMore(1)">
 		<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
 			<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
 			<view class="loadingIco row align-center"> 
@@ -13,6 +13,9 @@
 		<cell v-for="(item,index) in lists" :key="index" class="cell" @click="cardClick(10,item)">
 			<goods-card class="goodsCard" :data-obj="item"></goods-card>
 		</cell>
+		<cell v-if="isNoMore && lists.length > 5">
+			<text class="botLine">------ 我也是有底线的哦 !!! -------</text>
+		</cell>
 		<cell class="nodata flex1 flex-column all-center" v-if="lists.length == 0">
 			<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
 			<text class="nodatadesc">暂无数据</text>
@@ -22,7 +25,7 @@
 
 <script>
 	import goodsCard from '@/components/goods-card/goods-card.nvue'
-	import {unencryp} from "../../../common/utils/request.js"
+	import {unencryp,request} from "../../../common/utils/request.js"
 	export default {
 		components:{goodsCard},
 		data(){
@@ -45,7 +48,7 @@
 		},
 		methods:{
 			getLists(type){
-				unencryp('/snap/getSnapUpListByType','post',this.param).then(res=>{
+				request('/snap/getSnapUpListByType','post',this.param).then(res=>{
 					if(res.code == 200){
 						setTimeout(()=> {
 							if(this.param.pageNum >= Math.ceil(res.data.maxSize/this.param.pageSize)){

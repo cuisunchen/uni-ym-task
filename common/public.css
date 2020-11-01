@@ -120,3 +120,9 @@ button{
 	/* margin-right: 20rpx; */
 	transform: rotate(0deg);
 }
+.botLine{
+	color: #999;
+	font-size: 24rpx;
+	line-height: 80rpx;
+	text-align: center;
+}

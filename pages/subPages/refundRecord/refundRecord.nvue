@@ -1,6 +1,6 @@
 <template>
 	<view class="refundRecord flex1 flex-column">
-		<list class="lists flex1" loadmoreoffset="10" @loadmore="loadMore">
+		<list class="lists flex1" show-scrollbar="false" loadmoreoffset="10" @loadmore="loadMore">
 			<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
 				<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
 				<view class="loadingIco row align-center">
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-	import {unencryp} from '../../../common/utils/request.js'
+	import {unencryp,request} from '../../../common/utils/request.js'
 	import messageCard from '../../../components/message-card/message-card.nvue'
 	export default {
 		components:{
@@ -48,9 +48,8 @@
 		},
 		methods: {
 			getLists(type){
-				unencryp('/snap/getMyRefundList','post',this.param).then(res=>{
+				request('/snap/getMyRefundList','post',this.param).then(res=>{
 					uni.hideLoading()
-					console.log(res)
 					if(res.code == 200){
 						setTimeout(()=>{
 							if(this.param.pageNum >= Math.ceil(res.data.maxSize/this.param.pageSize)){
@@ -72,7 +71,10 @@
 							},1200)
 						}
 					}else{
-						res.msg || uni.showToast(res.msg)
+						uni.showToast({
+							title:res.msg,
+							icon:'none'
+						})
 					}
 				})
 			},

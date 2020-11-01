@@ -6,7 +6,7 @@
 		</header>
 		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false">
 			<swiper-item class="swiperItem flex1 flex-column">
-				<list class="lists flex1">
+				<list class="lists flex1" show-scrollbar="false">
 					<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="showLoading">
 						<loading-indicator></loading-indicator>
 						<text class="freshTit">加载中 ...</text>
@@ -17,7 +17,7 @@
 				</list>
 			</swiper-item>
 			<swiper-item>
-				<list class="lists flex1">
+				<list class="lists flex1" show-scrollbar="false">
 					<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="showLoading">
 						<loading-indicator></loading-indicator>
 						<text class="freshTit">加载中 ...</text>

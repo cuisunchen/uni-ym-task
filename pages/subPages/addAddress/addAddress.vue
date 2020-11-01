@@ -7,7 +7,7 @@
 			</view>
 			<view class="item">
 				<view class="left">手机号码</view>
-				<input type="tel" maxlength="11" v-model="info.phone" placeholder-class="line" placeholder="请填写收货人手机号" />
+				<input type="number" maxlength="11" v-model="info.phone" placeholder-class="line" placeholder="请填写收货人手机号" />
 			</view>
 			<view class="item" @tap="showRegionPicker">
 				<view class="left">所在地区</view>
@@ -53,7 +53,9 @@
 				return
 			}
 			delete this.info.area
-			this.$unencryp('/snap/addDeliveryAddress','post',this.info).then(res => {
+			console.log(this.info)
+			this.$request('/snap/addDeliveryAddress','post',encodeURIComponent(JSON.stringify(this.info))).then(res => {
+				console.log(res)
 				if(res.code == 200){
 					if(this.info.id){
 						this.showToast('修改成功')

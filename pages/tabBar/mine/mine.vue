@@ -68,6 +68,13 @@
 		},
 		methods: {
 			goSubPage(path){
+				console.log(path)
+				if(path == 'myMessage'){
+					uni.navigateTo({
+						url:'../../subPages/myMessage/myMessage'
+					})
+					return
+				}
 				uni.navigateTo({
 					url:`../../subPages/${path}/${path}`
 				})

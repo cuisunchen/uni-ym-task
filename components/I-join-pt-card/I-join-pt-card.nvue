@@ -8,7 +8,7 @@
 		<view class="main">
 			<view class="goodsInfo row">
 				<view class="goodsImg flex-shrink">
-					<image class="img" :src="dataObj.icon" mode=""></image>
+					<image class="img" :src="dataObj.icon" mode="aspectFill"></image>
 				</view>
 				<view class="content flex1 flex-column flex-between">
 					<text class="title">{{dataObj.title}}</text>
@@ -91,13 +91,19 @@
 .goodsImg{
 	width: 140rpx;
 	height: 140rpx;
-	border-radius: 10rpx;
-	overflow: hidden;
+	/* border-bottom-left-radius: 10rpx;
+	border-bottom-right-radius: 10rpx;
+	border-top-left-radius: 10rpx;
+	border-top-right-radius: 10rpx;*/
+	overflow: hidden; 
 }
 .img{
 	width: 100%;
 	height: 100%;
-	border-radius: 10rpx;
+	/* border-bottom-left-radius: 10rpx;
+	border-bottom-right-radius: 10rpx;
+	border-top-left-radius: 10rpx;
+	border-top-right-radius: 10rpx; */
 }
 .content{
 	margin-left: 20rpx;

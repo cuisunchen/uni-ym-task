@@ -106,6 +106,21 @@
 							showCancel:false,
 							content:'您的申请已提交成功,我们将会在1-3个工作日内审核发放到账,请留意账单信息'
 						})
+						this.getUserInfo()
+					}else{
+						this.showToast(res.msg)
+					}
+				})
+			},
+			getUserInfo(){
+				this.$request('/api/userInfo','get',{}).then(res => {
+					if(res.code == 200){
+						uni.hideLoading()
+						this.userInfo = res.data
+						uni.setStorage({
+						    key: 'userInfo',
+						    data: JSON.stringify(res.data)
+						});
 					}else{
 						this.showToast(res.msg)
 					}

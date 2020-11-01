@@ -47,7 +47,7 @@
 				<view class="title flex align-center">
 					<u-icon name="clock" color="#ff0000" size="36"></u-icon>
 					<text class="titLabel">历史成团:</text>
-					<text class="num">{{detailInfo.fakeDataBasic}}</text>
+					<text class="num">{{detailInfo.fakeDataBasic + detailInfo.historicalVolume}}</text>
 				</view>
 				<view class="rule flex all-center">
 					<image class="ruleImg" :src="ruleImg" mode="widthFix"></image>
@@ -192,7 +192,7 @@
 			},
 			getCollectRes(){
 				return new Promise((resolve, reject) => {
-					this.$unencryp('/snap/collectSnapUp','post',{id:this.goodsId, type: this.detailInfo.collect ? 1: 0}).then(res => {
+					this.$request('/snap/collectSnapUp','post',{id:this.goodsId, type: this.detailInfo.collect ? 1: 0}).then(res => {
 						if(res.code == 200){
 							resolve(res)
 						}else{
@@ -202,7 +202,7 @@
 				})
 			},
 			getMemberList(type){
-				this.$unencryp('/snap/getSnapUpPlays','post',{id:this.goodsId}).then(res => {
+				this.$request('/snap/getSnapUpPlays','post',{id:this.goodsId}).then(res => {
 					if(type == 'refresh'){
 						setTimeout(()=> {
 							uni.stopPullDownRefresh();
@@ -216,9 +216,10 @@
 				})
 			},
 			getDetail(id){
-				this.$unencryp('/snap/getSnapUpInfo','post',{id}).then(res => {
+				this.$request('/snap/getSnapUpInfo','post',{id}).then(res => {
 					if(res.code == 200){
 						this.detailInfo = res.data
+						
 						this.attributeValue = res.data.attributeValues[0]
 						this.collectType = res.data.collect
 					}else{

@@ -1,6 +1,15 @@
 <template>
 	<div class="flex1">
-		<list class="goodsHome flex1 flex-column">
+		<div class="header">
+			<div class="statusBar" :style="{height:statusBarHeight+'px'}"></div>  
+			<div class="info row all-center">
+				<text class="navTitleTxt">首页1.0.1</text>
+				<view class="iconBox row all-center" @click="goSearch">
+					<uni-icons class="search" type="search" color="#fff" size="22"></uni-icons>
+				</view>
+			</div>    
+		</div>
+		<list class="goodsHome flex1 flex-column" :style="{'top':(statusBarHeight + 42) +'px'}" show-scrollbar="false">
 			<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
 				<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
 				<view class="loadingIco row align-center"> 
@@ -26,7 +35,7 @@
 				<header class="listTit row align-center flex-between">
 					<view class="titWrap row align-center flex-between">
 						<view class="leftBox row align-center">
-							<text class="label">{{item.title}}</text> 
+							<text class="label">{{item.title}}{{fileSizeString}}</text> 
 							<text class="line">丨</text> 
 							<text class="nums">红包奖励概率: {{index == 0 ? 50 : index == 1 ? 70 : index == 2 ? 94 : 97}}%</text>
 						</view>
@@ -44,23 +53,16 @@
 				<cell v-if="index !== goodsList.length-1"><view class="emptyBox"></view></cell>
 			</template>
 		</list>
-		<view class="updateBox row all-center" v-if="isUpdateShow" @click="closeUpdate">
-			<view class="content">
-				<image class="updateBg" src="../../../static/app_update_bg.png" mode=""></image>
-				<view class="main">
-					<scroll-view scroll-y="true" class="flex1">
-						<text class="title">发现新的版本，请点击升级</text>
-						
-						<text class="item" v-for="(item,index) in update_des" :key="index">{{index+1}}、{{item}}</text>
-					</scroll-view>
-					<view class="progress-box flex-column" v-if="update_type == 0 && is_update">
-						<progress class="progress" :percent="prpgress_num" activeColor="#1c89d6" stroke-width="6" />
-						<view class="progress-des">资源下载中，请稍后({{download_num_ed}}/{{download_num}}M)</view>
-					</view> 
-					<text class="updateDesc">新版本体验更顺畅哦,赶快升级吧~~~</text>
-					<view class="btnWrap flex all-center" v-if="!is_update" @click="downloadBtn">
-						<text class="btn">立即升级</text>
-					</view>
+		
+		<view class="dialog row all-center" v-if="showUpdate">
+			<view class="updateConBox">
+				<view class="title row all-center">提示</view>
+				<view class="updateCon row all-center">
+					<text class="updateTxt">发现新的版本，请点击升级{{baifen}}</text>
+				</view>
+				<view class="updateBtns row">
+					<view class="cancelbtn flex1 row all-center" @click="closeUpdate"><text class="btnTxt">取消</text></view>
+					<view class="confirmbtn flex1 row all-center" @click="downloadBtn"><text class="btnTxt">立即升级</text></view>
 				</view>
 			</view>
 		</view>
@@ -84,31 +86,29 @@
 				loading:false,
 				bannerList: [],
 				goodsList:[],
-				
+				release:false,
 				isUpdateShow:false,  //  是否显示升级框
 				version: '',
-				update_type:0,//0是热更新，1整包更新
-				// update_url:'https://m.mafengwo.cn/app/download/redirect?app=com.mfw.roadbook&channel=MFW',//更新的地址
 				update_url:'',
-				update_title:'发现新的版本，请点击升级',
-				update_des:[],
-				is_update_app:false,
-				is_forced_update:false,//是否强制升级
-				
-				prpgress_num:0,
-				download_num_ed: 0, //已经下载数
-				download_num: 0, //总下载数
-				is_update:false,
 				
 				titleNView: null,
+				statusBarHeight: '' ,
+				showUpdate: false,
+				updating: false,
+				
+				totalSize: 0,
+				baifen: 0,
+				fileSizeString:''
 			}
 		},
-		onNavigationBarButtonTap() {
-			uni.navigateTo({
-				url:'../../subPages/HM-search/HM-search'
-			})
-		},
-		onShow(){ 
+		onShow(){
+			setTimeout(() => { //获取状态栏高度，setTimeout后才能调用uni.
+				uni.getSystemInfo({     
+					success: (res) => {    
+						this.statusBarHeight = res.statusBarHeight; 
+					}    
+				});    
+			}, 1);
 			plus.runtime.getProperty(plus.runtime.appid, widgetInfo => {
 				this.version = widgetInfo.version;
 				this.getCheckVersion()
@@ -127,67 +127,107 @@
 		},
 		methods:{
 			downloadBtn() {
-				//整包更新打开浏览器
-				if(this.update_type == 1) {
-					plus.runtime.openURL(encodeURI(this.update_url));
-					this.closeUpdate()
-					return
-				}
-				this.is_update = true 
-				//下载更新文件 
-				const downloadTask = uni.downloadFile({
-					url:this.update_url,
-					success: res => {
-						if (res.statusCode == 200) {
-							this.installBtn(res.tempFilePath);
-							return;
-						}else{
-							uni.showModal({
-								title:'提示',
-								content:'请求资源有误,请联系客服!!'
-							})
-						}
+				let	task=plus.downloader.createDownload( this.update_url, {}, (download,status)=>{ //安装到手机的目录
+					if ( status == 200 ) { 
+						plus.runtime.install(download.filename);  // 安装下载的apk文件
+					} else {
+						plus.nativeUI.closeWaiting();
+						uni.showToast({
+							title:'下载更新失败！',
+							icon: 'none'
+						})
 					}
 				});
-			
-				downloadTask.onProgressUpdate(res => {
-					this.prpgress_num = res.progress;
-					this.download_num_ed = (res.totalBytesWritten / Math.pow(1024.00, 2)).toFixed(2);
-					this.download_num = (res.totalBytesExpectedToWrite / Math.pow(1024.00, 2)).toFixed(2);
+				task.addEventListener("statechanged", (download, status) => {
+					// console.log(download.state)
+					switch (download.state) {
+						case 2:
+							this.clearCache()
+							plus.nativeUI.showWaiting("正在下载...");
+							break;
+						case 3:
+							//进度条百分比 totalSize为总量，baifen为当前下载的百分比
+							if(this.totalSize==0){
+								this.totalSize=parseInt(download.totalSize);
+							}
+							if(parseInt(download.downloadedSize/this.totalSize*100)!=this.baifen){
+								this.baifen=parseInt(download.downloadedSize/this.totalSize*100);
+							}							
+							break;
+						case 4:
+							plus.nativeUI.closeWaiting();
+							uni.showToast({
+								title:'下载完成',
+							})
+							this.clearCache()
+							break;
+					}
 				});
-			},
-			//点击安装
-			installBtn(path) { 
-				plus.runtime.install(path, {
-					force: false
-				}, res => {
-					//更新完重启app
-					plus.runtime.restart();
-				},err => {
-					//重置更新的参数
-					this.prpgress_num = 0
-					this.download_num_ed = 0
-					this.download_num = 0
-					this.is_update = false
-					uni.showModal({
-						title: '更新失败',
-						content: err.message,
-						showCancel: false,
-						success: res => {
-						}
-					});
-			
-				});
+				task.start();
 			},
 			closeUpdate(){
-				if(this.is_forced_update){
-					return
-				}
-				this.isUpdateShow = false
+				this.showUpdate = false
 				uni.showTabBar()
+			},
+			// 清理缓存
+			clearCache() {    
+					let os = plus.os.name;  
+					if (os == 'Android') {  
+							let main = plus.android.runtimeMainActivity();  
+							let sdRoot = main.getCacheDir();  
+							let files = plus.android.invoke(sdRoot, "listFiles");  
+							let len = files.length;  
+							for (let i = 0; i < len; i++) {  
+									let filePath = '' + files[i]; // 没有找到合适的方法获取路径，这样写可以转成文件路径  
+									plus.io.resolveLocalFileSystemURL(filePath, (entry)=> {  
+											if (entry.isDirectory) {  
+													entry.removeRecursively((entry)=> { //递归删除其下的所有文件及子目录  
+															this.formatSize(); // 重新计算缓存  
+													}, (e)=> {  
+															console.log(e.message)  
+													});  
+											} else {  
+													entry.remove();  
+											}  
+									}, (e)=> {  
+											console.log('文件路径读取失败')  
+									});  
+							} 
+							 uni.showToast({
+							 	title:'清除了'
+							 })
+					} else { // ios  
+							plus.cache.clear(()=> {  
+								console.log(缓存清理完成)
+								this.formatSize();  
+							});  
+					}  
+			},
+			// 计算缓存
+			formatSize() {    
+				plus.cache.calculate((size) => {  
+						let sizeCache = parseInt(size);  
+						if (sizeCache == 0) {  
+								this.fileSizeString = "0B";  
+						} else if (sizeCache < 1024) {  
+								this.fileSizeString = sizeCache + "B";  
+						} else if (sizeCache < 1048576) {  
+								this.fileSizeString = (sizeCache / 1024).toFixed(2) + "KB";  
+						} else if (sizeCache < 1073741824) {  
+								this.fileSizeString = (sizeCache / 1048576).toFixed(2) + "MB";  
+						} else {  
+								this.fileSizeString = (sizeCache / 1073741824).toFixed(2) + "GB";  
+						}  
+				});  
+			},
+			goSearch(){
+				uni.navigateTo({
+					url:'../../subPages/HM-search/HM-search'
+				})
 			},
 			getGoodsList(){
 				unencryp('/snap/getSnapUpList','get',{}).then(res => {
+					// console.log(res)
 					if(res.code == 200){
 						setTimeout(()=>{
 							this.goodsList = res.data.contentList
@@ -268,22 +308,32 @@
 				}
 				request('/api/checkVersion','post',param).then(res => {
 					// 这里需要返回app下载链接
+					// console.log(res)
 					if(res.code == 200){
-						let downloadTxt = '';
-						this.update_des = []  
 						if(this.version == res.data.version ){return}
+						setTimeout(()=>{
+							let downloadTxt = '';
+							this.update_des = []  
+							this.update_url = res.data.downloadLink
+							this.showUpdate = true
+							uni.hideTabBar()
+						},0)
+						
+						return
 						if(this.version != res.data.version && res.data.forceUpdate == 'false'){
 							setTimeout(()=>{
 								this.isUpdateShow = true
-								this.update_type = 0
+								this.update_type = 1
 								downloadTxt = `版本号${res.data.version}精彩不容错过, 请及时更新!`
 								this.update_des.push(downloadTxt)
 							},0)
 						}else
 						if(this.version != res.data.version && res.data.forceUpdate == 'true'){
+							console.log(res)
+							
 							setTimeout(()=>{
 								this.isUpdateShow = true
-								this.update_type = 0
+								this.update_type = 1
 								this.is_forced_update = true
 								downloadTxt = ['最新版本修改了部分已知问题,并进行了一些性能优化',]
 								this.update_des.push(...downloadTxt)
@@ -349,7 +399,33 @@
 <style scoped>
 .goodsHome{
 	position: relative;
-	top: -4rpx;
+}
+.header {    
+	background-color: #2C405A;
+	width: 750upx;    
+	position: fixed;    
+	top: 0;    
+	z-index: 1;
+}    
+.info {  
+	color: #fff;
+	width: 750upx; 
+	height: 44px;    
+	position: relative;
+} 
+.navTitleTxt{
+	color: #fff;
+	font-size: 34rpx;
+}
+.iconBox{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 26rpx;
+	padding-left: 60rpx;
+}
+.search{
+	margin-bottom: 10rpx;
 }
 .swiperImg{
 	width: 750rpx;
@@ -430,6 +506,7 @@
 	margin-bottom: 150rpx;
 	position: relative;
 }
+
 .updateBg{
 	width: 580rpx;
 	height: 734rpx;
@@ -479,5 +556,47 @@
 	color: #fff;
 	font-size: 30rpx;
 	font-weight: bold;
+}
+.dialog{
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 9999;
+	background-color: rgba(0,0,0,0.3);
+}
+.updateConBox{
+	width: 560upx;
+	border-radius: 20rpx;
+	padding: 20rpx 0 0;
+	background-color: #fff;
+}
+.title{
+	height: 40rpx;
+	margin-top: 20rpx;
+}
+.updateCon{
+	padding: 0 20rpx;
+}
+.updateTxt{
+	color: #666;
+	font-size: 28rpx;
+}
+.updateBtns{
+	height: 80rpx;
+	margin-top: 30rpx;
+	border-top-width: 1rpx;
+	border-style: solid;
+	border-color: #f3f3f3;
+}
+.cancelbtn{
+	border-right-width: 1rpx;
+	border-style: solid;
+	border-color: #f3f3f3;
+}
+.btnTxt{
+	color: #007AFF;
+	font-size: 30rpx;
 }
 </style>

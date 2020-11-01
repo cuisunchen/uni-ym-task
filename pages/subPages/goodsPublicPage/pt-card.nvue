@@ -1,5 +1,5 @@
 <template>
-	<list class="lists" loadmoreoffset="10" @loadmore="loadMore">
+	<list class="lists" show-scrollbar="false" loadmoreoffset="10" @loadmore="loadMore">
 		<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
 			<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
 			<view class="loadingIco row align-center">
@@ -10,6 +10,9 @@
 		<cell v-for="(item,index) in lists" :key="index" class="cell">
 			<pt-ing class="card" :data-obj="item" @click="goOrderDetail(item)"></pt-ing>
 		</cell>
+		<cell v-if="isNoMore && lists.length > 5">
+			<text class="botLine">------ 我也是有底线的哦 !!! -------</text>
+		</cell>
 		<cell class="nodata flex1 flex-column all-center" v-if="lists.length == 0">
 			<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
 			<text class="nodatadesc">暂无数据</text>
@@ -19,7 +22,7 @@
 
 <script>
 	import ptIng from '@/components/pt-ing/ptIng.nvue'
-	import {unencryp} from '../../../common/utils/request.js'
+	import {unencryp,request} from '../../../common/utils/request.js'
 	export default {
 		components:{ptIng},
 		props:{
@@ -68,7 +71,7 @@
 				})
 			},
 			getLists(type){
-				unencryp('/snap/getMyBuyingList','post',this.param).then(res=>{
+				request('/snap/getMyBuyingList','post',this.param).then(res=>{
 					uni.hideLoading()
 					if(res.code == 200){
 						setTimeout(()=>{

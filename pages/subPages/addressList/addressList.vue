@@ -42,7 +42,7 @@
 				uni.showLoading({
 					title:'请求连接中...'
 				})
-				this.$unencryp('/snap/editDeliveryAddress','post',{"id": item.id,"type": 1}).then(res => {
+				this.$request('/snap/editDeliveryAddress','post',{"id": item.id,"type": 1}).then(res => {
 					if(res.code == 200){
 						this.lists = []
 						this.getAddrList()
@@ -55,7 +55,7 @@
 				uni.showLoading({
 					title:'请求连接中...'
 				})
-				this.$unencryp('/snap/editDeliveryAddress','post',{"id": item.id,"type": 0}).then(res => {
+				this.$request('/snap/editDeliveryAddress','post',{"id": item.id,"type": 0}).then(res => {
 					if(res.code == 200){
 						this.lists = []
 						uni.setStorage({
@@ -82,13 +82,12 @@
 				uni.showLoading({
 					title:'数据加载中...'
 				})
-				this.$unencryp('/snap/getDeliveryAddressList','get',{}).then(res => {
+				this.$request('/snap/getDeliveryAddressList','get',{}).then(res => {
 					if(res.code == 200){
 						this.lists = res.data.map(item => {
 							item.newAddr = item.addressInfo.replace(/-/g,'').replace(/~/,'')
 							return item
 						})
-						console.log(this.lists)
 					}else{
 						this.showToast(res.msg)
 					}

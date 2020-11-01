@@ -1,5 +1,5 @@
 <template>
-	<list class="lists flex1" loadmoreoffset="10" @loadmore="loadMore">
+	<list class="lists flex1" show-scrollbar="false" loadmoreoffset="10" @loadmore="loadMore">
 		<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="showLoading">
 			<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
 			<view class="loadingIco row align-center">
@@ -50,7 +50,15 @@
 				}
 			}
 		},
+		onUnload() {
+			uni.$off('sendNearbyQa')
+		},
 		created() {
+			uni.$on('sendNearbyQa', (data) => {
+				setTimeout(()=>{
+					this.$set(this.lists,data.index,data.data)
+				},0)
+			})
 			 this.param.cityCode = uni.getStorageSync('location') ? JSON.parse(uni.getStorageSync('location')).adcode : '';
 			 uni.showLoading({
 			 	title:'加载中...'
@@ -63,7 +71,7 @@
 				this.tabIndex = i
 			},
 			getLists(type){
-				unencryp('/api/earn/easyMoreTask','post',this.param).then(res=>{
+				request('/api/earn/easyMoreTask','post',this.param).then(res=>{
 					uni.hideLoading()
 					if(type == 'fresh'){
 						setTimeout(()=>{
@@ -100,7 +108,7 @@
 				})
 			},
 			getRcommendDatas(){ 
-				unencryp('/api/earn/recommend','post',this.param).then(res=>{
+				request('/api/earn/recommend','post',this.param).then(res=>{
 					uni.hideLoading()
 					if(res.code == 200){
 						setTimeout(()=>{
@@ -165,7 +173,7 @@
 					return
 				}
 				uni.navigateTo({
-					url:'../../subPages/details/details?param='+ encodeURIComponent(JSON.stringify(data)) + '&type='+ type + '&index='+index
+					url:'../../subPages/details/details?param='+ encodeURIComponent(JSON.stringify(data)) + '&type='+ type + '&index='+index + '&tabType=nearQA'
 				})
 			},
 			userClick(item,index){

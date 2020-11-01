@@ -7,7 +7,7 @@
 			</view>
 		</view>
 		
-		<list class="lists flex1">
+		<list class="lists flex1" show-scrollbar="false">
 			<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
 				<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
 				<view class="loadingIco row align-center"> 
@@ -26,12 +26,11 @@
 							<text class="date">{{item.dateTime}}</text>
 						</view>
 						<view class="idNum">
-							<text class="idNumCon">拼团编号: pt{{index > 10 && index < 100 ? '0' + (index+1) : '00' + (index+1)}}</text>
+							<text class="idNumCon">拼团编号: P{{index > 10 && index < 100 ? '0' + (index+1) : '00' + (index+1)}}</text>
 						</view>
 					</view>
 				</view>
 			</cell>
-			
 			<cell class="nodata flex1 flex-column all-center" v-if="lists.length == 0">
 				<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
 				<text class="nodatadesc">亲,这里还是空空如也哦~~~</text>
@@ -41,7 +40,7 @@
 </template>
 
 <script>
-	import {unencryp} from '../../../common/utils/request.js'
+	import {unencryp,request} from '../../../common/utils/request.js'
 	export default {
 		data() {
 			return {
@@ -61,7 +60,7 @@
 		},
 		methods:{
 			getLists(type){
-				unencryp('/snap/getSnapUpPlays','post',{id:this.goodsId}).then(res => {
+				request('/snap/getSnapUpPlays','post',{id:this.goodsId}).then(res => {
 					if(res.code == 200){
 						setTimeout(()=>{
 							this.lists = res.data

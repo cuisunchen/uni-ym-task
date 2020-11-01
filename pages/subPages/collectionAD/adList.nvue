@@ -1,5 +1,5 @@
 <template>
-	<list class="lists flex1" loadmoreoffset="10" @loadmore="loadMore">
+	<list class="lists flex1" show-scrollbar="false" loadmoreoffset="10" @loadmore="loadMore">
 		<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
 			<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
 			<view class="loadingIco row align-center">

@@ -4,18 +4,18 @@
 			<view class="loginWrap">
 				<view class="tab flex">
 					<view class="wechatLogin flex1 flex all-center" :class="{active: currentTab == 0}" @click="tabChange(0)">登录码登录</view>
-					<view class="codeLogin flex1 flex all-center" :class="{active: currentTab == 1}" @click="tabChange(1)">手机验证码登录</view>
+					<!-- <view class="codeLogin flex1 flex all-center" :class="{active: currentTab == 1}" @click="tabChange(1)">手机验证码登录</view> -->
 				</view>
 				
 				<swiper class="swiper" :current="currentTab" @change="swiperChange">
 					<swiper-item>
 							<view class="swiper-item">
 								<input class="uni-input" maxlength="11" type="number" v-model="form.phone" placeholder-class="inputHolder" placeholder="请输入手机号" />
-								<input class="uni-input" maxlength="6" v-model="form.password" placeholder-class="inputHolder" password placeholder="请输入登录码"/>
+								<input class="uni-input" maxlength="6"  password   v-model="form.password" placeholder-class="inputHolder" placeholder="请输入登录码"/>
 								<button class="loginBtn flex all-center" :class="{disabled:loading1}" type="default" :disabled="loading1" :loading="loading1" @click="pwdLogin">登录</button>
 							</view>
 					</swiper-item>
-					<swiper-item>
+					<!-- <swiper-item>
 							<view class="swiper-item">
 								<input class="uni-input" type="number" maxlength="11" v-model="form.phone" placeholder-class="inputHolder" placeholder="请输入手机号" />
 								<view class="box flex">
@@ -24,7 +24,7 @@
 								</view>
 								<button class="loginBtn flex all-center" :class="{disabled:loading2}" type="default" :loading="loading2" :disabled="loading2" @click="login">登录</button>
 							</view>
-					</swiper-item>
+					</swiper-item> -->
 				</swiper>
 			</view>
 			

@@ -69,10 +69,13 @@
 					setTimeout(()=> {
 						this.lineLeft = data.left + 10
 						this.lineWidth = data.width - 20
-						console.log(this.lineLeft)
+						// console.log(this.lineLeft)
 					}, 0);
 				}).exec()
 			})
+		},
+		onLoad(opt) {
+			this.tabIndex = opt.type
 		},
 		methods: {
 			swiperChange(e){

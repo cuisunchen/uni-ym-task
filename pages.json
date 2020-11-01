@@ -9,39 +9,7 @@
 					"navigationBarTitleText": "首页",
 					"app-plus": {
 						"bounce": "none",
-						"titleNView": {
-							"backgroundColor": "#2C405A",
-							"buttons": [{
-								"text": "\ue615",
-								"fontSize": "20px",
-								"width": "60px",
-								"fontSrc": "/static/iconfont/iconfont.ttf"
-							}]
-						}
-					}
-				}
-		},
-		{
-			"path" : "pages/tabBar/newHome/newHome",
-			"style" : {
-				"navigationBarTitleText": "首页",
-				"app-plus": {
-					"bounce": "none",
-					"titleNView": {
-						"backgroundColor": "#2C405A"
-					}
-				}
-			}
-		},
-		{
-		    "path" : "pages/subPages/totalTaskPage/totalTaskPage",
-		    "style" : {
-					"navigationBarTitleText": "任务",
-					"app-plus": {
-						"bounce": "none",
-						"titleNView": {
-							"backgroundColor": "#2C405A"
-						}
+						"titleNView":false
 					}
 				}
 		},
@@ -58,7 +26,6 @@
 		  "path" : "pages/tabBar/home/home",
 		  "style" : {
 				"navigationBarTitleText": "问答",
-				// "enablePullDownRefresh": true,
 				"app-plus": {
 					"bounce": "none",
 					"titleNView": {

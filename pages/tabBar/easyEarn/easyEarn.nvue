@@ -1,5 +1,5 @@
 <template>
-	<list class="easyEarn flex1 flex-column">
+	<list class="easyEarn flex1 flex-column" show-scrollbar="false">
 		<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
 			<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
 			<view class="loadingIco row align-center"> 
@@ -75,7 +75,21 @@
 				goodLucks:[]
 			}
 		},
+		onUnload() {
+			uni.$off('sendQaEarn')
+			uni.$off('sendGlEarn')
+		},
 		created() {
+			uni.$on('sendQaEarn', (data) => {
+				setTimeout(()=>{
+					this.$set(this.questions,data.index,data.data)
+				},0)
+			})
+			uni.$on('sendGlEarn', (data) => {
+				setTimeout(()=>{
+					this.$set(this.goodLucks,data.index,data.data)
+				},0)
+			})
 			uni.getSystemInfo({
 				success:(res)=>{
 					this.recomendItemHeight = (res.windowWidth-40)/3
@@ -96,7 +110,7 @@
 		},
 		methods: {
 			getDatas(){
-				unencryp('/api/earn/easyEarnHome','get',{}).then(res => {
+				request('/api/earn/easyEarnHome','get',{}).then(res => {
 					if(res.code == 200){
 						setTimeout(()=>{
 							let recommendAdList = res.data.top
@@ -157,14 +171,17 @@
 					return
 				}
 				this.userClick(data,index)
-				let pageType = ''
+				let pageType = '',
+					tabType = '';
 				if(type=="qa"){
 					pageType = 'question'
+					tabType = 'earnQa'
 				}else if(type=="gl"){
 					pageType = 'goodluck'
+					tabType = 'earnGl'
 				}
 				uni.navigateTo({
-					url:'../../subPages/details/details?param='+ encodeURIComponent(JSON.stringify(data)) + '&type=' + pageType +'&index='+index + '&from=easyEarn'
+					url:'../../subPages/details/details?param='+ encodeURIComponent(JSON.stringify(data)) + '&type=' + pageType +'&index='+index + '&tabType=' + tabType
 				})
 			},
 			goRecommandDetail(data,index){

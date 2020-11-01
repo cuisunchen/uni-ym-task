@@ -114,7 +114,7 @@
 					"attributeValue": this.info.attributeValue,
 					"id": this.info.id
 				}
-				this.$unencryp('/snap/purchase','post',param).then(res => {
+				this.$request('/snap/purchase','post',param).then(res => {
 					if(res.code == 200){
 						this.userPayAd(res.data.id)
 					}else{
