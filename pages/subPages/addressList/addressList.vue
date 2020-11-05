@@ -2,9 +2,9 @@
 	<view class="addressList">
 		<address-card class="card" v-for="(item,index) in lists" :key="index" :data-obj="item" :has-default="addressId ? false : true"
 			@click="goEdit(item)" @change="addrChange(item)" @delete="deleteAddr(item)"></address-card>
-		<view class="nodata flex-column align-center" v-if="false">
+		<view class="nodata flex-column align-center" v-if="lists.length == 0">
 				<image class="img" src="../../../static/noData.png" mode="scaleToFill"></image>
-				<view class="desc">亲,这里还空空如也哦~~~</view>
+				<view class="desc">暂无数据</view>
 		</view>
 	</view>
 </template>
@@ -26,6 +26,9 @@
 		},
 		onShow() {
 			this.lists = []
+			uni.showLoading({
+				title:'加载中'
+			})
 			this.getAddrList() 
 		},
 		onLoad(opt) {
@@ -79,10 +82,8 @@
 				})
 			},
 			getAddrList(){
-				uni.showLoading({
-					title:'数据加载中...'
-				})
 				this.$request('/snap/getDeliveryAddressList','get',{}).then(res => {
+					uni.hideLoading()
 					if(res.code == 200){
 						this.lists = res.data.map(item => {
 							item.newAddr = item.addressInfo.replace(/-/g,'').replace(/~/,'')

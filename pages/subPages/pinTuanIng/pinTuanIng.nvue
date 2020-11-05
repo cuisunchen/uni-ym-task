@@ -57,7 +57,6 @@
 			this.$nextTick(() => {
 				let theNode=uni.createSelectorQuery().select(`#tab0`)
 				theNode.boundingClientRect((data)=>{
-							console.log(data)
 							this.lineLeft = data.left + 10
 							this.lineWidth = data.width - 20
 				}).exec()

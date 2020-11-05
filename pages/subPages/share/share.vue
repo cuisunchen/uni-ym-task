@@ -22,7 +22,6 @@
 			getImgUrl(){
 				this.$request('/api/view/shareApp','get',{}).then(res => {
 					if(res.code == 200){
-						console.log(res)
 						this.imgUrl = res.data
 					}else{
 						this.showToast(res.msg)

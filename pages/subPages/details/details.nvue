@@ -136,7 +136,6 @@
 			cancelCollectAd(){
 				request('/api/view/cancelCollectAd','post',
 						{"homeAdId": this.dataObj.id || this.dataObj.homeAdId}).then(res=>{
-							console.log(res)
 					if(res.code == 200){
 						showToast(res.data)
 						this.isCollect = false

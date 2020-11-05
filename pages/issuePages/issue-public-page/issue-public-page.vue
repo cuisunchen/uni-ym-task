@@ -164,8 +164,6 @@
 								success:(re) => {
 									if(re.cancel){
 										this.userPayAd(res.data.homeAdId)
-									} else if (res.confirm) {
-										console.log('用户点击取消');
 									}
 								}
 							})
@@ -179,8 +177,6 @@
 							success:(re) => {
 								if(re.confirm){
 									this.userPayAd(res.data.homeAdId)
-								} else if (res.cancel) {
-									console.log('用户点击取消');
 								}
 							}
 						})

@@ -18,7 +18,7 @@
 		
 		<view class="tip">
 			<view class="title">温馨提示:</view>
-			<view class="con">1. 为了绑定您的资金安全,每个提现账号只能绑定一个友米账号</view>
+			<view class="con">1. 为了您的资金安全,每个提现账号只能绑定一个友米账号</view>
 			<view class="con">2. 请仔细核对您的账号信息,如果因为信息填写错误导致转账失败或转给他人,责任自负</view>
 			<view class="con">3. 若存在不正当获得赏金行为(违规提交,多方提交,多账号提交等),平台有权对赏金追回,并视违规程度进行惩罚,甚至封号</view>
 		</view>

@@ -65,7 +65,6 @@
 			if(opt.type == 'preview'){
 				this.pageTit = '效果如下'
 				this.dataObj = JSON.parse(decodeURIComponent(opt.pageData))
-				console.log(this.dataObj)
 				this.recommendList[0].homeTopImgUrl = this.dataObj.homeTopImgUrl
 				this.recommendList[0].homeBigImgUrl = this.dataObj.homeBigImgUrl
 				this.recommendList[0].bigImg = this.dataObj.bigImg

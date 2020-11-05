@@ -2,7 +2,9 @@
 	<view class="bar flex">
 		<view class="item flex1 flex-column align-center" v-for="(item,index) in barList" @click="itemClick(item,index)">
 			<image class="img" :class="{joinImg:index == 1}" :src="item.img" mode="scaleToFill"></image>
-			<text class="title">{{item.title}}</text>
+			<view class="titleBox">
+				<text class="title">{{item.title}}</text>
+			</view>
 		</view>
 	</view>
 </template>
@@ -67,13 +69,9 @@
 	}
 	.joinImg{
 		width: 88rpx;
-		// height: 95.7rpx;
-		// margin-top: -13.7rpx;
-		// background-color: #007AFF;
 	}
-	
 	.title{
-		font-size: 24rpx;
-		line-height: 20rpx;
+		font-size: 26rpx;
+		line-height: 22rpx;
 	}
 </style>

@@ -10,7 +10,7 @@
 		
 		<view class="adItems">
 			<view class="wrap flex flex-between">
-				<choose-ad-type-card class="card" type="问" title="问答型" desc="低至10元/天" bg-color="#f5387a" 
+				<choose-ad-type-card class="card" type="问" title="问答型" desc="低至3元/天" bg-color="#f5387a" 
 										@click="itemClick('issueQS')" @btn-click="btnClick('qs-example-page')">
 				</choose-ad-type-card>
 				<choose-ad-type-card class="card" type="运" title="好运型" desc="低至3元/天" bg-color="gold" 

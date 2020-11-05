@@ -53,6 +53,21 @@
 		onUnload() {
 			uni.$off('sendSameCityQa')
 		},
+		props:{
+			tabIndex:{
+				type: Number
+			}
+		},
+		watch:{
+			tabIndex(val){
+				if(val == 1){
+					uni.showLoading({
+						title:'加载中 ...'
+					})
+					this.getLists()
+				}
+			}
+		},
 		created() {
 			uni.$on('sendSameCityQa', (data) => {
 			  setTimeout(()=>{
@@ -61,10 +76,7 @@
 			})
 			
 			this.param.cityCode = uni.getStorageSync('location') ? JSON.parse(uni.getStorageSync('location')).adcode : '';
-			uni.showLoading({
-				title:'加载中...'
-			})
-			this.getLists()
+			
 			this.getRcommendDatas()
 		},
 		methods:{

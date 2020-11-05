@@ -16,15 +16,15 @@
 		<swiper class="flex1 swiper" :current="tabIndex" :indicator-dots="false" :autoplay="false" @change="swiperChange">
 			<!-- 全国 -->
 			<swiper-item>
-				<nationwide-list></nationwide-list>
+				<nationwide-list :tab-index="tabIndex"></nationwide-list>
 			</swiper-item>
 			<!-- 同城 -->
 			<swiper-item>
-				<same-city-list></same-city-list>
+				<same-city-list :tab-index="tabIndex"></same-city-list>
 			</swiper-item>
 			<!-- 附近 -->
 			<swiper-item>
-				<nearby-list></nearby-list>
+				<nearby-list :tab-index="tabIndex"></nearby-list>
 			</swiper-item>
 		</swiper>
 	</view>
@@ -44,6 +44,9 @@
 			}
 		},
 		mounted() {
+			uni.showLoading({
+				title:'加载中...'
+			})
 			this.$nextTick(() => {
 				let theNode = uni.createSelectorQuery().select(`#tab0`)
 				theNode.boundingClientRect((data)=>{

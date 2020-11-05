@@ -53,9 +53,7 @@
 				return
 			}
 			delete this.info.area
-			console.log(this.info)
 			this.$request('/snap/addDeliveryAddress','post',encodeURIComponent(JSON.stringify(this.info))).then(res => {
-				console.log(res)
 				if(res.code == 200){
 					if(this.info.id){
 						this.showToast('修改成功')
@@ -82,7 +80,6 @@
 				for (let citys of cityData) {
 					for (let city of citys) {
 						if(city.label == areaStr[1]){
-							console.log(city.value)
 							city.value.substring(2)
 							this.areaCode[1] = this.areaCode[0] + city.value.substring(2)
 							isOut = true
@@ -106,7 +103,6 @@
 					}
 					if(isOut2){break}
 				}
-				console.log(this.areaCode)
 				// 将破折号替换为字符串
 				this.info.area = JSON.parse(opt.data).addressInfo.split('~')[0].replace(/-/g,'')
 				this.info.addressInfo = JSON.parse(opt.data).addressInfo.split('~')[1]   //  详细地址  手动输入的地址

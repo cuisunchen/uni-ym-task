@@ -68,7 +68,6 @@
 		},
 		methods: {
 			goSubPage(path){
-				console.log(path)
 				if(path == 'myMessage'){
 					uni.navigateTo({
 						url:'../../subPages/myMessage/myMessage'
@@ -136,7 +135,7 @@
 						uni.showToast({
 							title:content,
 							icon:'none',
-							duration:4000
+							duration:2500
 						})
 					}else{
 						this.showToast(res.msg)

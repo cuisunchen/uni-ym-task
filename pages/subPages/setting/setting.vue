@@ -84,11 +84,11 @@
 			getInfo(){
 				 this.$request('/api/view/appInfo','get',{}).then(res=>{
 						if(res.code == 200){
-							 this.lists[0].desc = '- ' + res.data.guanWang
-							 this.lists[0].copyText = res.data.guanWang
-							 this.lists[1].desc = '- 小程序搜索' + res.data.xiaoChengXu
-							 this.lists[1].copyText = res.data.xiaoChengXu
-							 this.lists[2].desc = '- ' + res.data.guanWechat
+							 this.lists[0].desc = '- 微信小程序搜索"' + res.data.xiaoChengXu + '"'
+							 this.lists[0].copyText = res.data.xiaoChengXu
+							 this.lists[1].desc = '- ' + res.data.guanWechat
+							 this.lists[1].copyText = res.data.guanWechat
+							 this.lists[2].desc = '- 根据兴趣推送广告'
 							 this.lists[2].copyText = res.data.guanWechat
 						}
 				 })

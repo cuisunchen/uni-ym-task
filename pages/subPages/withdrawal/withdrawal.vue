@@ -104,7 +104,7 @@
 						uni.showModal({
 							title:'提示',
 							showCancel:false,
-							content:'您的申请已提交成功,我们将会在1-3个工作日内审核发放到账,请留意账单信息'
+							content:`提现金额${this.withdrawalAmount}元, 我们会尽快审核!`
 						})
 						this.getUserInfo()
 					}else{

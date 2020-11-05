@@ -50,8 +50,23 @@
 				}
 			}
 		},
-		onUnload() {
+		beforeDestroy() {
 			uni.$off('sendSameCityGL')
+		},
+		props:{
+			tabIndex:{
+				type: Number
+			}
+		},
+		watch:{
+			tabIndex(val){
+				if(val == 1){
+					uni.showLoading({
+						title:'加载中 ...'
+					})
+					this.getLists()
+				}
+			}
 		},
 		created() {
 			uni.$on('sendSameCityGL', (data) => {
@@ -59,12 +74,8 @@
 					this.$set(this.goodLucks,data.index,data.data)
 				},0)
 			})
-			 this.param.cityCode = uni.getStorageSync('location') ? JSON.parse(uni.getStorageSync('location')).adcode : '';
-			 uni.showLoading({
-			 	title:'加载中...'
-			 })
-			 this.getLists()
-			 this.getRcommendDatas()
+			this.param.cityCode = uni.getStorageSync('location') ? JSON.parse(uni.getStorageSync('location')).adcode : '';
+			this.getRcommendDatas()
 		},
 		methods:{
 			tabClick(i){

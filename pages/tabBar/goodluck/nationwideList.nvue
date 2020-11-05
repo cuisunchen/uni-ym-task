@@ -50,7 +50,22 @@
 				}
 			}
 		},
-		onUnload() {
+		props:{
+			tabIndex:{
+				type: Number
+			}
+		},
+		watch:{
+			tabIndex(val){
+				if(val == 0){
+					uni.showLoading({
+						title:'加载中 ...'
+					})
+					this.getLists()
+				}
+			}
+		},
+		beforeDestroy() {
 			uni.$off('sendNationGL')
 		},
 		created() {

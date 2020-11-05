@@ -50,8 +50,23 @@
 				}
 			}
 		},
-		onUnload() {
+		beforeDestroy() {
 			uni.$off('sendNationQa')
+		},
+		props:{
+			tabIndex:{
+				type: Number
+			}
+		},
+		watch:{
+			tabIndex(val){
+				if(val == 0){
+					uni.showLoading({
+						title:'加载中 ...'
+					})
+					this.getLists()
+				}
+			}
 		},
 		created() {
 			uni.$on('sendNationQa', (data) => {
@@ -60,13 +75,13 @@
 				},0)
 			})
 			
-			 this.param.cityCode = uni.getStorageSync('location') ? JSON.parse(uni.getStorageSync('location')).adcode : '';
-			 this.recommendParam.cityCode = uni.getStorageSync('location') ? JSON.parse(uni.getStorageSync('location')).adcode : '';
-			 uni.showLoading({
-			 	title:'加载中...'
-			 })
-			 this.getLists()
-			 this.getRcommendDatas()
+			this.param.cityCode = uni.getStorageSync('location') ? JSON.parse(uni.getStorageSync('location')).adcode : '';
+			this.recommendParam.cityCode = uni.getStorageSync('location') ? JSON.parse(uni.getStorageSync('location')).adcode : '';
+			uni.showLoading({
+				title:'加载中 ...'
+			})
+			this.getLists()
+			this.getRcommendDatas()
 		},
 		methods:{
 			tabClick(i){
@@ -111,7 +126,7 @@
 			},
 			getRcommendDatas(){ 
 				request('/api/earn/recommend','post',this.recommendParam).then(res=>{
-					uni.hideLoading()
+					uni.hideLoading() 
 					if(res.code == 200){
 						setTimeout(()=>{
 							this.recommendList = res.data

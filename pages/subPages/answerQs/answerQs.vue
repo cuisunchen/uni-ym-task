@@ -82,32 +82,38 @@
 						  }
 						}else if(res.code == 500){
 							if(res.data.isTrue != null && !res.data.isTrue){
-									this.dataObj.userGet = '未得'
-							 }
-							 if(res.data.isFinish){
-								 this.dataObj.status = '已完成'
-									uni.showToast({
-										 title: '此广告已完成,不能再回答',
-										 icon: 'none',
-										 duration: 2000,
-										 position: 'bottom'
-									})
-							 }
-							 if(res.data.message == '已回答'){
-									uni.showToast({
-										 title: '您已回答过,不能再回答',
-										 icon: 'none',
-										 duration: 2000,
-										 position: 'bottom'
-									})
-							 }else if(res.data.message == '已下架'){
-									uni.showToast({
-										 title: '此广告已下架,不能再回答',
-										 icon: 'none',
-										 duration: 2000,
-										 position: 'bottom'
-									})
-							 } 
+								this.dataObj.userGet = '未得'
+								uni.showToast({
+									 title: res.data.message,
+									 icon: 'none',
+									 duration: 2000,
+									 position: 'bottom'
+								})
+							}
+						  if(res.data.isFinish){
+							  this.dataObj.status = '已完成'
+								uni.showToast({
+									 title: '此广告已完成,不能再回答',
+									 icon: 'none',
+									 duration: 2000,
+									 position: 'bottom'
+								})
+						  }
+						  if(res.data.message == '已回答'){
+								uni.showToast({
+									 title: '您已回答过,不能再回答',
+									 icon: 'none',
+									 duration: 2000,
+									 position: 'bottom'
+								})
+							}else if(res.data.message == '已下架'){
+								uni.showToast({
+									 title: '此广告已下架,不能再回答',
+									 icon: 'none',
+									 duration: 2000,
+									 position: 'bottom'
+								})
+							} 
 						}else if(res.code == 999){
 							uni.showToast({
 								 title: res.msg + ',不能再回答',
@@ -139,15 +145,9 @@
 				 })
 			},
 			goBackHome(){
-				if(this.from && this.from == 'easyEarn'){
-					uni.switchTab({
-						url: '../../tabBar/easyEarn/easyEarn'
-					})
-				}else{
-					uni.navigateTo({
-						url: '../../tabBar/home/home'
-					})
-				}
+				uni.switchTab({
+					url: '../../tabBar/easyEarn/easyEarn'
+				})
 			},
 			bindChange (e) {
 				const val = e.detail.value

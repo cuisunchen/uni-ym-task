@@ -195,11 +195,8 @@
 				this.submitRequest()
 			},
 			submitRequest(){  
-				console.log(this.form)
-				//encodeURIComponent(JSON.stringify(this.form))
 				this.$request('/api/recommend','post',encodeURIComponent(JSON.stringify(this.form))).then(res => {
 					uni.hideLoading()
-					// console.log(res)
 					if(res.code == 200){
 						if(uni.getSystemInfoSync().platform == 'android'){
 							uni.showModal({
@@ -210,8 +207,6 @@
 								success:(re) => {
 									if(re.cancel){
 										this.userPayAd(res.data.homeAdId)
-									} else if (res.confirm) {
-										console.log('用户点击取消');
 									}
 								}
 							})
@@ -225,8 +220,6 @@
 							success:(re) => {
 								if(re.confirm){
 									this.userPayAd(res.data.homeAdId)
-								} else if (res.cancel) {
-									console.log('用户点击取消');
 								}
 							}
 						})
@@ -272,14 +265,8 @@
 									uni.showModal({
 										title:'很遗憾,订单支付失败!',
 										content:'如有疑问,请联系客服',
-										showCancel:false,
-										// success: () => {
-										// 	uni.navigateBack({
-										// 		delta:1
-										// 	})
-										// }
+										showCancel:false
 									})
-									console.log('fail:' + JSON.stringify(err));
 								}
 						});
 					}

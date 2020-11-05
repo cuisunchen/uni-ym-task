@@ -140,7 +140,7 @@
 					const headers = {}
 					headers['Authorization'] =  token ? 'Bearer ' + token : '',
 					headers['Content-Type']= 'application/json;charset=utf-8' 
-					console.log(data)
+					
 					let param = Object.keys(data).length > 0 ? getRsaCode(JSON.stringify(data)) : data;
 					// console.log(param)
 						uni.request({

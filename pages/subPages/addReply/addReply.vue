@@ -39,15 +39,12 @@
 		},
 		onLoad(option) {
 		  this.itemObj = JSON.parse(decodeURIComponent(option.param));
-			console.log(this.itemObj)
 			this.typeId = option.typeId || 0
 		},
 		methods: {
 			getFeedbackDetail(){
-				console.log(this.itemObj.id)
 				this.$request('/api/getFeedbackById','post',{id:this.itemObj.id}).then(res => {
 					uni.hideLoading()
-					console.log(res)
 					if(res.code == 200){
 						this.mainQs = res.data[0]
 						res.data.shift()

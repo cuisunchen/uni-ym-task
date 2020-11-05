@@ -39,7 +39,6 @@
 		},
 		onLoad(opt) {
 			this.pageData = JSON.parse(decodeURIComponent(opt.pageData))
-			console.log(this.pageData)
 			this.getInfo(this.pageData.homeAdId)
 		},
 		methods: {

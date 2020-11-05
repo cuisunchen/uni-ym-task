@@ -1,15 +1,15 @@
 <template>
-	<div class="flex1">
+	<div class="goodsHome flex1" :style="{'padding-bottom': (statusBarHeight+44)+'px'}">
 		<div class="header">
 			<div class="statusBar" :style="{height:statusBarHeight+'px'}"></div>  
 			<div class="info row all-center">
-				<text class="navTitleTxt">首页1.0.1</text>
+				<text class="navTitleTxt">首页</text>
 				<view class="iconBox row all-center" @click="goSearch">
 					<uni-icons class="search" type="search" color="#fff" size="22"></uni-icons>
 				</view>
 			</div>    
 		</div>
-		<list class="goodsHome flex1 flex-column" :style="{'top':(statusBarHeight + 42) +'px'}" show-scrollbar="false">
+		<list class="goodsHome flex1 flex-column" :style="{'top':(statusBarHeight + 43) +'px'}" show-scrollbar="false">
 			<refresh class="row fresh all-center" @refresh="onrefresh" @pullingdown="onpullingdown" :display="refreshing?'show':'hide'">
 				<image class="loadingImg" v-if="!loadingStatus" src="../../../static/loading.gif" mode=""></image>
 				<view class="loadingIco row align-center"> 
@@ -31,11 +31,11 @@
 				<bar class="bar flex-shrink" @click="barClick"></bar>
 			</cell>
 			
-			<template class="wrap" v-for="(item,index) in goodsList" >
+			<template class="wrap" v-for="(item,index) in goodsList"+>
 				<header class="listTit row align-center flex-between">
 					<view class="titWrap row align-center flex-between">
 						<view class="leftBox row align-center">
-							<text class="label">{{item.title}}{{fileSizeString}}</text> 
+							<text class="label">{{item.title}}</text> 
 							<text class="line">丨</text> 
 							<text class="nums">红包奖励概率: {{index == 0 ? 50 : index == 1 ? 70 : index == 2 ? 94 : 97}}%</text>
 						</view>
@@ -54,14 +54,17 @@
 			</template>
 		</list>
 		
-		<view class="dialog row all-center" v-if="showUpdate">
-			<view class="updateConBox">
+		<view class="dialog row all-center" v-if="showUpdate" @touchmove.stop.prevent="moveHandle">
+			<view class="updateConBox flex-column">
 				<view class="title row all-center">提示</view>
 				<view class="updateCon row all-center">
-					<text class="updateTxt">发现新的版本，请点击升级{{baifen}}</text>
+					<text class="updateTxt">发现新的版本，请点击升级</text>
+				</view>
+				<view class="progress-box flex1" ref="progressBox" id="progressBox">
+					<view class="progress" :style="{width: baifen/100*updateBoxWidth + 'px'}"></view>
 				</view>
 				<view class="updateBtns row">
-					<view class="cancelbtn flex1 row all-center" @click="closeUpdate"><text class="btnTxt">取消</text></view>
+					<!-- <view class="cancelbtn flex1 row all-center" @click="closeUpdate"><text class="btnTxt">取消</text></view> -->
 					<view class="confirmbtn flex1 row all-center" @click="downloadBtn"><text class="btnTxt">立即升级</text></view>
 				</view>
 			</view>
@@ -98,8 +101,15 @@
 				
 				totalSize: 0,
 				baifen: 0,
-				fileSizeString:''
+				fileSizeString:'',
+				updateBoxWidth:null
 			}
+		},
+		onLoad() {
+			plus.runtime.getProperty(plus.runtime.appid, widgetInfo => {
+				this.version = widgetInfo.version;
+				this.getCheckVersion()
+			});
 		},
 		onShow(){
 			setTimeout(() => { //获取状态栏高度，setTimeout后才能调用uni.
@@ -109,10 +119,6 @@
 					}    
 				});    
 			}, 1);
-			plus.runtime.getProperty(plus.runtime.appid, widgetInfo => {
-				this.version = widgetInfo.version;
-				this.getCheckVersion()
-			});
 			uni.$on('send', e =>{
 				this.$set(this.questions,e.index,e.data)
 			})
@@ -139,11 +145,9 @@
 					}
 				});
 				task.addEventListener("statechanged", (download, status) => {
-					// console.log(download.state)
 					switch (download.state) {
 						case 2:
-							this.clearCache()
-							plus.nativeUI.showWaiting("正在下载...");
+							plus.nativeUI.showWaiting("正在下载,请不要离开此页面...");
 							break;
 						case 3:
 							//进度条百分比 totalSize为总量，baifen为当前下载的百分比
@@ -159,6 +163,7 @@
 							uni.showToast({
 								title:'下载完成',
 							})
+							uni.clearStorage();
 							this.clearCache()
 							break;
 					}
@@ -171,53 +176,55 @@
 			},
 			// 清理缓存
 			clearCache() {    
-					let os = plus.os.name;  
-					if (os == 'Android') {  
-							let main = plus.android.runtimeMainActivity();  
-							let sdRoot = main.getCacheDir();  
-							let files = plus.android.invoke(sdRoot, "listFiles");  
-							let len = files.length;  
-							for (let i = 0; i < len; i++) {  
-									let filePath = '' + files[i]; // 没有找到合适的方法获取路径，这样写可以转成文件路径  
-									plus.io.resolveLocalFileSystemURL(filePath, (entry)=> {  
-											if (entry.isDirectory) {  
-													entry.removeRecursively((entry)=> { //递归删除其下的所有文件及子目录  
-															this.formatSize(); // 重新计算缓存  
-													}, (e)=> {  
-															console.log(e.message)  
-													});  
-											} else {  
-													entry.remove();  
-											}  
-									}, (e)=> {  
-											console.log('文件路径读取失败')  
-									});  
-							} 
-							 uni.showToast({
-							 	title:'清除了'
-							 })
-					} else { // ios  
-							plus.cache.clear(()=> {  
-								console.log(缓存清理完成)
-								this.formatSize();  
-							});  
-					}  
+				let os = plus.os.name;  
+				if (os == 'Android') {  
+					let main = plus.android.runtimeMainActivity();  
+					let sdRoot = main.getCacheDir();  
+					let files = plus.android.invoke(sdRoot, "listFiles");  
+					let len = files.length;  
+					for (let i = 0; i < len; i++) {  
+						let filePath = '' + files[i]; // 没有找到合适的方法获取路径，这样写可以转成文件路径  
+						plus.io.resolveLocalFileSystemURL(filePath, (entry)=> {  
+							if (entry.isDirectory) {  
+								entry.removeRecursively((entry)=> { //递归删除其下的所有文件及子目录  
+										this.formatSize(); // 重新计算缓存  
+								}, (e)=> {    
+									uni.showToast({
+										title:e.message,
+										icon:'none'
+									})
+								});  
+							} else {  
+									entry.remove();  
+							}  
+						}, (e)=> {  
+							uni.showToast({
+								title:'文件路径读取失败',
+								icon:'none'
+							}) 
+						});  
+					} 
+				} else { // ios  
+					plus.cache.clear(()=> {  
+						this.formatSize();  
+					});  
+				}  
 			},
 			// 计算缓存
 			formatSize() {    
 				plus.cache.calculate((size) => {  
-						let sizeCache = parseInt(size);  
-						if (sizeCache == 0) {  
-								this.fileSizeString = "0B";  
-						} else if (sizeCache < 1024) {  
-								this.fileSizeString = sizeCache + "B";  
-						} else if (sizeCache < 1048576) {  
-								this.fileSizeString = (sizeCache / 1024).toFixed(2) + "KB";  
-						} else if (sizeCache < 1073741824) {  
-								this.fileSizeString = (sizeCache / 1048576).toFixed(2) + "MB";  
-						} else {  
-								this.fileSizeString = (sizeCache / 1073741824).toFixed(2) + "GB";  
-						}  
+					let sizeCache = parseInt(size);  
+					if (sizeCache == 0) {  
+							this.fileSizeString = "0B";  
+					} else if (sizeCache < 1024) {  
+							this.fileSizeString = sizeCache + "B";  
+					} else if (sizeCache < 1048576) {  
+							this.fileSizeString = (sizeCache / 1024).toFixed(2) + "KB";  
+					} else if (sizeCache < 1073741824) {  
+							this.fileSizeString = (sizeCache / 1048576).toFixed(2) + "MB";  
+					} else {  
+							this.fileSizeString = (sizeCache / 1073741824).toFixed(2) + "GB";  
+					}  
 				});  
 			},
 			goSearch(){
@@ -227,7 +234,6 @@
 			},
 			getGoodsList(){
 				unencryp('/snap/getSnapUpList','get',{}).then(res => {
-					// console.log(res)
 					if(res.code == 200){
 						setTimeout(()=>{
 							this.goodsList = res.data.contentList
@@ -308,74 +314,29 @@
 				}
 				request('/api/checkVersion','post',param).then(res => {
 					// 这里需要返回app下载链接
-					// console.log(res)
 					if(res.code == 200){
+						
 						if(this.version == res.data.version ){return}
 						setTimeout(()=>{
 							let downloadTxt = '';
 							this.update_des = []  
 							this.update_url = res.data.downloadLink
 							this.showUpdate = true
+							this.$nextTick(()=>{
+								setTimeout(()=>{
+									let theNode = uni.createSelectorQuery().select(`#progressBox`)
+									theNode.boundingClientRect((data)=>{
+										this.updateBoxWidth = data.width
+									}).exec()
+								},10)
+							})
+							
 							uni.hideTabBar()
 						},0)
-						
-						return
-						if(this.version != res.data.version && res.data.forceUpdate == 'false'){
-							setTimeout(()=>{
-								this.isUpdateShow = true
-								this.update_type = 1
-								downloadTxt = `版本号${res.data.version}精彩不容错过, 请及时更新!`
-								this.update_des.push(downloadTxt)
-							},0)
-						}else
-						if(this.version != res.data.version && res.data.forceUpdate == 'true'){
-							console.log(res)
-							
-							setTimeout(()=>{
-								this.isUpdateShow = true
-								this.update_type = 1
-								this.is_forced_update = true
-								downloadTxt = ['最新版本修改了部分已知问题,并进行了一些性能优化',]
-								this.update_des.push(...downloadTxt)
-								
-								let pages = getCurrentPages()
-								let page = pages[pages.length - 1];
-								let currentWebview = page.$getAppWebview();
-								this.titleNView = currentWebview.getStyle().titleNView
-								this.titleNView.buttons[0].width = 0   //  隐藏头部右边的按钮
-								currentWebview.setStyle({
-									titleNView:this.titleNView
-								})
-								uni.hideTabBar()
-								this.update_url = res.data.downloadLink 
-							},0)
-							return
-						}else{
-							this.getAlertData()
-							return
-						}
-						//  缓存非强制更新下载弹框弹出时的时间   保证2个小时弹出一次
-						let storageDate = uni.getStorageSync('updateDate')
-						let nowDate = new Date().getTime()
-						let spaceTime = Math.floor((nowDate-storageDate)/1000/60/60)
-						if(storageDate){
-							if(spaceTime > 2 || spaceTime == 2){ // 每次弹出后更新缓存时间,清除缓存中弹框状态
-								this.update_url = res.data.downloadLink
-								wx.setStorage({
-									key: 'updateDate',
-									data: nowDate
-								})
-							}
-						}else{
-							this.update_url = res.data.downloadLink
-							wx.setStorage({
-								key: 'updateDate',
-								data: nowDate
-							})
-						}
 					}else{
 						uni.showToast({
-							title:res.msg
+							title:res.msg,
+							icon:'none'
 						})
 					}
 				})
@@ -385,12 +346,18 @@
 				var strRegex = "((http[s]{0,1}|ftp)://[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)|(www.[a-zA-Z0-9\\.\\-]+\\.([a-zA-Z]{2,4})(:\\d+)?(/[a-zA-Z0-9\\.\\-~!@#$%^&*+?:_/=<>]*)?)";
 				let re=new RegExp(strRegex);
 				if (!re.test(data.topContentImg)) {
-					this.showToast('详情页地址有误,请联系客服')
+					uni.showToast({
+						title: '详情页地址有误,请联系客服',
+						icon: 'none'
+					})
 					return
 				}
 				uni.navigateTo({
 					url:'../../subPages/details/details?param='+ encodeURIComponent(JSON.stringify(data)) + '&type=swiper&index='+index + '&from=easyEarn'
 				})
+			},
+			moveHandle(){
+				return
 			},
 		}
 	}
@@ -398,7 +365,7 @@
 
 <style scoped>
 .goodsHome{
-	position: relative;
+	/* padding-bottom: ; */
 }
 .header {    
 	background-color: #2C405A;
@@ -531,32 +498,6 @@
 	font-size: 28rpx;
 }
 
-
-.progress {
-	border-radius:35px;
-}
-.progress-des {
-	margin-top: 20rpx;
-	font-size: 28rpx;
-	color: #6C6C6C;
-}
-.updateDesc{
-	color: red;
-	line-height: 40rpx;
-	font-size: 24rpx;
-	text-align: center;
-}
-.btnWrap{
-	height: 80rpx;
-	margin-bottom: 20rpx;
-	border-radius: 10rpx;
-	background-color: #007AFF;
-}
-.btn{
-	color: #fff;
-	font-size: 30rpx;
-	font-weight: bold;
-}
 .dialog{
 	position: fixed;
 	top: 0;
@@ -564,10 +505,10 @@
 	left: 0;
 	right: 0;
 	z-index: 9999;
-	background-color: rgba(0,0,0,0.3);
+	background-color: rgba(0,0,0,0.4);
 }
 .updateConBox{
-	width: 560upx;
+	width: 560rpx;
 	border-radius: 20rpx;
 	padding: 20rpx 0 0;
 	background-color: #fff;
@@ -583,7 +524,21 @@
 	color: #666;
 	font-size: 28rpx;
 }
+.progress-box{
+	width: 520rpx;
+	height: 12rpx;
+	margin-top: 30rpx;
+	margin-left: 20rpx;
+	border-radius: 6rpx;
+	background-color: #b8b8b8;
+}
+.progress{
+	height: 12rpx;
+	border-radius: 6rpx;
+	background-color: #2C405A;
+}
 .updateBtns{
+	width: 560rpx;
 	height: 80rpx;
 	margin-top: 30rpx;
 	border-top-width: 1rpx;
@@ -598,5 +553,6 @@
 .btnTxt{
 	color: #007AFF;
 	font-size: 30rpx;
+	line-height: 28rpx;
 }
 </style>

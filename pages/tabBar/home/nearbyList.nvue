@@ -53,6 +53,21 @@
 		onUnload() {
 			uni.$off('sendNearbyQa')
 		},
+		props:{
+			tabIndex:{
+				type: Number
+			}
+		},
+		watch:{
+			tabIndex(val){
+				if(val == 2){
+					uni.showLoading({
+						title:'加载中 ...'
+					})
+					this.getLists()
+				}
+			}
+		},
 		created() {
 			uni.$on('sendNearbyQa', (data) => {
 				setTimeout(()=>{
@@ -60,10 +75,7 @@
 				},0)
 			})
 			 this.param.cityCode = uni.getStorageSync('location') ? JSON.parse(uni.getStorageSync('location')).adcode : '';
-			 uni.showLoading({
-			 	title:'加载中...'
-			 })
-			 this.getLists()
+			 
 			 this.getRcommendDatas()
 		},
 		methods:{

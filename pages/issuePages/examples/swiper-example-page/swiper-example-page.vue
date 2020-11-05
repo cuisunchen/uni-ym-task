@@ -36,7 +36,6 @@
 			if(opt.type == 'preview'){
 				this.pageTit = '效果如下'
 				this.dataObj = JSON.parse(decodeURIComponent(opt.pageData))
-				console.log()
 			}
 		},
 		methods: {

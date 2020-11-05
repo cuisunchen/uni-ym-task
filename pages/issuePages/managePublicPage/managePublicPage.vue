@@ -52,7 +52,6 @@
 		},
 		methods: {
 			goDetail(item){
-				console.log(item)
 				let url = ''
 				let type = item.homeType.split('-')[0]
 				if(type == '问答' || type == '好运'){

@@ -1,12 +1,18 @@
 <template>
-	<view class="downloadPage page" id="_poster">
-		<image class="bgImg" src="../../../static/other/yaoBg.png" mode=""></image>
+	<view class="downloadPage page flex-column align-center" id="_poster">
+		<!-- <image class="bgImg" src="../../../static/other/yaoBg.png" mode=""></image>
 		<view class="contentWrap flex-column align-center" id="contentWrap">
 			<image class="yao" src="../../../static/other/yao.png" mode=""></image>
 			<view class="bot flex">
 				<view class="code flex all-center">
 					<image :src="qrcode" @load="imgOnloag" mode="aspectFill"></image>
 				</view>
+			</view>
+		</view> -->
+		<image class="bgImg1 flex1" src="../../../static/other/shareBg.png" mode="heightFix"></image>
+		<view class="codeBox flex all-center">
+			<view class="code flex all-center">
+				<image :src="qrcode" @load="imgOnloag" mode="aspectFill"></image>
 			</view>
 		</view>
 	</view>
@@ -112,12 +118,10 @@
 									},
 									(e) => {
 										this.showToast('下载失败,请联系系统管理员' + JSON.stringify(e))
-										console.log('保存图片失败：' + JSON.stringify(e));
 									}
 								);
 							},
 							() => {
-								console.log('加载Base64图片数据失败：' + JSON.stringify(e));
 							}
 						);
 					},
@@ -142,13 +146,33 @@
 	height: 100%;
 	overflow-y: scroll;
 	position: relative;
-	background-color: #95ae84;
+	background-color: #35b72a;
 	.bgImg{
 		width: 100%;
 		height: 100%;
 		position: absolute;
 		left: 0;
 		top: 0;
+	}
+	.bgImg1{
+		// width: 100%;
+		// height: 100%;
+	}
+	.codeBox{
+		height: 500rpx;
+		background-color: #35b72a;
+		.code{
+			width: 250rpx;
+			height: 284.5rpx;
+			margin-bottom: 200rpx;
+			border-radius: 10rpx;
+			
+			image{
+				width: 250rpx;
+				height: 284.5rpx;
+				border-radius: 10rpx;
+			}
+		}
 	}
 	.contentWrap{
 		height: 100%;

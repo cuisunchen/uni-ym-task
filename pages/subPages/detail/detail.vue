@@ -77,7 +77,6 @@
 			}else{
 				this.dataObj.webViewShow = false
 			}
-			// console.log(this.dataObj)
 			this.type = option.type || ''
 			
 			this.boxHeight = uni.getSystemInfoSync().windowHeight
@@ -91,9 +90,6 @@
 			// })
 		},
 		methods: {
-			imgLoad(e){
-				console.log(e)
-			},
 			onScale(){},
 			dblclick() {
 				if (this.scaleValue != 1) {

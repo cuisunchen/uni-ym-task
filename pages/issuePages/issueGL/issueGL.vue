@@ -141,6 +141,7 @@
 					releasesPrice: "",
 					interest: 0,
 					rangeType: 1,
+					address:''
 				},
 				issueType:'全国',
 				pickerValueDefault: [0, 0, 0],   // 这里控制显示3级联动或是2级联动
@@ -253,6 +254,7 @@
 					releaseTime,
 					releasesNumber,
 					title,
+					address,
 					releasesPrice: [
 						 maxPrize*100,,,,
 						 minPrize*100
@@ -277,8 +279,6 @@
 								success:(re) => {
 									if(re.cancel){
 										this.userPayAd(res.data.homeAdId)
-									} else if (res.confirm) {
-										console.log('用户点击取消');
 									}
 								}
 							})
@@ -292,8 +292,6 @@
 							success:(re) => {
 								if(re.confirm){
 									this.userPayAd(res.data.homeAdId)
-								} else if (res.cancel) {
-									console.log('用户点击取消');
 								}
 							}
 						})
@@ -346,7 +344,6 @@
 										// 	})
 										// }
 									})
-									console.log('fail:' + JSON.stringify(err));
 						    }
 						});
 					}
@@ -393,9 +390,12 @@
 				this.pickerText = e.name
 				if(this.form.rangeType == 1){
 					this.form.cityCode = '0'
+					this.form.address = '全国'
 				}else if(this.form.rangeType == 2){
+					this.form.address = e.name.replace(/-/g,' ')
 					this.form.cityCode = e.secondPick.code.slice(0,4)
 				}else if(this.form.rangeType == 3){
+					this.form.address = e.name.replace(/-/g,' ')
 					this.form.cityCode = e.thirdPick.code
 				}
 			},

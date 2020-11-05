@@ -76,7 +76,6 @@
 				this.$request('/api/userTodayAmount','get',{}).then(res => {
 					this.info = res.data
 					this.info.glqa = (Number(res.data.goodLuck)+Number(res.data.qa)).toFixed(2)
-					console.log(this.info)
 				})
 			}
 		}

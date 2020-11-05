@@ -49,7 +49,6 @@
 				request('/api/userMessage','post',this.param).then(res => {
 					uni.hideLoading()
 					if(res.code == 200){
-						console.log(res)
 						setTimeout(()=>{
 							if(this.param.pageNum >= Math.ceil(res.data.maxSize/this.param.pageSize)){
 								this.isNoMore = true
