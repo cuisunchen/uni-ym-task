@@ -37,7 +37,7 @@
 						<view class="leftBox row align-center">
 							<text class="label">{{item.title}}</text> 
 							<text class="line">丨</text> 
-							<text class="nums">红包奖励概率: {{index == 0 ? 50 : index == 1 ? 70 : index == 2 ? 94 : 97}}%</text>
+							<text class="nums">红包奖励概率: {{index == 0 ? 50 : index == 1 ? 70 : index == 2 ? 85 : 90}}%</text>
 						</view>
 						<view class="rightBox row align-center" @click="goWatchMorePage(index)">
 							<text class="more">查看更多</text>
@@ -315,8 +315,7 @@
 				request('/api/checkVersion','post',param).then(res => {
 					// 这里需要返回app下载链接
 					if(res.code == 200){
-						
-						if(this.version == res.data.version ){return}
+						if( this.version == res.data.version ){return}
 						setTimeout(()=>{
 							let downloadTxt = '';
 							this.update_des = []  

@@ -741,6 +741,15 @@ function isDebugMode() {
   return typeof __channelId__ === 'string' && __channelId__;
 }
 
+function jsonStringifyReplacer(k, p) {
+  switch (typof(p)) {
+    case 'Function':
+      return 'function() { [native code] }';
+    default:
+      return p;}
+
+}
+
 function log(type) {
   for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     args[_key - 1] = arguments[_key];
@@ -763,9 +772,9 @@ function formatLog() {
 
     if (type === '[object object]' || type === '[object array]') {
       try {
-        v = '---BEGIN:JSON---' + JSON.stringify(v) + '---END:JSON---';
+        v = '---BEGIN:JSON---' + JSON.stringify(v, jsonStringifyReplacer) + '---END:JSON---';
       } catch (e) {
-        v = '[object object]';
+        v = type;
       }
     } else {
       if (v === null) {

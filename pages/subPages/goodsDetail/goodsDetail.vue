@@ -166,11 +166,11 @@
 				case '10':
 					this.ruleImg = '../../../static/pt10.png'
 					break;
-				case '50':
-					this.ruleImg = '../../../static/pt50.png'
+				case '20':
+					this.ruleImg = '../../../static/pt20.png'
 					break;
-				case '100':
-					this.ruleImg = '../../../static/pt100.png'
+				case '30':
+					this.ruleImg = '../../../static/pt30.png'
 					break;
 			}
 			this.goodsId = opt.id

@@ -49,11 +49,11 @@
 			</scroll-view>
 		</view>
 		
-		<view class="lists" v-if="lists && lists.length > 0">
+		<scroll-view class="lists flex1" scroll-y v-if="lists && lists.length > 0">
 			<view class="cardWrap">
 				<goods-card v-for="list in lists" @click="cardClick(list)" :data-obj="list"></goods-card>
 			</view>
-		</view>
+		</scroll-view>
 		<view class="nodata flex1 flex-column all-center" v-if="lists && lists.length == 0 && noData">
 			<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
 			<text class="nodatadesc">亲,这里还空空如也哦~~~</text>
@@ -263,7 +263,9 @@
 </script>
 <style scoped>
 	.content{
+		display: flex;
 		height: 100%;
+		overflow: hidden;
 	}
 	view{display:block;}
 	.search-box {width:95%;background-color:rgb(242,242,242);padding:15upx 2.5%;display:flex;justify-content:space-between;position:sticky;top: 0;}
@@ -287,6 +289,11 @@
 	.keyword-box .keyword-block .keyword {width:94%;padding:3px 3%;display:flex;flex-flow:wrap;justify-content:flex-start;}
 	.keyword-box .keyword-block .hide-hot-tis {display:flex;justify-content:center;font-size:28upx;color:#6b6b6b;}
 	.keyword-box .keyword-block .keyword>view {display:flex;justify-content:center;align-items:center;border-radius:60upx;padding:0 20upx;margin:10upx 20upx 10upx 0;height:60upx;font-size:28upx;background-color:rgb(242,242,242);color:#6b6b6b;}
+	
+	
+	.lists{
+		overflow-y: scroll;
+	}
 	.cardWrap{
 		padding: 0 20rpx;
 		background-color: #fff;

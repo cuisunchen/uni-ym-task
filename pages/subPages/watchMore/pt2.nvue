@@ -28,6 +28,11 @@
 	import {unencryp,request} from "../../../common/utils/request.js"
 	export default {
 		components:{goodsCard},
+		props:{
+			tabIndex:{
+				type: Number
+			}
+		},
 		data(){
 			return{
 				loadingStatus: true,   //  控制雪花动画是否显示
@@ -43,12 +48,20 @@
 				isNoMore: false,			// 控制是否可以加载更多
 			}
 		},
-		created() {
-			this.getLists()
+		watch:{
+			tabIndex(val){
+				if(val == 0){
+					uni.showLoading({
+						title:'加载中 ...'
+					})
+					this.getLists()
+				}
+			}
 		},
 		methods:{
 			getLists(type){
 				request('/snap/getSnapUpListByType','post',this.param).then(res=>{
+					uni.hideLoading()
 					if(res.code == 200){
 						setTimeout(()=> {
 							if(this.param.pageNum >= Math.ceil(res.data.maxSize/this.param.pageSize)){

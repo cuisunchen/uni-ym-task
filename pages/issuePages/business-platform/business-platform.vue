@@ -5,17 +5,8 @@
 				<image class="img" src="../../../static/mineBg.jpeg" mode="aspectFill"></image>
 				<view class="layout"></view>
 				<view class="con">
-					<view class="userInfo flex align-center">
-						<view class="avatar">
-							<image :src="info.avatarUrl" mode=""></image>
-						</view>
-						<view class="name">{{info.nickName}}</view>
-					</view>
-					
-					<view class="peoples flex-column align-center">
-						<view class="label">当前用户人数</view>
-						<view class="num">{{info.peopleCount}}</view>
-					</view>
+					<view class="dc">今日平台共发布 {{info.peopleCount}} 条广告</view>
+					<view class="dc">快去看看你的同城附近有没有广告订单</view>
 					
 					<view class="noticeBox flex">
 						<view class="img">
@@ -144,16 +135,16 @@
 	}
 	.bgImgBox{
 		width: 100%;
-		height: 370rpx;
+		height: 260rpx;
 		position: relative;
 		.img{
 			width: 100%;
-			height: 330rpx;
+			height: 260rpx;
 		}
 		.layout{
 			position: absolute;
 			top: 0;
-			bottom: 40rpx;
+			bottom: 0;
 			left: 0;
 			right: 0;
 			background-color: rgba(0, 0, 0, .2);
@@ -161,36 +152,15 @@
 		.con{
 			position: absolute;
 			top: 0;
+			bottom: 0;
 			left: 20rpx;
 			right: 20rpx;
-			.userInfo{
-				margin-top: 36rpx;
-				.avatar{
-					width: 100rpx;
-					height: 100rpx;
-					border-radius: 8rpx;
-					background-color: #2C405A;
-					margin-left: 16rpx;
-					image{
-						width: 100%;
-						height: 100%;
-					}
-				}
-				.name{
-					color: #fff;
-					font-size: 32rpx;
-					margin-left: 20rpx;
-				}
-			}
-			.peoples{
-				color: #fff;
-				margin-top: 20rpx;
-				.label{
-					font-size: 24rpx;
-				}
-				.num{
-					font-size: 46rpx;
-					font-weight: bold;
+			.dc{
+				color: #f2f2f2;
+				font-size: 28rpx;
+				margin-top:20rpx;
+				&:first-child{
+					margin-top: 60rpx;
 				}
 			}
 			.noticeBox{
@@ -210,7 +180,6 @@
 				}
 				/deep/ .uni-noticebar{
 					font-size: 24rpx;
-					// height: 100%;
 					padding: 0 8rpx;
 					margin-bottom: 0;
 				}
@@ -219,59 +188,9 @@
 	}
 	
 	.wrap{
+		margin-top: 50rpx;
 		padding: 0 20rpx 40rpx;
-		.userInfo{
-			margin-top: 36rpx;
-			.avatar{
-				width: 100rpx;
-				height: 100rpx;
-				border-radius: 8rpx;
-				background-color: #2C405A;
-				margin-left: 16rpx;
-				image{
-					width: 100%;
-					height: 100%;
-				}
-			}
-			.name{
-				color: #fff;
-				font-size: 32rpx;
-				margin-left: 20rpx;
-			}
-		}
-		.peoples{
-			color: #fff;
-			margin-top: 20rpx;
-			.label{
-				font-size: 24rpx;
-			}
-			.num{
-				font-size: 46rpx;
-				font-weight: bold;
-			}
-		}
-		.noticeBox{
-			background-color: #eee;
-			padding: 6rpx 0;
-			font-size: 28rpx;
-			margin-top: 30rpx;
-			border-radius: 10rpx;
-			.img{
-				width: 70rpx;
-				height: 70rpx;
-				margin-left: 4rpx;
-				image{
-					width: 100%;
-					height: 100%;
-				}
-			}
-			/deep/ .uni-noticebar{
-				font-size: 24rpx;
-				height: 100%;
-				padding: 0 8rpx;
-				margin-bottom: 0;
-			}
-		}
+		
 		.orderManage{
 			margin-top: 30rpx;
 		}

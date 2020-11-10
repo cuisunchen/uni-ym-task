@@ -23,7 +23,7 @@
 					<view class="con flex1 flex-column flex-between">
 						<view class="info row flex-between align-center">
 							<text class="tel">{{item.phone}}</text>
-							<text class="date">{{item.dateTime}}</text>
+							<!-- <text class="date">{{item.dateTime}}</text> -->
 						</view>
 						<view class="idNum row align-center">
 							<text class="idNumCon">拼团编号: P{{index > 10 && index < 100 ? '0' + (index+1) : '00' + (index+1)}}</text>

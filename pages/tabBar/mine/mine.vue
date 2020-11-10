@@ -28,7 +28,7 @@
 			</view>
 			
 			<view class="cells">
-				<cell icon-path="../../../static/xiaox.png" title="当前用户人数:" :desc="String(userInfo.countPeople)" desc-color="red" desc-size="20" right-text="立即发布" border-bottom-color="transparent" :is-icon-show="false" @click="goIssuePage"></cell>
+				<cell icon-path="../../../static/xiaox.png" title="发布广告" desc="- 3元即可发布" desc-color="red" border-bottom-color="transparent" @click="goIssuePage"></cell>
 				
 				<view class="group1">
 					<cell icon-path="../../../static/fx1.png" title="分享应用" desc="- 提高会员等级" @click="goSubPage('share')"></cell>
