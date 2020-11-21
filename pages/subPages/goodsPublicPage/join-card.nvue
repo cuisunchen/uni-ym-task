@@ -82,7 +82,6 @@
 			},
 			getLists(type){
 				request('/snap/getMyBuyingList','post',this.param).then(res=>{
-					uni.hideLoading()
 					if(res.code == 200){
 						setTimeout(()=>{
 							if(this.param.pageNum >= Math.ceil(res.data.maxSize/this.param.pageSize)){
@@ -139,6 +138,9 @@
 					return
 				}
 				this.param.pageNum ++ 
+				uni.showLoading({
+					title: '加载中 ...'
+				})
 				this.getLists('loadMore')
 			},
 		}

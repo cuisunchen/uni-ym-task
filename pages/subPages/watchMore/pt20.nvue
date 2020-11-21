@@ -51,6 +51,12 @@
 		watch:{
 			tabIndex(val){
 				if(val == 2){
+					let isInitPT20 = uni.getStorageSync('isInitPT20')
+					if(isInitPT20){return}
+					uni.setStorage({
+						key:'isInitPT20',
+						data: true
+					})
 					uni.showLoading({
 						title:'加载中 ...'
 					})

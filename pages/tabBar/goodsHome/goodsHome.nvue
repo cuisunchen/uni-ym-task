@@ -64,7 +64,6 @@
 					<view class="progress" :style="{width: baifen/100*updateBoxWidth + 'px'}"></view>
 				</view>
 				<view class="updateBtns row">
-					<!-- <view class="cancelbtn flex1 row all-center" @click="closeUpdate"><text class="btnTxt">取消</text></view> -->
 					<view class="confirmbtn flex1 row all-center" @click="downloadBtn"><text class="btnTxt">立即升级</text></view>
 				</view>
 			</view>
@@ -145,6 +144,7 @@
 					}
 				});
 				task.addEventListener("statechanged", (download, status) => {
+					console.log(download.totalSize)
 					switch (download.state) {
 						case 2:
 							plus.nativeUI.showWaiting("正在下载,请不要离开此页面...");
@@ -363,9 +363,6 @@
 </script>
 
 <style scoped>
-.goodsHome{
-	/* padding-bottom: ; */
-}
 .header {    
 	background-color: #2C405A;
 	width: 750upx;    
@@ -393,6 +390,9 @@
 .search{
 	margin-bottom: 10rpx;
 }
+.swiper{
+	height: 250rpx;
+}
 .swiperImg{
 	width: 750rpx;
 	height: 300rpx;
@@ -400,7 +400,7 @@
 .bar{
 	padding: 30rpx 0;
 	border-radius: 10rpx;
-	margin: 0 0 30rpx;
+	margin: 0 0 20rpx;
 	border-radius: 0;
 	background-color: #fff;
 }
@@ -410,7 +410,7 @@
 	margin-bottom: 20rpx;
 }
 .listsWrap{
-	margin-bottom: 30rpx;
+	margin-bottom: 20rpx;
 	background-color: #f6f6f6;
 }
 .listTit{
@@ -448,7 +448,7 @@
 	line-height: 26rpx;
 }
 .emptyBox{
-	height: 30rpx;
+	height: 20rpx;
 }
 .cardWrap{
 	padding: 0 20rpx;
@@ -465,12 +465,6 @@
 }
 .text{
 	color: #fff;
-}
-.content{
-	width: 580rpx;
-	height: 734rpx;
-	margin-bottom: 150rpx;
-	position: relative;
 }
 
 .updateBg{

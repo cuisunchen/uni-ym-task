@@ -2,7 +2,6 @@
 	<view class="ptReward">
 		<ygc-refresh class="freshBox"
 		    @onRefresh="onrefresh" 
-		    @scrolltolower="onpullingdown"
 		    :pullupLoadingType="pullupLoadingType">
 				<view class="head">
 					<image class="topBg" src="../../../static/mineBg.jpeg" mode="aspectFill"></image>
@@ -65,9 +64,6 @@
 							this.num=4;
 							this.showLoading = 'hide'
 					},2000)
-			},
-			onpullingdown(e){
-				console.log(123121)
 			},
 			showPicker(){
 				this.pickShow = true

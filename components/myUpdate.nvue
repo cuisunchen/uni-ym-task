@@ -90,7 +90,6 @@
 			
 				downloadTask.onProgressUpdate(res => {
 					this.prpgress_num = res.progress;
-					console.log(this.prpgress_num)
 					this.download_num_ed = (res.totalBytesWritten / Math.pow(1024.00, 2)).toFixed(2);
 					this.download_num = (res.totalBytesExpectedToWrite / Math.pow(1024.00, 2)).toFixed(2);
 				});

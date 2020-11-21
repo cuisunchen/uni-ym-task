@@ -1,7 +1,7 @@
 <template>
 	<view class="addressList">
 		<address-card class="card" v-for="(item,index) in lists" :key="index" :data-obj="item" :has-default="addressId ? false : true"
-			@click="goEdit(item)" @change="addrChange(item)" @delete="deleteAddr(item)"></address-card>
+			@itemClick="chooseAddr(item)" @click="goEdit(item)" @change="addrChange(item)" @delete="deleteAddr(item)"></address-card>
 		<view class="nodata flex-column align-center" v-if="lists.length == 0">
 				<image class="img" src="../../../static/noData.png" mode="scaleToFill"></image>
 				<view class="desc">暂无数据</view>
@@ -16,7 +16,8 @@
 		data() {
 			return {
 				lists:[],
-				addressId:''
+				addressId:'',
+				info:{}
 			}
 		},
 		onNavigationBarButtonTap() {
@@ -35,8 +36,21 @@
 			if(opt.addressId){
 				this.addressId = opt.addressId
 			}
+			if(opt.addrInfo){
+				this.info = JSON.parse(decodeURIComponent(opt.addrInfo))
+			}
 		},
 		methods:{
+			chooseAddr(item){
+				this.info.name = item.name
+				this.info.tel = item.phone
+				this.info.addr = item.newAddr
+				this.info.addressId = item.id	
+				uni.$emit('addrInfo',this.info)
+				uni.navigateBack({
+					delta: 1
+				})
+			},
 			deleteAddr(item){
 				if(item.default){
 					this.showToast('默认地址不能删除','none',2000)

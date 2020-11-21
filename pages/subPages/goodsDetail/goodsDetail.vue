@@ -106,7 +106,7 @@
 			<u-divider color="#999" :half-width="50" bg-color="#f6f6f6" margin-top="30" margin-bottom="30">我也是有底线的</u-divider>
 		</view>
 		<uni-popup ref="popup" type="bottom">
-			<good-size-choose :lists="detailInfo.attributeValues" :data-index="attributeIndex" @change="sizeChange"></good-size-choose>
+			<good-size-choose :details="detailInfo" :lists="detailInfo.attributeValues" :data-index="attributeIndex" @change="sizeChange"></good-size-choose>
 		</uni-popup>
 		
 		<view class="footer flex">
@@ -219,8 +219,7 @@
 				this.$request('/snap/getSnapUpInfo','post',{id}).then(res => {
 					if(res.code == 200){
 						this.detailInfo = res.data
-						
-						this.attributeValue = res.data.attributeValues[0]
+						// this.attributeValue = res.data.attributeValues[0]
 						this.collectType = res.data.collect
 					}else{
 						this.showToast(res.msg,'none',1500)
@@ -247,6 +246,10 @@
 				this.$refs.popup.close()
 			},
 			goPt(){
+				if(!this.attributeValue){
+					this.$refs.popup.open()
+					return
+				}
 				let param = {
 					price: this.detailInfo.discountPrice,
 					failPrice: this.detailInfo.failPrice,

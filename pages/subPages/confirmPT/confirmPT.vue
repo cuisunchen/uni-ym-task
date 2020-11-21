@@ -97,8 +97,12 @@
 			if(addr.addr){
 				addr.addr = addr.addr.replace(/-/g,'').replace(/~/,'')
 				this.info = {...this.info,...addr}
-				
 			}
+			uni.$once('addrInfo',(data) => {
+					setTimeout(()=>{
+						this.info = data
+					},0)
+			})
 		},
 		onLoad(opt) {
 			this.info = JSON.parse(opt.param)
@@ -173,7 +177,7 @@
 			},
 			goAddress(){
 				uni.navigateTo({
-					url:'../addressList/addressList?addressId=' + this.info.addressId
+					url:'../addressList/addressList?addressId=' + this.info.addressId + '&addrInfo=' + encodeURIComponent(JSON.stringify(this.info))
 				})
 			}
 		}

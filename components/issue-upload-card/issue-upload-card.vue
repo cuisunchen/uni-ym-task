@@ -51,7 +51,6 @@
 		},
 		watch:{
 			isClear(val){
-				console.log(val)
 				if(val){
 					this.imgUrl = ''
 				}

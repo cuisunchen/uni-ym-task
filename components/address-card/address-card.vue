@@ -1,6 +1,6 @@
 <template>
 	<view class="addressCard flex-column">
-		<view class="infoBox flex">
+		<view class="infoBox flex" @click="itemClick">
 			<view class="wrap flex1">
 				<view class="info">
 					<text class="name">{{item.name}}</text><text>{{item.phone}}</text>
@@ -63,6 +63,9 @@
 			
 		},
 		methods:{
+			itemClick(){
+				this.$emit('itemClick')
+			},
 			changeAddr(){
 				this.$emit('change')
 			},

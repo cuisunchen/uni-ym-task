@@ -247,7 +247,6 @@ export default {
     this.current = this.value
     this.$nextTick(() => {
 			this.elId = 'xfjpeter_' + this.randomString()
-			debugger
       this.getTabItemWidth()
     })
   }

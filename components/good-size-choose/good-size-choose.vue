@@ -1,14 +1,14 @@
 <template>
 	<view class="goodSizeChoose flex-column">
 		<view class="goodsInfo flex-shrink flex">
-			<u-image width="200" height="200" border-radius="10" class="goodsImg flex-shrink" src="@/static/other/sfe@2x.png"></u-image>
+			<u-image width="200" height="200" border-radius="10" class="goodsImg flex-shrink" :src="details.topImages[0]"></u-image>
 			<view class="info flex-column flex-end">
-				<view class="title ellipsis_two">男士内裤礼盒装真冰丝无痕OMGIM向欧盟尴尬吗青年平角裤大码四角内裤莫代尔码四角内裤莫代尔</view>
+				<view class="title ellipsis_two">{{details.title}}</view>
 				<view class="rewardBox flex align-center">
 					<text class="priceSymbol">￥</text>
-					<text class="price">0.30</text>
+					<text class="price">{{details.discountPrice}}</text>
 					<text class="label">未拼中奖励红包:</text>
-					<text class="reward">0.20</text>
+					<text class="reward">{{details.failPrice}}</text>
 				</view>
 			</view>
 		</view>	
@@ -17,7 +17,7 @@
 		</view>
 		<scroll-view class="lists flex1" scroll-y>
 			<radio-group class="group" @change="radioChange">
-				<label class="cell flex align-center flex-between" v-for="(item, index) in lists" :key="index">
+				<label class="cell flex align-center flex-between" v-for="(item, index) in details.attributeValues" :key="index">
 					<view>{{item}}</view>
 					<view>
 							<radio :value="item" :index="index" :checked="index === current" color="#18B566"/>
@@ -40,6 +40,12 @@
 					return []
 				}
 			},
+			details:{
+				type: Object,
+				default(){
+					return {}
+				}
+			},
 			dataIndex:{
 				// #ifdef APP-PLUS
 				type: String,
@@ -55,8 +61,9 @@
 		data(){
 			return{
 				customStyle:{
-					'background-color':'#f6f6f6',
-					'border-color': '#f6f6f6'
+					'color': '#ffffff',
+					'background-color':'#2C405A',
+					'border-color': '#2C405A'
 				},
 				current: 0,
 				value: ''
@@ -99,7 +106,7 @@
 			.info{
 				margin-left: 20rpx;
 				.title{
-					
+					font-size: 28rpx;
 				}
 				.rewardBox{
 					margin-top: 10rpx;

@@ -57,6 +57,11 @@
 				}).exec()
 			})
 		},
+		onUnload(){
+			uni.removeStorageSync('isInitNationWideQS');
+			uni.removeStorageSync('isInitNearbyQS');
+			uni.removeStorageSync('isInitSameCityQS');
+		},
 		methods:{
 			swiperChange(e){
 				this.tabIndex = e.detail.current

@@ -78,7 +78,6 @@
 				this.tabIndex = index
 				let theNode=uni.createSelectorQuery().select(`#${id}`)
 				    theNode.boundingClientRect((data)=>{
-				          console.log(data)
 									this.lineLeft = data.left + 10
 				    }).exec()
 			},

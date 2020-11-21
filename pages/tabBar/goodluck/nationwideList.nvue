@@ -58,6 +58,8 @@
 		watch:{
 			tabIndex(val){
 				if(val == 0){
+					let isInitNationWideGL = uni.getStorageSync('isInitNationWideGL')
+					if(isInitNationWideGL){return}
 					uni.showLoading({
 						title:'加载中 ...'
 					})
@@ -78,6 +80,7 @@
 			 uni.showLoading({
 			 	title:'加载中...'
 			 })
+			 uni.setStorageSync('isInitNationWideGL', 'true');
 			 this.getLists()
 			 this.getRcommendDatas()
 		},

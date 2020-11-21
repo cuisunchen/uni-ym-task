@@ -77,6 +77,12 @@
 		onLoad(opt) {
 			this.tabIndex = opt.type
 		},
+		onUnload() {
+			uni.removeStorageSync('isInitPT2');
+			uni.removeStorageSync('isInitPT10');
+			uni.removeStorageSync('isInitPT20');
+			uni.removeStorageSync('isInitPT30');
+		},
 		methods: {
 			swiperChange(e){
 				this.tabIndex = e.detail.current

@@ -61,6 +61,8 @@
 		watch:{
 			tabIndex(val){
 				if(val == 0){
+					let isInitNationWideQS = uni.getStorageSync('isInitNationWideQS')
+					if(isInitNationWideQS){return}
 					uni.showLoading({
 						title:'加载中 ...'
 					})
@@ -80,6 +82,7 @@
 			uni.showLoading({
 				title:'加载中 ...'
 			})
+			uni.setStorageSync('isInitNationWideQS', 'true');
 			this.getLists()
 			this.getRcommendDatas()
 		},
@@ -169,6 +172,7 @@
 					return
 				}
 				this.param.pageNum ++ 
+				console.log(111)
 				this.getLists('loadMore')
 			},
 			goDetail(data,index){

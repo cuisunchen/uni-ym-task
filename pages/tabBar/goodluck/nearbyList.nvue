@@ -58,6 +58,9 @@
 		watch:{
 			tabIndex(val){
 				if(val == 2){
+					let isInitNearbyGL = uni.getStorageSync('isInitNearbyGL')
+					if(isInitNearbyGL){return}
+					uni.setStorageSync('isInitNearbyGL', true);
 					uni.showLoading({
 						title:'加载中 ...'
 					})

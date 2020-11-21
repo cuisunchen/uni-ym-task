@@ -1,15 +1,8 @@
 <template>
 	<view class="downloadPage page flex-column align-center" id="_poster">
-		<!-- <image class="bgImg" src="../../../static/other/yaoBg.png" mode=""></image>
-		<view class="contentWrap flex-column align-center" id="contentWrap">
-			<image class="yao" src="../../../static/other/yao.png" mode=""></image>
-			<view class="bot flex">
-				<view class="code flex all-center">
-					<image :src="qrcode" @load="imgOnloag" mode="aspectFill"></image>
-				</view>
-			</view>
-		</view> -->
-		<image class="bgImg1 flex1" src="../../../static/other/shareBg.png" mode="heightFix"></image>
+		<view class="imgBox flex all-center">
+			<image class="bgImg" src="../../../static/other/shareBg.png" mode="heightFix"></image>
+		</view>
 		<view class="codeBox flex all-center">
 			<view class="code flex all-center">
 				<image :src="qrcode" @load="imgOnloag" mode="aspectFill"></image>
@@ -147,67 +140,23 @@
 	overflow-y: scroll;
 	position: relative;
 	background-color: #35b72a;
-	.bgImg{
+	.imgBox{
+		flex: 10;
 		width: 100%;
-		height: 100%;
-		position: absolute;
-		left: 0;
-		top: 0;
-	}
-	.bgImg1{
-		// width: 100%;
-		// height: 100%;
+		// background-color: #ff0000;
+		.bgImg{
+			height: 100%;
+		}
 	}
 	.codeBox{
-		height: 500rpx;
+		flex: 5;
 		background-color: #35b72a;
 		.code{
 			width: 250rpx;
 			height: 284.5rpx;
-			margin-bottom: 200rpx;
+			// margin-bottom: 200rpx;
 			border-radius: 10rpx;
-			
-			image{
-				width: 250rpx;
-				height: 284.5rpx;
-				border-radius: 10rpx;
-			}
-		}
-	}
-	.contentWrap{
-		height: 100%;
-		overflow-y: scroll;
-		-webkit-overflow-scrolling:touch;
-		.yao{
-			margin: 100rpx auto 70rpx;
-		}
-	}
-	.bot{
-		margin: 0 16rpx;
-		padding: 30rpx ;
-		border-radius: 10rpx;
-		background-color: #fff;
-		.leftCon{
-			>view{
-				text-align: center;
-			}
-			.title{
-				font-size: 38rpx;
-				line-height: 70rpx;
-			}
-			.desc{
-				color: #666;
-				margin-bottom: 20rpx;
-			}
-			.injoin{
-				color: red;
-				line-height: 60rpx;
-			}
-		}
-		.code{
-			width: 250rpx;
-			height: 284.5rpx;
-			border-radius: 10rpx;
+			// background-color: #FF0000;
 			image{
 				width: 250rpx;
 				height: 284.5rpx;
