@@ -3,7 +3,7 @@
 		<view class="con flex-column flex-between">
 			 <view class="line1 row flex-between align-center">
 					<view class="money row align-center">
-						<text class="status">退款</text>
+						<text class="status">{{dataObj.tag}}</text>
 						<text class="price">{{dataObj.title}}</text>
 					</view>
 					<text class="time">{{dataObj.time}}</text>

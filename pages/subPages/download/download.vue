@@ -141,15 +141,14 @@
 	position: relative;
 	background-color: #35b72a;
 	.imgBox{
-		flex: 10;
 		width: 100%;
-		// background-color: #ff0000;
+		height: 70%;
 		.bgImg{
 			height: 100%;
 		}
 	}
 	.codeBox{
-		flex: 5;
+		height: 30%;
 		background-color: #35b72a;
 		.code{
 			width: 250rpx;

@@ -57,6 +57,7 @@
 								this.lists.push(...res.data)
 							}else{
 								this.lists = res.data
+								console.log(this.lists)
 							}
 						},0)
 						if(type == 'refresh'){
@@ -104,6 +105,9 @@
 					return
 				}
 				this.param.pageNum ++ 
+				uni.showLoading({
+					title: '加载中...'
+				})
 				this.getLists('loadMore')
 			},
 		}

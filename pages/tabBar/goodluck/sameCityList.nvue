@@ -11,8 +11,8 @@
 			<recommend-list :lists="recommendList" @click="goDetail"></recommend-list>
 		</cell>
 		<cell class="empty"></cell>
-		<cell class="cell">
-			<gl-list-item v-for="(item,index) in goodLucks" :key="index" :data-obj="item" @click="goDetail(item,index)"></gl-list-item>
+		<cell class="cell" v-for="(item,index) in goodLucks" :key="index">
+			<gl-list-item :data-obj="item" @click="goDetail(item,index)"></gl-list-item>
 		</cell>
 		<cell class="nodata flex1 flex-column all-center" v-if="goodLucks.length == 0">
 			<image class="nodataimg" src="../../../static/noData.png" mode="scaleToFill"></image>
@@ -158,6 +158,9 @@
 					return
 				}
 				this.param.pageNum ++ 
+				uni.showLoading({
+					title:'加载中 ...'
+				})
 				this.getLists('loadMore')
 			},
 			goDetail(data,index){

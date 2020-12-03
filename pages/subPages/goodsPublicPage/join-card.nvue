@@ -7,7 +7,7 @@
 				<text class="freshTit">{{refreshText}}</text>
 			</view>
 		</refresh>
-		<cell v-for="item in lists" class="cell">
+		<cell v-for="(item,index) in lists" :key="index" class="cell">
 			<ijoin-pt-card class="card" :data-obj="item" @click="onceMore(item)" @cardClick="goOrderDetail(item)"></ijoin-pt-card>	
 		</cell>
 		<cell v-if="isNoMore && lists.length > 5">

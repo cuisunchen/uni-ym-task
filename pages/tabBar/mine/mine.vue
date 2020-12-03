@@ -57,7 +57,7 @@
 				userInfo:{}
 			}
 		},
-		onLoad() {
+		onShow() {
 			uni.showLoading({
 				title:'加载中'
 			})

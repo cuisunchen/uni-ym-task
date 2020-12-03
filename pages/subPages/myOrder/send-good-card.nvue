@@ -7,7 +7,7 @@
 				<text class="freshTit">{{refreshText}}</text>
 			</view>
 		</refresh>
-		<cell v-for="item in lists" class="cell">
+		<cell v-for="(item,index) in lists" :key="index" class="cell">
 			<my-order-card :data-obj="item" class="card" @click="cancelSend(item)" @cardClick="goOrderDetail(item)"></my-order-card>
 		</cell>
 		<cell v-if="isNoMore && lists.length > 5">
@@ -146,6 +146,9 @@
 					return
 				}
 				this.param.pageNum ++
+				uni.showLoading({
+					title: '加载中...'
+				})
 				this.getLists('loadMore')
 			},
 		}

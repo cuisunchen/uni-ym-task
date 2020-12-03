@@ -6,11 +6,11 @@
 			<view class="u-tooltip-item u-tooltip-cancel" hover-class="u-tooltip-cancel-hover" @tap="onCancel">
 				{{cancelBtn ? cancelText : ''}}
 			</view>
-			<view v-if="showTips" class="u-tooltip-item u-tooltip-tips">
+			<!-- <view v-if="showTips" class="u-tooltip-item u-tooltip-tips">
 				{{tips ? tips : mode == 'number' ? '数字键盘' : mode == 'card' ? '身份证键盘' : '车牌号键盘'}}
-			</view>
+			</view> -->
 			<view v-if="confirmBtn" @tap="onConfirm" class="u-tooltip-item u-tooltips-submit" hover-class="u-tooltips-submit-hover">
-				{{confirmBtn ? confirmText : ''}}
+				{{confirmBtn ? confirmText : '确定'}}
 			</view>
 		</view>
 		<block v-if="mode == 'number' || mode == 'card'">
@@ -179,31 +179,30 @@
 	}
 
 	.u-tooltip {
-		@include vue-flex;
+		display: flex;
 		justify-content: space-between;
 	}
 
 	.u-tooltip-item {
 		color: #333333;
-		flex: 0 0 33.333333%;
-		text-align: center;
 		padding: 20rpx 10rpx;
 		font-size: 28rpx;
 	}
 
 	.u-tooltips-submit {
+		width: 100rpx;
+		padding-right: 20rpx;
 		text-align: right;
-		flex-grow: 1;
-		flex-wrap: 0;
-		padding-right: 40rpx;
 		color: $u-type-primary;
 	}
-
+	.u-tooltip-tips{
+		flex: 1;
+		text-align: center;
+	}
 	.u-tooltip-cancel {
+		width: 100rpx;
+		padding-left: 20rpx;
 		text-align: left;
-		flex-grow: 1;
-		flex-wrap: 0;
-		padding-left: 40rpx;
 		color: #888888;
 	}
 

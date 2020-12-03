@@ -16,11 +16,16 @@
 				</view>
 			</view>
 			
-			<view class="withdrawalMoneys">
-				<view class="title">可提现金额</view>
-				<view class="types flex flex-between">
-					<button class="flex1 flex all-center" v-for="(item,index) in amountLimit" :key="index" @click="amountClick(item,index)"
-									:class="{active: withdrawalIndex == index,meddle: index == 1}" type="primary" plain="true">{{item}}元</button>
+			<view class="withdrawalMoneys flex align-center">
+				<view class="withdrawalMoneysWrap flex1 flex align-center">
+					<view class="labelBox flex flex-shrink align-center">
+						<text class="title">提现金额 :</text>
+					</view>
+					<view class="moneyBox flex1 flex align-center">
+						<input class="inputBox flex1" ref='input' maxlength="11" confirm-type="done" v-model="withdrawalAmount"
+								placeholder-class="holderClass" type="number" placeholder="请输入整数提现金额" 
+								@input="keyChange"/>
+					</view>
 				</view>
 			</view>
 			
@@ -38,7 +43,7 @@
 					<label class="uni-list-cell uni-list-cell-pd wrap flex1 flex align-center" @click="chooseType(1)">
 						<image src="../../../static/ali.png" mode=""></image>
 						<view class="label flex1 flex align-center">支付宝<image src="../../../static/recom.png" mode=""></image></view>
-						<radio value=""  :checked="withdrawalTypeIndex == 1"/>
+						<radio value="" :checked="withdrawalTypeIndex == 1"/>
 					</label>
 					<button class="flex all-center" type="primary" plain="true" @click="goSetPage('ali')">{{aliPayInfo.realName?'已设置':'前往设置'}}</button>
 				</view>
@@ -47,13 +52,13 @@
 			<view class="tip">
 				<view class="title">注意事项</view>
 				<view class="item flex align-center"><text class="dot"></text><text class="flex1">提现账号只能绑定一次,如需更改,请联系客服</text></view>
-				<view class="item flex align-center"><text class="dot"></text><text class="flex1">申请提现后,1个工作日内平台审核到账</text></view>
+				<view class="item flex align-center"><text class="dot"></text><text class="flex1">提现金额不高于20元秒到账,高于20元1个工作日内审核到账</text></view>
 				<view class="item flex align-center"><text class="dot"></text><text class="flex1">手续费:提现金额的5%</text></view>
 				<view class="item flex align-center"><text class="dot"></text><text class="flex1">如有违规操作,或异常账号,平台拒绝提现</text></view>
 			</view>
 			
 			<view class="btnBox">
-				<button type="default" class="flex all-center" :loading="btnLoading" :disabled="btnLoading" @click="applyWithdraw">申请提现</button>
+				<button type="default" class="flex all-center" :loading="btnLoading" :disabled="btnLoading" @click="withdraw">申请提现</button>
 			</view>
 		</view>
 	</view>
@@ -74,10 +79,12 @@
 					account:'',
 					name:''
 				},
-				withdrawalAmount: null,    //  提现的金额
+				withdrawalAmount: '',    //  提现的金额
 				btnLoading: false,
 				dateLimit:[],
-				userInfo:{}
+				userInfo:{},
+				value: '',
+				showKeyboard: false
 			}
 		},
 		onShow() {
@@ -88,9 +95,29 @@
 			this.navigateTo('../withdrawalRecord/withdrawalRecord')
 		},
 		methods: {
+			keyChange(e){
+				if(e.detail.value.includes('.')){
+					setTimeout(()=>{
+						this.withdrawalAmount = e.detail.value.replace('.','')
+					},200)
+				}else{
+					this.withdrawalAmount=e.detail.value.replace(/[^\d]/g,'');
+				}
+			},
+			withdraw(){
+				this.$u.throttle(this.applyWithdraw, 1500)
+			},
 			applyWithdraw(){
 				if(this.withdrawalTypeIndex == 0){
 					this.showToast('暂时不支持微信在线提现,请选择支付宝提现')
+					return
+				}
+				if(!this.withdrawalAmount){
+					this.showToast('请输入提现金额,最低2元')
+					return
+				}else
+				if(this.withdrawalAmount < 2){
+					this.showToast('最低提现金额不能低于2元')
 					return
 				}
 				this.btnLoading = true
@@ -101,11 +128,20 @@
 				this.$request('/api/applyWithdraw','post',param).then(res => {
 					this.btnLoading = false
 					if(res.code == 200){
-						uni.showModal({
-							title:'提示',
-							showCancel:false,
-							content:`提现金额${this.withdrawalAmount}元, 我们会尽快审核!`
-						})
+						if(this.withdrawalAmount > 20){
+							uni.showModal({
+								title:'提现申请成功',
+								showCancel:false,
+								content:`提现金额${this.withdrawalAmount}元,我们会尽快审核!`
+							})
+						}else{
+							uni.showModal({
+								title:'提现申请成功',
+								showCancel:false,
+								content:`提现金额${this.withdrawalAmount}元已到账,去支付宝里看看吧!`
+							})
+						}
+						this.withdrawalAmount = ''
 						this.getUserInfo()
 					}else{
 						this.showToast(res.msg)
@@ -126,16 +162,12 @@
 					}
 				})
 			},
-			amountClick(item,index){
-				this.withdrawalAmount = item
-				this.withdrawalIndex = index
-			},
 			withdrawInfo(){
 				this.$request('/api/withdrawInfo','get',{}).then(res => {
 					if(res.code == 200){
-						this.dateLimit = res.data.dateLimit
-						this.amountLimit = res.data.amountLimit;
-						this.withdrawalAmount = this.amountLimit[0]
+						// this.dateLimit = res.data.dateLimit
+						// this.amountLimit = res.data.amountLimit;
+						// this.withdrawalAmount = this.amountLimit[0]
 						if(Object.entries(res.data.aliPay)){
 							this.isNoInput = true
 							this.aliPayInfo = res.data.aliPay
@@ -240,18 +272,23 @@
 			margin-top: 20rpx;
 			padding: 20rpx;
 			background-color: #fff;
-			.types{
-				>button{
+			.withdrawalMoneysWrap{
+				border-radius: 10rpx;
+				background-color: #eee;
+			}
+			.labelBox{
+				height: 80rpx;
+				padding: 0 20rpx;
+				.title{
 					font-size: 28rpx;
-					height: 80rpx;
-					color: #B4C386;
-					&.active{
-						color: #fff;
-						background-color: #B4C386;
-					}
+					margin-bottom: 0;
 				}
-				.meddle{
-					margin: 0 20rpx;
+			}
+			.moneyBox{
+				height: 80rpx;
+				.inputBox{
+					font-size: 28rpx;
+					padding-right: 20rpx;
 				}
 			}
 		}

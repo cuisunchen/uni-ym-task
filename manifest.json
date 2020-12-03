@@ -2,8 +2,8 @@
     "name" : "今日友米",
     "appid" : "__UNI__4DF39C1",
     "description" : "手赚app平台",
-    "versionName" : "1.0.405",
-    "versionCode" : 10405,
+    "versionName" : "1.0.409",
+    "versionCode" : 10409,
     "transformPx" : false,
     "app-plus" : {
         "nvueCompiler" : "uni-app",

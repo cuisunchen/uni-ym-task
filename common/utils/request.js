@@ -29,7 +29,6 @@ const request = (url, method='post', data, hasToken="true") => {
 						header: headers
 				}).then(res => {
 					uni.hideLoading()
-					
 					if (encodeArr.includes(url)){
 						 let data = JSON.parse(deRsaCode(res[1].data))
 						 resolve(data)

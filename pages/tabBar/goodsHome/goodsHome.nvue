@@ -21,8 +21,8 @@
 				</view>
 			</refresh>
 			<cell class="page-swiper">
-				<swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
-					<swiper-item v-for="(item,index) in bannerList" :key="index" @click="goDetail(item)">
+				<swiper class="swiper" :indicator-dots="true" :autoplay="true" :circular="true" :interval="4000">
+					<swiper-item v-for="(item,index) in bannerList" :key="index" v-if="item.topImg != null" @click="goDetail(item)">
 						<image class="swiperImg" :src="item.topImg" mode="widthFix"></image>
 					</swiper-item>
 				</swiper>	
@@ -68,6 +68,12 @@
 				</view>
 			</view>
 		</view>
+		<uni-popup class="popup" ref="popup" type="center">
+			<view class="popCon flex all-center" id="popCon" ref="popCon" @click="goDetail(popupObj)">
+				<image class="popupImg" :src="popupObj.titleImg" mode="widthFix" :style="{width:popupImgStyle.width + 'upx',height: popupImgStyle.height+'upx'}" @load="popImgLoad"></image>
+			</view>
+			<view class="closeBox all-center"><icon type="cancel" size="28" color="#fff" @click="closePopup"/></view>
+		</uni-popup>
 	</div>
 </template>
 
@@ -101,19 +107,22 @@
 				totalSize: 0,
 				baifen: 0,
 				fileSizeString:'',
-				updateBoxWidth:null
+				updateBoxWidth:null,
+				popupObj:{},
+				popupImgStyle:{}
 			}
 		},
 		onLoad() {
 			plus.runtime.getProperty(plus.runtime.appid, widgetInfo => {
 				this.version = widgetInfo.version;
 				this.getCheckVersion()
+				this.getAlertAD()
 			});
 		},
 		onShow(){
 			setTimeout(() => { //获取状态栏高度，setTimeout后才能调用uni.
 				uni.getSystemInfo({     
-					success: (res) => {    
+					success: (res) => {  
 						this.statusBarHeight = res.statusBarHeight; 
 					}    
 				});    
@@ -125,12 +134,35 @@
 			if(!userInfo){
 				return
 			}
+			
 			uni.showLoading({
 				title:'加载中' 
 			})
 			this.getGoodsList()  
 		},
 		methods:{
+			getAlertAD(){
+				request('/api/view/getAlertOrCover','post',{homeType: 3}).then(res=>{
+					if(res.code == 200){
+						this.popupObj = res.data
+						this.popupObj.topImg = res.data.titleImg
+						this.popupObj.topContentImg = res.data.contentImg
+						this.$nextTick(()=>{
+							if(this.popupObj.topImg ){
+								this.$refs.popup.open()
+							}
+						})
+					}else{
+						this.showToast(res.msg)
+					}
+				})
+			},
+			popImgLoad(e){
+				this.popupImgStyle = e.detail
+			},
+			closePopup(){
+				this.$refs.popup.close()
+			},
 			downloadBtn() {
 				let	task=plus.downloader.createDownload( this.update_url, {}, (download,status)=>{ //安装到手机的目录
 					if ( status == 200 ) { 
@@ -144,7 +176,6 @@
 					}
 				});
 				task.addEventListener("statechanged", (download, status) => {
-					console.log(download.totalSize)
 					switch (download.state) {
 						case 2:
 							plus.nativeUI.showWaiting("正在下载,请不要离开此页面...");
@@ -490,7 +521,6 @@
 	color: #666;
 	font-size: 28rpx;
 }
-
 .dialog{
 	position: fixed;
 	top: 0;
@@ -547,5 +577,11 @@
 	color: #007AFF;
 	font-size: 30rpx;
 	line-height: 28rpx;
+}
+.popCon{
+	background-color: #fff;
+}
+.closeBox{
+	margin-top: 50rpx;
 }
 </style>
