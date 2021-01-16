@@ -1,4 +1,5 @@
 <template>
+	<!-- 退款记录页面用  组件 -->
 	<view class="messageCard">
 		<view class="con flex-column flex-between">
 			 <view class="line1 row flex-between align-center">

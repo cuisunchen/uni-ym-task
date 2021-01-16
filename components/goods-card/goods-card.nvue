@@ -21,7 +21,7 @@
 			
 			<view class="moneyBox row flex align-center">
 				<text class="money">￥ {{dataObj.price}}</text>
-				<text class="status flex all-center">{{dataObj.snapUpPeople}}/{{dataObj.snapUpPeopleMax}}</text>
+				<text class="status flex all-center">{{dataObj.snapUpPeople >= dataObj.snapUpPeopleMax ? 0 : dataObj.snapUpPeople}}/{{dataObj.snapUpPeopleMax}}</text>
 			</view>
 			
 			<view class="info row flex">

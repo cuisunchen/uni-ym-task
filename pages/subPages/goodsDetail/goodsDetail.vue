@@ -62,27 +62,27 @@
 			<view class="ptNow flex-column">
 				<u-cell-item title="他们刚刚成功参与拼团" :title-style="{color: '#000',fontSize: '28rpx',boderColor:'#ff0000'}" value="查看拼团成员" @click="goMemberList" />
 				<view class="wrap flex flex-between align-center">
-					<swiper class="userSwiper flex1" :vertical="true" :autoplay="true" :circular="true" :interval="3000" :duration="700">
-						<swiper-item v-for="mem in memberList" v-if="memberList.length > 0">
+					<swiper class="userSwiper flex1" :vertical="true" :autoplay="false" :circular="true" :interval="3000" :duration="700">
+						<swiper-item class="swiperItem" v-for="(mem,index) in memberList" :key="index" v-if="memberList.length > 0 && memberList.length < groupType">
 							<view class="userInfo flex flex-between align-center">
 								<view class="left flex align-center">
-									<image class="userImg" :src="mem.avatar" mode=""></image>
+									<image class="userImg" :src="mem.avatar" mode=""></image>	
 									<text class="tel">{{mem.phone}}</text>
 								</view>
 							</view>
 						</swiper-item>
-						<swiper-item v-for="mem in 2" v-if="memberList.length == 0">
+						<swiper-item v-for="mem in 2" v-if="memberList.length == 0 || memberList.length >= groupType">
 							<view class="userInfo flex flex-between align-center">
 								<view class="left flex align-center">
 									<image class="userImg" src="../../../static/timg01@2x.png" mode=""></image>
-									<text class="tel">欢迎您参与此次拼团</text>
+									<text class="tel">欢迎您参与新的拼团</text>
 								</view>
 							</view>
 						</swiper-item>
 					</swiper>
 					<view class="right flex align-center">
 						<text>还差</text>
-						<text class="num">{{detailInfo.snapUpPeopleMax - detailInfo.snapUpPeople}}</text>
+						<text class="num">{{detailInfo.snapUpPeopleMax - (detailInfo.snapUpPeople == detailInfo.snapUpPeopleMax ? 0 : detailInfo.snapUpPeople)}}</text>
 						<text>人成团</text>
 					</view>
 				</view>
@@ -128,6 +128,7 @@
 
 <script>
 	import goodSizeChoose from '@/components/good-size-choose/good-size-choose.vue'
+	import socketUrl from '@/common/utils/socketConfig.js'
 	export default {
 		components:{
 			goodSizeChoose
@@ -145,14 +146,27 @@
 				attributeValue:'',
 				attributeIndex:0,
 				groupType:'',
+				socketTask: null,
+				// 确保websocket是打开状态
+				timeout: 10000, // 1分钟
+				timeoutObj: null,
 			}
 		},
 		onUnload() {
+			clearInterval(this.timeoutObj);
+			this.timeoutObj = null
 			clearInterval(this.timer)
+			this.closeSocket() 
+		},
+		onHide() {
+			clearInterval(this.timeoutObj);
+			this.timeoutObj = null
+			clearInterval(this.timer)
+			this.closeSocket() 
 		},
 		onShow() {
-			this.getDetail(this.goodsId)
-			this.getMemberList()
+			let ids = [this.goodsId]
+			this.connectSocketInit(ids)
 		},
 		onPullDownRefresh() {
 			this.getMemberList('refresh')
@@ -174,8 +188,84 @@
 					break;
 			}
 			this.goodsId = opt.id
+			this.getDetail(this.goodsId)
+			this.getMemberList()
 		},
 		methods:{
+			connectSocketInit(ids) {
+				this.socketTask = uni.connectSocket({
+					url: socketUrl,
+					success(data) {
+						console.log("websocket连接成功");
+					},
+					fail(err) {
+						uni.showLoading({
+							title:'数据加载失败,重连中...' 
+						})
+					}
+				});
+				// 消息的发送和接收必须在正常连接打开中,才能发送或接收【否则会失败】
+				this.socketTask.onOpen((res) => {
+					let obj = {
+						"type":0,
+						"snapUpId":ids,
+					}
+					this.socketTask.send({
+						data: JSON.stringify(obj),
+						async success() {
+							console.log("消息发送成功");
+						},
+					});
+					this.socketTask.onMessage((res) => {
+						// console.log(res.data); 
+						this.getMessage(res.data)
+						this.reset(obj); 
+					});
+				})
+				// 这里仅是事件监听【如果socket关闭了会执行】
+				this.socketTask.onClose(() => {
+					console.log("已经被关闭了")
+				})
+			},
+			getMessage(data){
+				if(JSON.parse(data).length){
+					this.detailInfo.snapUpPeople = JSON.parse(data)[0].players.length
+				}
+			},
+			closeSocket() {
+				this.timeoutObj = null
+				clearInterval(this.timeoutObj);
+				if(this.socketTask){
+					this.socketTask.close({
+						success(res) {
+							console.log("关闭成功", res)
+						},
+						fail(err) {
+							console.log("关闭失败", err)
+						}
+					})
+				}
+			},
+			// 检测心跳reset
+			reset (obj) {
+				clearInterval(this.timeoutObj);
+				this.start(obj); // 启动心跳
+			},
+			// 启动心跳 start 
+			start (obj) {
+				this.timeoutObj = setInterval(()=>{
+					this.socketTask.send({
+						data: JSON.stringify(obj),
+						success:()=> {
+							console.log("消息发送成功");
+						},
+						fail:(err)=> {
+							this.connectSocketInit();
+						}
+					});
+				}, this.timeout);
+			},
+			
 			collect(){   //  截流处理
 				this.$u.throttle(this.collection, 1500)
 			},
@@ -216,10 +306,13 @@
 				})
 			},
 			getDetail(id){
+				uni.showLoading({
+					title:'加载中...'
+				})
 				this.$request('/snap/getSnapUpInfo','post',{id}).then(res => {
+					uni.hideLoading()
 					if(res.code == 200){
 						this.detailInfo = res.data
-						// this.attributeValue = res.data.attributeValues[0]
 						this.collectType = res.data.collect
 					}else{
 						this.showToast(res.msg,'none',1500)
@@ -243,13 +336,10 @@
 			sizeChange(e){
 				this.attributeValue = e.value
 				this.attributeIndex = e.index
+				console.log(this.attributeValue)
 				this.$refs.popup.close()
 			},
 			goPt(){
-				if(!this.attributeValue){
-					this.$refs.popup.open()
-					return
-				}
 				let param = {
 					price: this.detailInfo.discountPrice,
 					failPrice: this.detailInfo.failPrice,
@@ -434,10 +524,12 @@
 		}
 		.userSwiper{
 			height: 100rpx;
+			.swiperItem{
+				background-color: #fff;
+			}
 		}
 		.userInfo{
 			height: 100rpx;
-			
 			.userImg{
 				width: 50rpx;
 				height: 50rpx;

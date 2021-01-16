@@ -19,6 +19,10 @@ export default {
 	},
 	onHide: function() {
 		console.log('App Hide');
+		uni.removeStorageSync('isInitPT2');
+		uni.removeStorageSync('isInitPT10');
+		uni.removeStorageSync('isInitPT20');
+		uni.removeStorageSync('isInitPT30');
 	},
 	methods:{
 		getLocation(){

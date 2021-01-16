@@ -14,7 +14,7 @@
 			</view>
 			
 			<view class="stytus row flex-end">
-				<text class="clickNum">点击量: </text> <text class="times row align-center">{{dataObj.clickNum}}</text>
+				<!-- <text class="clickNum">点击量: </text> <text class="times row align-center">{{dataObj.clickNum}}</text> -->
 				<text class="income">收入(元): </text> 
 				<text class="money">{{dataObj.price}}</text>
 			</view>

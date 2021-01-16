@@ -1,11 +1,22 @@
 <template>
 	<view class="totalProfit">
 		<view class="info">
-			<image src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1581347358171&di=ec957d316e45f80a3bebe31095c9864e&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20171121%2Fcf0400672fe944719a18957b6feff952.jpeg" 
-					 mode="aspectFill"></image>
+			<view class="topBg">
+				 <view class="layout"></view>
+				 <image src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1581347358171&di=ec957d316e45f80a3bebe31095c9864e&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20171121%2Fcf0400672fe944719a18957b6feff952.jpeg"
+				 		 mode="aspectFill"></image>
+			</view>
+			
 			<view class="infoCon">
 				<view class="text">全部收益(元)</view>
-				<view class="nums flex flex-between align-center"><text class="rank">排名: {{info.userOrder}}名</text><text class="total">{{info.sumMoney}}</text></view>
+				<view class="nums flex flex-between align-center">
+					<view class="">
+						<text class="total">{{info.sumMoney}}</text> 
+						<text class="freezeReward">+ 冻结: {{info.freezeReward}}</text> 
+					</view>
+					<text class="rank">排名: {{info.userOrder}}名</text>
+				</view>
+				<view class="desc">提示: 冻结金额主要为活动期间您的拉新奖励,新人成功拼团,可立即解冻(拉新抽奖和新人返利一直有效,均不会被冻结)</view>
 			</view>
 		</view>
 		<view class="content">
@@ -34,8 +45,8 @@
 		data() {
 			return {
 				info:{
-					userOrder:'10012',
-					sumMoney: '0.26'
+					userOrder:'',
+					sumMoney: ''
 				},
 				lists:[
 					{
@@ -51,7 +62,7 @@
 			}
 		},
 		created() {
-			
+			this.info.freezeReward = JSON.parse(uni.getStorageSync('userInfo')).freezeReward
 		},
 		onLoad(opt){
 			this.totalMoney = opt.totalMoney
@@ -102,31 +113,55 @@
 		position: relative;
 		height: 260rpx;
 		background-color: #1d91da;
-		image{
-			width: 100%;
-			height: 100%;
+		.topBg{
 			position: absolute;
 			left: 0;
+			right: 0;
 			top: 0;
-			z-index: 0
+			z-index: 7;
+			height: 300rpx;
+			.layout{
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				z-index: 8;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0,0,0,.3);
+			}
+			image{
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				left: 0;
+				top: 0;
+				z-index: 0
+			}
 		}
+		// image{
+		// 	width: 100%;
+		// 	height: 100%;
+		// 	position: absolute;
+		// 	left: 0;
+		// 	top: 0;
+		// 	z-index: 0
+		// }
 		.infoCon{
 			position: absolute;
 			left: 0;
 			top: 60rpx;
 			right: 0;
-			z-index: 1;
+			z-index: 8;
 			padding: 0 30rpx;
 			color: #fff;
 			font-size: 28rpx;
-			.text{
-				text-align: right;
-			}
 			.nums{
 				margin-top: 20rpx;
 				.total{
 					font-size: 32rpx;
 					font-weight: 700;
+					margin-right: 10rpx;
 				}
 				.rank{
 					padding: 6rpx 10rpx;
@@ -135,11 +170,16 @@
 					background-color: rgba(68, 66, 66, 0.5)
 				}
 			}
+			.desc{
+				color: yellow;
+				font-size: 24rpx;
+				margin-top: 10rpx;
+			}
 		}
 	}
 	.content{
 		position: absolute;
-		top: 180rpx;
+		top: 240rpx;
 		left: 0;
 		right: 0;
 		bottom: 0;

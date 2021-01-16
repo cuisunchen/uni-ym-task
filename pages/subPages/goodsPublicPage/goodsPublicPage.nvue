@@ -28,11 +28,11 @@
 				lineLeft:null,
 				tabList: [
 					{
-						name:'我参与的',
+						name:'已完成',
 						id:'tab0'
 					},
 					{
-						name:'我拼团中',
+						name:'进行中',
 						id:'tab1'
 					}
 				],

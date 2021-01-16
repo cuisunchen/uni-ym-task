@@ -14,7 +14,7 @@
 				<text class="unFinish">{{item.status}}</text>
 			</view>
 			<view class="stytus flex flex-end">
-				<text>点击量: </text> <text class="time flex align-center">{{item.clickNum}}</text>
+				<!-- <text>点击量: </text> <text class="time flex align-center">{{item.clickNum}}</text> -->
 				<text>收入(元): </text> 
 				<text class="money">{{item.price}}</text>
 			</view>

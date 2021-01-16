@@ -81,18 +81,14 @@
 				],
 				row:[],
 				allArr:[
-					[ "500", "200", "0.5", "500", "0.2"],
-					[ "150", "1", "50", "50", "2"],
-					[ "1", "10", "0.2", "0.2", "20"],
-					[ "0.5", "5", "150", "0.6",  "0.5"],
-					[ "5", "0.8", "120", "100", "5"],
-					[ "0.2", "0.2", "200", "8", "2"],
-					[ "6", "0.5", "5", "0.6", "80"],
-					[ "10", "10", "5", "0.8", "0.5"],
-				],
-				chouArr:[
-					"1元", "0.8元", "0.5元", "0.5元", "0.5元", "0.5元", "0.2元"
-					, "0.2元", "0.2元", "0.2元", "1.2元", "1.5元", "2元"
+					[ "500", "0.12", "0.58", "0.21", "0.22"],
+					[ "150", "1.08", "50.08", "0.5", "200"],
+					[ "0.18", "0.45", "0.2", "0.16", "20"],
+					[ "0.55", "5", "80", "0.1",  "0.5"],
+					[ "0.1", "0.88", "0.8", "100", "0.5"],
+					[ "0.24", "0.2", "0.16", "0.8", "0.32"],
+					[ "0.6", "0.5", "5", "0.66", "60"],
+					[ "10", "5", "0.9", "0.89", "0.54"],
 				],
 				newArr:[],
 				isClick: true,
@@ -104,6 +100,7 @@
 		onShow () {
 			this.row = this.default  
 			let arr = this.randomArray(this.allArr)
+			//  打乱数据
 			for (const item of arr) {
 				 let child = this.randomArray(item)
 				 this.newArr.push(child)
@@ -130,19 +127,25 @@
 				 if(!this.isClick){
 						return
 				 }
-				 this.rowIndex = rowIndex
-				 this.columnIndex = columnIndex
-				 let random = this.createRandom()
-				 this.row = this.newArr
-				 this.row[rowIndex][columnIndex] = this.chouArr[random]
-				 this.isClick = false
-				 let amount = this.row[rowIndex][columnIndex].split('元')[0]
-				 let param = {
-					 getAmount:amount*100
-				 }
-				 this.$request('/api/luckyDraw','post',param).then(res => {
+				 
+				 uni.showLoading({
+				 	title:'加载中,请稍后...'
+				 })
+				 this.$request('/api/luckyDraw','post',{}).then(res => {
+					 uni.hideLoading()
 					 if(res.code == 200){
-						 this.showToast(`恭喜您获得${this.row[rowIndex][columnIndex]}`)
+						 this.rowIndex = rowIndex
+						 this.columnIndex = columnIndex
+						 this.newArr = []
+						 let arr = this.randomArray(this.allArr)
+						 for (const item of arr) {
+						 	 let child = this.randomArray(item)
+						 	 this.newArr.push(child)
+						 }
+						 this.row = this.newArr
+						 this.isClick = false
+						 this.row[rowIndex][columnIndex] = res.data
+						 this.showToast(`恭喜您获得${res.data}元`)
 						 this.getLuckDrawTimes() 
 					 }else{
 						 this.showToast(res.msg,'none',3000)

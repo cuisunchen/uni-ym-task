@@ -11,7 +11,7 @@
 						<view class="cell"><text class="label">发布状态:</text> <text class="status">{{pageData.status}}</text></view>
 						<view class="cell"><text class="label">发布类型:</text> <text class="range">{{pageData.homeType}}</text></view>
 						<view class="cell"><text class="label">发布费用:</text> <text class="money">{{pageData.releasePrice}}</text></view>
-						<view class="cell"><text class="label">已点击量:</text> <text class="type">2</text></view>
+						<!-- <view class="cell"><text class="label">已点击量:</text> <text class="type">2</text></view> -->
 					</view>
 				</view>
 				

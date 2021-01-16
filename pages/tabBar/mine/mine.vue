@@ -18,7 +18,12 @@
 					</view>
 					<view class="wallet flex1" @click="goSubPage('totalProfit')">
 						<view class="tit">全部收益</view>
-						<view class="num">{{userInfo.countAmount}}</view>
+						<view class="num flex-column all-center">
+							<view class="countAmount">{{userInfo.countAmount}}</view>
+							<view class="frozen">
+								<text class="label">冻结:</text> <text class="val">{{userInfo.freezeReward}}</text>
+							</view>
+						</view>
 					</view>
 					<view class="withdrawal flex1" @click="goSubPage('withdrawal')">
 						<view class="tit">账户余额<text class="drawal">(去提现)</text></view>
@@ -28,7 +33,7 @@
 			</view>
 			
 			<view class="cells">
-				<cell icon-path="../../../static/xiaox.png" title="发布广告" desc="- 3元即可发布" desc-color="red" border-bottom-color="transparent" @click="goIssuePage"></cell>
+				<!-- <cell icon-path="../../../static/xiaox.png" title="发布广告" desc="- 3元即可发布" desc-color="red" border-bottom-color="transparent" @click="goIssuePage"></cell> -->
 				
 				<view class="group1">
 					<cell icon-path="../../../static/fx1.png" title="分享应用" desc="- 提高会员等级" @click="goSubPage('share')"></cell>
@@ -191,7 +196,7 @@
 		}
 		.userInfoBox{
 			margin: 60rpx 30rpx 0;
-			padding: 40rpx 30rpx;
+			padding: 40rpx 30rpx 20rpx;
 			background-color: #fff;
 			border-radius: 10rpx;
 			box-shadow: 
@@ -231,6 +236,7 @@
 						}
 					}
 					.num{
+						font-size: 32rpx;
 						font-weight: bold;
 					}
 					&.todayInto{
@@ -240,7 +246,22 @@
 					}
 					&.wallet{
 						.num{
-							color: #F39631
+							color: #F39631;
+							.countAmount{
+								font-size: 32rpx;
+							}
+						}
+						.frozen{
+							color: #009193;
+							font-weight: normal;
+							font-size: 24rpx;
+							margin-left: 6rpx;
+							padding: 0 6rpx;
+							background-color: #e5f5f4;
+							.label{
+								font-size: 22rpx;
+								margin-right: 4rpx;
+							}
 						}
 					}
 					&.withdrawal{

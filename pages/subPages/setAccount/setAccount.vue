@@ -82,6 +82,7 @@
 					"typeId": this.type == 'wechat' ? 2 : 1   //  1为支付宝   2 为微信
 				}
 				this.$request('/api/bindCashOut','post',param).then(res => {
+					console.log(res)
 					if(res.code ==200){
 						this.showToast('设置成功')
 						uni.navigateBack({

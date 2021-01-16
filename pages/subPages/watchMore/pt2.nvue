@@ -26,6 +26,7 @@
 <script>
 	import goodsCard from '@/components/goods-card/goods-card.nvue'
 	import {unencryp,request} from "../../../common/utils/request.js"
+	import socketUrl from '@/common/utils/socketConfig.js'
 	export default {
 		components:{goodsCard},
 		props:{
@@ -46,12 +47,23 @@
 				},
 				lists:[],
 				isNoMore: false,			// 控制是否可以加载更多
+				socketTask: null,
+				// 确保websocket是打开状态
+				timeout: 10000, // 1分钟
+				timeoutObj: null,
 			}
 		},
 		watch:{
 			tabIndex(val){
 				if(val == 0){
-					let isInitPT2 = uni.getStorageSync('isInitPT2')
+					let isInitPT2 = uni.getStorageSync('isInitPT2')  //  判断是否要初始化掉接口,防止每次切换tab都调接口导致页面滚到头部
+					if(this.lists.length > 0){
+						let ids = []
+						for (let item of this.lists) {
+							ids.push(item.id)
+						}
+						this.connectSocketInit(ids);
+					}
 					if(isInitPT2){return}
 					uni.setStorage({
 						key:'isInitPT2',
@@ -61,10 +73,104 @@
 						title:'加载中 ...'
 					})
 					this.getLists()
+				}else{
+					clearInterval(this.timeoutObj);
+					this.timeoutObj = null
+					this.closeSocket() 
 				}
 			}
 		},
+		beforeDestroy() {
+			if(this.tabIndex != 0){ return}
+			uni.removeStorageSync('isInitPT10');
+			clearInterval(this.timeoutObj);
+			this.timeoutObj = null
+			this.closeSocket()
+		},
 		methods:{
+			connectSocketInit(ids) {
+				this.socketTask = uni.connectSocket({
+					url: socketUrl,
+					success(data) {
+						console.log("websocket连接成功");
+					},
+					fail(err) {
+						uni.showLoading({
+							title:'数据加载失败,重连中...' 
+						})
+					}
+				});
+				// 消息的发送和接收必须在正常连接打开中,才能发送或接收【否则会失败】
+				this.socketTask.onOpen((res) => {
+					let obj = {
+						"type":0,
+						"snapUpId":ids,
+					}
+					this.socketTask.send({
+						data: JSON.stringify(obj),
+						async success() {
+							console.log("消息发送成功");
+						},
+					});
+					this.socketTask.onMessage((res) => {
+						this.getMessage(res.data)
+						this.reset(obj); 
+					});
+				})
+				// 这里仅是事件监听【如果socket关闭了会执行】
+				this.socketTask.onClose(() => {
+					console.log("已经被关闭了")
+				})
+			},
+			getMessage(data){
+				let isbreak = false
+				for (var i = 0; i < this.lists.length; i++) {
+					if(isbreak){break}
+					let item = this.lists[i]
+					for (let socetItem of JSON.parse(data)) {
+						if(item.id == socetItem.snapUpId){
+							item.snapUpPeople = socetItem.players.length
+							isbreak = true
+							this.$set(this.lists,i,JSON.parse(JSON.stringify(item)))
+							// console.log(this.goodsList)
+							break
+						}
+					}
+				}
+			},
+			closeSocket() {
+				if(this.socketTask){
+					this.socketTask.close({
+						success(res) {
+							console.log("关闭成功", res)
+						},
+						fail(err) {
+							console.log("关闭失败", err)
+						}
+					})
+				}
+			},
+			
+			// 检测心跳reset
+			reset (obj) {
+				clearInterval(this.timeoutObj);
+				this.start(obj); // 启动心跳
+			},
+			// 启动心跳 start 
+			start (obj) {
+				this.timeoutObj = setInterval(()=>{
+					this.socketTask.send({
+						data: JSON.stringify(obj),
+						success:()=> {
+							console.log("消息发送成功");
+						},
+						fail:(err)=> {
+							this.connectSocketInit();
+						}
+					});
+				}, this.timeout);
+			},
+			
 			getLists(type){
 				request('/snap/getSnapUpListByType','post',this.param).then(res=>{
 					uni.hideLoading()
@@ -78,6 +184,11 @@
 							}else{
 								this.lists = res.data.list
 							}
+							let ids = []
+							for (let item of this.lists) {
+								ids.push(item.id)
+							}
+							this.connectSocketInit(ids);
 						}, 0);
 						if(type == 'refresh'){
 							setTimeout(()=>{

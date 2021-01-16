@@ -10,7 +10,7 @@
 			<view class="data">
 				<text>中奖率:{{item.probability}}%</text>
 				<text class="topVal">最高奖励:{{item.maxReward}}元</text>
-				<text class="topVal">点击量:{{item.clickNum}}次</text>
+				<!-- <text class="topVal">点击量:{{item.clickNum}}次</text> -->
 			</view>
 		</view>
 	</view>

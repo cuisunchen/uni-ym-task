@@ -43,7 +43,7 @@
 		},
 		onNavigationBarButtonTap() {
 			if(!(/^1[3456789]\d{9}$/.test(this.info.phone))){
-				this.showToast('手机号码输入有误','none',2000)
+				this.showToast('手机号码格式错误','none',2000)
 				return
 			}else if(!this.info.area){
 				this.showToast('请选择所在区域','none',2000)

@@ -26,11 +26,11 @@
 						},
 						{
 							img:'../../../static/biaoqing.png',
-							title:'我拼团中'
+							title:'拼团奖励'
 						},
 						{
 							img:'../../../static/lipin.png',
-							title:'拼团奖励'
+							title:'新手福利'
 						}
 					]
 				}

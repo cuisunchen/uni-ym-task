@@ -945,7 +945,31 @@
 								}
 							}
 						}
-        }
+        },
+				{
+					"path" : "pages/subPages/newerWelfare/newerWelfare",
+					"style" : {
+						"navigationBarTitleText": "新手福利",
+						"navigationBarTextStyle":"black",
+						"enablePullDownRefresh": true,
+						"app-plus": {
+							"bounce": "vertical",
+							"titleNView": false
+						}
+					}
+				},
+				{
+					"path" : "pages/subPages/needKnow/needKnow",
+					"style" : {
+						"navigationBarTitleText": "新手福利",
+						"navigationBarTextStyle":"black",
+						"enablePullDownRefresh": false,
+						"app-plus": {
+							"bounce": "vertical",
+							"titleNView": false
+						}
+					}
+				}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

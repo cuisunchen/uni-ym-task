@@ -61,6 +61,7 @@
 								this.lists = res.data.list
 							}
 						},0)
+						
 						if(type == 'fresh'){
 							setTimeout(()=>{
 								this.loadingStatus = true

@@ -31,7 +31,7 @@
 				<bar class="bar flex-shrink" @click="barClick"></bar>
 			</cell>
 			
-			<template class="wrap" v-for="(item,index) in goodsList"+>
+			<template class="wrap" v-for="(item,index) in goodsList">
 				<header class="listTit row align-center flex-between">
 					<view class="titWrap row align-center flex-between">
 						<view class="leftBox row align-center">
@@ -70,7 +70,7 @@
 		</view>
 		<uni-popup class="popup" ref="popup" type="center">
 			<view class="popCon flex all-center" id="popCon" ref="popCon" @click="goDetail(popupObj)">
-				<image class="popupImg" :src="popupObj.titleImg" mode="widthFix" :style="{width:popupImgStyle.width + 'upx',height: popupImgStyle.height+'upx'}" @load="popImgLoad"></image>
+				<image class="popupImg" :src="popupObj.titleImg" mode="widthFix"></image>
 			</view>
 			<view class="closeBox all-center"><icon type="cancel" size="28" color="#fff" @click="closePopup"/></view>
 		</uni-popup>
@@ -83,6 +83,7 @@
 	import goodsCard from '@/components/goods-card/goods-card.nvue'
 	import mUpdateAppTip from '@/components/maozai-update/updateAppTip.vue'
 	import myUpdate from '@/components/myUpdate.nvue'
+	import socketUrl from '@/common/utils/socketConfig.js'
 	export default {
 		components:{bar,goodsCard,mUpdateAppTip,myUpdate},
 		data(){
@@ -109,7 +110,11 @@
 				fileSizeString:'',
 				updateBoxWidth:null,
 				popupObj:{},
-				popupImgStyle:{}
+				popupImgStyle:{},
+				
+				socketTask: null,
+				timeout: 60000, // 1分钟
+				timeoutObj: null,
 			}
 		},
 		onLoad() {
@@ -119,7 +124,21 @@
 				this.getAlertAD()
 			});
 		},
+		onHide() {
+			clearInterval(this.timeoutObj);
+			this.timeoutObj = null
+			this.closeSocket() 
+		},
 		onShow(){
+			// let param = {
+			// 	pageNum: 1,
+			// 	pageSize: 10,
+			// 	type:1
+			// }
+			// request('/snap/getLimitTimeSnapUpList','post',param).then(res =>{
+			// 	console.log(res)
+				
+			// })
 			setTimeout(() => { //获取状态栏高度，setTimeout后才能调用uni.
 				uni.getSystemInfo({     
 					success: (res) => {  
@@ -134,13 +153,101 @@
 			if(!userInfo){
 				return
 			}
-			
 			uni.showLoading({
 				title:'加载中' 
 			})
 			this.getGoodsList()  
 		},
 		methods:{
+			connectSocketInit(ids) {
+				this.socketTask = uni.connectSocket({
+					url: socketUrl,
+					success(data) {
+						console.log("websocket连接成功");
+					},
+					fail(err) {
+						uni.showLoading({
+							title:'数据加载失败,重连中...' 
+						})
+					}
+				});
+				// 消息的发送和接收必须在正常连接打开中,才能发送或接收【否则会失败】
+				this.socketTask.onOpen((res) => {
+					let obj = {
+						"type":0,
+						"snapUpId":ids,
+					}
+					this.socketTask.send({
+						data: JSON.stringify(obj),
+						async success() {
+							console.log("消息发送成功");
+						},
+					});
+					this.socketTask.onMessage((res) => {
+						// console.log(res.data);
+						this.getMessage(res.data)
+						this.reset(obj); 
+					});
+				})
+				// 这里仅是事件监听【如果socket关闭了会执行】
+				this.socketTask.onClose(() => {
+					console.log("已经被关闭了")
+				})
+			},
+			getMessage(data){
+				let isbreak = false
+				for (var i = 0; i < this.goodsList.length; i++){
+					if(isbreak){break}
+					var subItem = this.goodsList[i].subList
+					for (var l = 0; l < subItem.length; l++) {
+						if(isbreak){break}
+						var item = subItem[l]
+						for (let socetItem of JSON.parse(data)) {
+							if(item.id == socetItem.snapUpId){
+								item.snapUpPeople = socetItem.players.length
+								isbreak = true
+								this.$set(this.goodsList[i].subList,l,JSON.parse(JSON.stringify(item)))
+								break
+							}
+						}
+					}
+				}
+			},
+			closeSocket() {
+				this.timeoutObj = null
+				clearInterval(this.timeoutObj);
+				if(this.socketTask){
+					this.socketTask.close({
+						success:(res)=> {
+							console.log("关闭成功", res)
+						},
+						fail:(err)=> {
+							console.log("关闭失败", err)
+						}
+					})
+				}
+			},
+			// 检测心跳reset
+			reset (obj) {
+				clearInterval(this.timeoutObj);
+				this.start(obj); // 启动心跳
+			},
+			// 启动心跳 start 
+			start (obj) {
+				this.timeoutObj = setInterval(()=>{
+					this.socketTask.send({
+						data: JSON.stringify(obj),
+						success:()=> {
+							console.log("消息发送成功"); 
+						},
+						fail:(err)=> {
+							console.log('消息发送失败')
+							this.connectSocketInit();
+						}
+					});
+				}, this.timeout);
+			},
+			
 			getAlertAD(){
 				request('/api/view/getAlertOrCover','post',{homeType: 3}).then(res=>{
 					if(res.code == 200){
@@ -156,9 +263,6 @@
 						this.showToast(res.msg)
 					}
 				})
-			},
-			popImgLoad(e){
-				this.popupImgStyle = e.detail
 			},
 			closePopup(){
 				this.$refs.popup.close()
@@ -269,7 +373,15 @@
 						setTimeout(()=>{
 							this.goodsList = res.data.contentList
 							this.bannerList = res.data.topList
+							let ids = []
+							for (let item of res.data.contentList) {
+								for (let child of item.subList) {
+									ids.push(child.id)
+								}
+							}
+							this.connectSocketInit(ids);
 						},0)
+						
 						setTimeout(()=>{
 								// 模拟网路请求
 								this.loadingStatus = true
@@ -323,12 +435,12 @@
 						break;
 					case 2:
 						uni.navigateTo({
-							url:'../../subPages/goodsPublicPage/goodsPublicPage?type=1'
+							url:'../../subPages/ptReward/ptReward'
 						})
 						break;
 					case 3:
 						uni.navigateTo({
-							url:'../../subPages/ptReward/ptReward'
+							url:'../../subPages/newerWelfare/newerWelfare'
 						})
 						break;
 				}
@@ -579,7 +691,15 @@
 	line-height: 28rpx;
 }
 .popCon{
+	width: 600upx;
+	height: 600upx;
+	border-radius: 10rpx;
 	background-color: #fff;
+}
+.popupImg{
+	width: 600upx;
+	height: 600upx;
+	border-radius: 10rpx;
 }
 .closeBox{
 	margin-top: 50rpx;

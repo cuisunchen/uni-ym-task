@@ -11,8 +11,9 @@
 					<view class="num">{{userInfo.userSurplus}}</view>
 				</view>
 				<view class="other flex-column flex-end">
-					<view class="total"><text>总收益: {{userInfo.countAmount}}元</text></view>
-					<view class=""><text>已提现: {{userInfo.withdrawalAmount}}元</text></view>
+					<view class=""><text>总收益: {{userInfo.countAmount}}元</text></view>
+					<view class="withdrawn"><text>已提现: {{userInfo.withdrawalAmount}}元</text></view>
+					<view class=""><text>已冻结: {{userInfo.freezeReward}}元</text></view>
 				</view>
 			</view>
 			
@@ -23,7 +24,7 @@
 					</view>
 					<view class="moneyBox flex1 flex align-center">
 						<input class="inputBox flex1" ref='input' maxlength="11" confirm-type="done" v-model="withdrawalAmount"
-								placeholder-class="holderClass" type="number" placeholder="请输入整数提现金额" 
+								placeholder-class="holderClass" type="number" placeholder="请输入整数提现金额,最低2元" 
 								@input="keyChange"/>
 					</view>
 				</view>
@@ -52,7 +53,10 @@
 			<view class="tip">
 				<view class="title">注意事项</view>
 				<view class="item flex align-center"><text class="dot"></text><text class="flex1">提现账号只能绑定一次,如需更改,请联系客服</text></view>
+				<view class="item flex align-center"><text class="dot"></text><text class="flex1">已冻结:为您拉新奖励,活动期间,好友参与拼团,可立即解冻</text></view>
 				<view class="item flex align-center"><text class="dot"></text><text class="flex1">提现金额不高于20元秒到账,高于20元1个工作日内审核到账</text></view>
+				<view class="item flex align-center"><text class="dot"></text><text class="flex1">低于20元未能及时到账,请检查支付宝账号是否填写正确</text></view>
+				<view class="item flex align-center"><text class="dot"></text><text class="flex1">每天提现上限为5次,超过5次提现需次日到账</text></view>
 				<view class="item flex align-center"><text class="dot"></text><text class="flex1">手续费:提现金额的5%</text></view>
 				<view class="item flex align-center"><text class="dot"></text><text class="flex1">如有违规操作,或异常账号,平台拒绝提现</text></view>
 			</view>
@@ -127,6 +131,7 @@
 				}
 				this.$request('/api/applyWithdraw','post',param).then(res => {
 					this.btnLoading = false
+					console.log(res)
 					if(res.code == 200){
 						if(this.withdrawalAmount > 20){
 							uni.showModal({
@@ -241,9 +246,9 @@
 			height: 300rpx;
 			overflow: hidden;
 			.balance{
-				margin-top: 50rpx;
+				margin-top: 40rpx;
 				.label{
-					margin-bottom: 20rpx;
+					margin-bottom: 10rpx;
 				}
 				.num{
 					font-size: 36rpx;
@@ -252,19 +257,18 @@
 				}
 			}
 			.other{
-				margin-top: 30rpx;
 				>view{
 					text-align: right;
 					text{
 						display: inline-block;
-						width: 50%;
+						width: 45%;
 						text-align: left;
 						border-radius: 4rpx;
 						background-color: rgba(0,0,0, .3);
 					}
 				}
-				.total{
-					margin-bottom: 10rpx;
+				.withdrawn{
+					margin: 10rpx 0;
 				}
 			}
 		}
@@ -288,6 +292,7 @@
 				height: 80rpx;
 				.inputBox{
 					font-size: 28rpx;
+					height: 80rpx;
 					padding-right: 20rpx;
 				}
 			}

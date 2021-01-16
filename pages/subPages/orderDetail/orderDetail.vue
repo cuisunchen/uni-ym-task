@@ -11,13 +11,14 @@
 		
 		<view class="userInfoBox flex">
 			<image class="icon" src="../../../static/dizhi@2x.png" mode=""></image>
-			<view class="info flex-column flex-between">
+			<view class="info flex-column flex-between" v-if="dataObj.name">
 				<view class="tit">
 					<text class="name">{{dataObj.name}}</text>
 					<text class="phone">{{dataObj.phone}}</text>
 				</view>
 				<view class="addr">{{dataObj.address}}</view>
 			</view>
+			<view class="info flex all-center" v-else>你可能在国外,我拿不到你的地址~~~</view>
 		</view>
 		
 		<view class="goodsInfoBox flex">
@@ -58,6 +59,7 @@
 				title: '加载中 ...'
 			})
 			this.dataObj = JSON.parse(opt.datas)
+			console.log(this.dataObj)
 		},
 		methods:{
 			imgLoad(){

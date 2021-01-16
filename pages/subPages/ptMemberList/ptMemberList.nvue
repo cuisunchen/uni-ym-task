@@ -3,7 +3,8 @@
 		<view class="pageTitle row">
 			<image class="titBg flex1" src="../../../static/bg02@2x.jpg" mode=""></image>
 			<view class="memberCount row align-center">
-				<text class="memberlabel">当前拼团人数: {{lists.length}} 人,还差{{groupType-lists.length}}人成团</text>
+				<text class="memberlabel" v-if="groupType-lists.length == 0">此为上次拼团结果且已成团,可立即开启新的拼团</text>
+				<text class="memberlabel" v-else>当前拼团人数: {{lists.length}} 人,还差{{groupType-lists.length}}人成团</text>
 			</view>
 		</view>
 		
@@ -18,7 +19,7 @@
 			<cell v-for="(item,index) in lists" :key="index">
 				<view class="callBox row align-center">
 					<view class="userImgBox">
-						<image class="userImg" :src="item.avatar" mode="aspectFill"></image>
+						<image class="userImg" :src="item.avatar || '../../../static/avatar.png'" mode="aspectFill"></image>
 					</view>
 					<view class="con flex1 flex-column flex-between">
 						<view class="info row flex-between align-center">
@@ -44,6 +45,7 @@
 
 <script>
 	import {unencryp,request} from '../../../common/utils/request.js'
+	import socketUrl from '@/common/utils/socketConfig.js'
 	export default {
 		data() {
 			return {
@@ -53,7 +55,7 @@
 				loading:false,
 				lists:[],
 				groupType:'',
-				goodsId: null
+				goodsId: null,
 			}
 		},
 		onLoad(opt) {
@@ -66,7 +68,15 @@
 				request('/snap/getSnapUpPlays','post',{id:this.goodsId}).then(res => {
 					if(res.code == 200){
 						setTimeout(()=>{
-							this.lists = res.data
+							let arr = []
+							this.lists = res.data.map((item) => {
+								if(arr.includes(item.avatar) && item.userId == null){
+									item.avatar=''
+								}else{
+									arr.push(item.avatar)
+								}
+								return item
+							})
 						},0)
 						if(type == 'refresh'){
 							setTimeout(()=>{

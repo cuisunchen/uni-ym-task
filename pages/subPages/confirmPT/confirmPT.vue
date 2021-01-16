@@ -64,7 +64,31 @@
 						</view>
 					</label>
 				</radio-group>
+				
 			</view>
+			
+			<view class="needKown flex align-center flex-between" @click="chooseNeedKnow">
+				<view class="labelBox flex align-center">
+					<image class="payIcon" src="../../../static/needKown.png" mode=""></image>
+					<text>拼团须知</text>
+				</view>
+				<!-- <icon type="radioUnselect" size="26" color="#ff0000"/> -->
+				<view class="checkBox flex all-center" v-if="!needKown">
+					<!-- <u-icon name="checkmark" color="#fff" size="24" v-if="needKown"></u-icon> -->
+					<!-- <radio class="radio" v-if="needKown" checked="true" color="#ff0000"/> -->
+				</view>
+				<radio class="radio" v-if="needKown" checked="true" color="#ff0000"/>
+				
+			</view>
+			<!-- <radio-group @change="chooseNeedKnow" class="radio-group-wrap">
+				<label class="needKown flex align-center flex-between">
+					<view class="labelBox flex align-center">
+						<image class="payIcon" src="../../../static/needKown.png" mode=""></image>
+						<text>拼团须知</text>
+					</view>
+					<radio class="radio" value="1" :checked="needKown" disabled color="#ff0000"/>
+				</label>
+			</radio-group> -->
 		</view>
 		
 		<view class="payBox flex align-center">
@@ -89,10 +113,13 @@
 						}
 				],
 				current: 0,
-				info:{}
+				info:{},
+				needKown: false,
+				radioType:'radioUnselect'
 			}
 		},
 		onShow(){
+			this.needKown = uni.getStorageSync('needKown') ? uni.getStorageSync('needKown') : false
 			let addr = uni.getStorageSync('addr')
 			if(addr.addr){
 				addr.addr = addr.addr.replace(/-/g,'').replace(/~/,'')
@@ -108,7 +135,17 @@
 			this.info = JSON.parse(opt.param)
 		},
 		methods:{
+			chooseNeedKnow(e){
+				// this.needKown = !this.needKown;
+				uni.navigateTo({
+					url:'../needKnow/needKnow'
+				})
+			},
 			confirmPay(){
+				if(!this.needKown){
+					this.showToast('请先查看拼团须知,再进行拼团~~~','none',3000)
+					return
+				}
 				if(!this.info.addressId){
 					this.showToast('请先选择收货地址')
 					return
@@ -297,6 +334,32 @@
 						color: #999;
 					}
 				}
+			}
+			
+		}
+		.needKown{
+			margin-top: 40rpx;
+			padding: 20rpx;
+			background-color: #fff;
+			border-radius: 10rpx;
+			.payIcon{
+				width: 55rpx;
+				height: 55rpx;
+				margin-right: 10rpx;
+			}
+			.checkBox{
+				width: 30rpx;
+				height: 30rpx;
+				border-radius: 50%;
+				margin-right: 14rpx;
+				border: 2rpx solid #cdced1;
+				&.checked{
+					background-color: red;
+					border-color: red;
+				}
+			}
+			.radio{
+				transform:scale(0.7)
 			}
 		}
 		.ptTime{

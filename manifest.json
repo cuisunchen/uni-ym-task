@@ -2,8 +2,8 @@
     "name" : "今日友米",
     "appid" : "__UNI__4DF39C1",
     "description" : "手赚app平台",
-    "versionName" : "1.0.409",
-    "versionCode" : 10409,
+    "versionName" : "1.1.6",
+    "versionCode" : 116,
     "transformPx" : false,
     "app-plus" : {
         "nvueCompiler" : "uni-app",
@@ -56,7 +56,9 @@
             "sdkConfigs" : {
                 "ad" : {},
                 "payment" : {
-                    "alipay" : {}
+                    "alipay" : {
+                        "__platform__" : [ "ios", "android" ]
+                    }
                 },
                 "maps" : {},
                 "geolocation" : {
@@ -122,6 +124,9 @@
         "permissionPhoneState" : {
             "request" : "always",
             "prompt" : "为保证您正常、安全地使用，需要获取设备识别码（部分手机提示为获取手机号码）使用权限，请允许。"
+        },
+        "uniStatistics" : {
+            "enable" : true
         }
     },
     "quickapp" : {},

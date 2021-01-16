@@ -10,7 +10,7 @@
 			<view class="data row">
 				<text class="txt rate">中奖率:{{dataObj.probability}}%</text>
 				<text class="txt topVal">最高奖励:{{dataObj.maxReward}}元</text>
-				<text class="txt topVal">点击量:{{dataObj.clickNum}}次</text>
+				<!-- <text class="txt topVal">点击量:{{dataObj.clickNum}}次</text> -->
 			</view>
 		</view>
 	</view>

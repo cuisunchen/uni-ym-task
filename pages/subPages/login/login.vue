@@ -11,7 +11,7 @@
 					<swiper-item>
 							<view class="swiper-item">
 								<input class="uni-input" maxlength="11" type="number" v-model="form.phone" placeholder-class="inputHolder" placeholder="请输入手机号" />
-								<input class="uni-input" maxlength="6"  password   v-model="form.password" placeholder-class="inputHolder" placeholder="请输入登录码"/>
+								<input class="uni-input" minlength="6" maxlength="18"  password   v-model="form.password" placeholder-class="inputHolder" placeholder="请输入6-18位登录码"/>
 								<button class="loginBtn flex all-center" :class="{disabled:loading1}" type="default" :disabled="loading1" :loading="loading1" @click="pwdLogin">登录</button>
 							</view>
 					</swiper-item>
